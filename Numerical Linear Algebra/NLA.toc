@@ -1,0 +1,73 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Matlab}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Exp 1: Discrete Legendre Poly}{4}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Exp 2: Classical vs. Modified Gram-Schmidt}{4}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Exp 3: Numerical Loss of Orthogonality}{5}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Householder Triangularization}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Householder and Gram-Schmidt}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Triangularization by Introducing Zeros}{7}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Householder Reflectors}{8}{section.2.3}%
+\contentsline {section}{\numberline {2.4}The Better of Two Reflectors}{9}{section.2.4}%
+\contentsline {section}{\numberline {2.5}The Algorithm}{9}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Applying or Forming $Q$}{9}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Operation Count}{10}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Least Squares Problems}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}The Problem}{12}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Orthogonal Projection and the Normal Equations}{12}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Pseudoinverse}{13}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Normal Equations}{13}{section.3.4}%
+\contentsline {section}{\numberline {3.5}QR factorization}{14}{section.3.5}%
+\contentsline {section}{\numberline {3.6}SVD}{14}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Comparison of Algorithms}{15}{section.3.7}%
+\contentsline {part}{I\hspace {1em}Conditioning and Stability}{16}{part.1}%
+\contentsline {chapter}{\numberline {4}Conditioning and Condition Numbers}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Condition of a Problem}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Absolute Condition Number}{17}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Relative Condition Number}{18}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Condition of Matrix-Vector Multiplication}{19}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Condition Number of a Matrix}{20}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Condition of a System of Equations}{20}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Floating Point Arithmetic}{22}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Limitations of Digital Representations}{22}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Floating Point Numbers}{22}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Machine Epsilon}{23}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Floating Point Arithmetic}{23}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Complex Floating Point Arithmetic}{24}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Stability}{25}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Algorithms}{25}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Accuracy}{25}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Stability}{25}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Backward Stability}{26}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Independence of Norm}{26}{section.6.5}%
+\contentsline {chapter}{\numberline {7}More on Stability}{27}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Stability of Floating Point Arithmetic}{27}{section.7.1}%
+\contentsline {section}{\numberline {7.2}An Unstable Algorithm}{28}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Accuracy of a Backward Stable Algo}{28}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Backward Error Analysis}{29}{section.7.4}%
+\contentsline {chapter}{\numberline {8}Stability of Householder Traingularization}{30}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Experiment}{30}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Theorem}{31}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Analyzing an Algorithm to Solve $Ax=b$}{31}{section.8.3}%
+\contentsline {chapter}{\numberline {9}Stability of Back Substitution}{34}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Triangular System}{34}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Backward Stability Theorem}{35}{section.9.2}%
+\contentsline {section}{\numberline {9.3}$ m=1 $}{35}{section.9.3}%
+\contentsline {section}{\numberline {9.4}$m=2$}{35}{section.9.4}%
+\contentsline {section}{\numberline {9.5}$m=3$}{36}{section.9.5}%
+\contentsline {section}{\numberline {9.6}General $m$}{37}{section.9.6}%
+\contentsline {chapter}{\numberline {10}Conditioning of Least Squares Problems}{38}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Four Conditioning Problems}{38}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Theorem}{38}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Transformation to a Diagonal Matrix}{39}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Sensitivity of $y$ to Perturbations in $b$}{39}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Sensitivity of $x$ to Perturbations in $b$}{39}{section.10.5}%
+\contentsline {section}{\numberline {10.6}Tilting the range of $A$}{40}{section.10.6}%
+\contentsline {section}{\numberline {10.7}Sensitivity of $y$ to Perturbations in $A$}{40}{section.10.7}%
+\contentsline {section}{\numberline {10.8}Sensitivity of $x$ to Perturbations in $A$}{41}{section.10.8}%
+\contentsline {chapter}{\numberline {11}Stability of Least Squares Algorithms}{43}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Example}{43}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Householder Triangularization}{44}{section.11.2}%
+\contentsline {section}{\numberline {11.3}GS Orthogonalization}{44}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Normal Equations}{45}{section.11.4}%
+\contentsline {section}{\numberline {11.5}SVD}{46}{section.11.5}%
+\contentsline {section}{\numberline {11.6}Rank-Deficient LS Problems}{46}{section.11.6}%

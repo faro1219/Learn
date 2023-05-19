@@ -1,0 +1,163 @@
+\chapter{Stability of Householder Traingularization}
+
+In this lecture we see backward error analysis in action. First we observe in a MATLAB experiment the remarkable phenomenon of backward stability of Householder triangularization. We then consider how the triangularization step can be combined with other backward stable pieces to obtain a stable algorithm for solving $A x=b$. 
+
+\section{Experiment} 
+
+Householder factorization is a backward stable algorithm for computing QR factorizations. We can illustrate this by a MATLAB experiment carried out in IEEE double precision arithmetic, $\mep\approx 1.11\times 10^{-16}$. 
+
+\begin{lstlisting}[language=Matlab]
+ R = triu(randn(50)); &\Comment{ Set $R$ to a $50\times 50$ upper-triangular matrix with normal random entries. } & 
+ [Q,X] = qr(randn(50));    &\Comment{ Set $Q$ to a random orthogonal matrix by orthogonalizing a random matrix. } &
+ A=Q*R; &\Comment{ Set $A$ to the product $QR$, up to rounding errors. } &
+ [Q2,R2] = qr(A);   &\Comment{ Compute QR factorization $A\approx Q_2 R_2$ by Householder traingularization. } &
+\end{lstlisting}
+
+The purpose of these four lines of MATLAB is to construct a matrix with a known QR factorization, $A=Q R$, which can then be compared with the QR factorization $A=Q_2 R_2$ computed by Householder triangularization. Actually, because of rounding errors, the QR factors of the computed matrix $A$ are not exactly $Q$ and $R$. However, for the purposes of this experiment they are close enough. The results about to be presented would not be significantly different if $A$ were exactly equal to $Q R$ (which we could achieve, in effect, by calculating $A=Q R$ in higher precision arithmetic on the computer). 
+
+For $Q_2$ and $R_2$, as it happens, are very far from exact:
+
+\begin{lstlisting}[language=Matlab]
+ norm(Q2-Q) &\Comment{ How accurate is $Q_2$? } &
+    ans = 0.00889 
+ norm(R2-R)/norm(R) &\Comment{ How accurate is $R_2$? } &
+    ans = 0.00071
+\end{lstlisting}
+
+These errors are huge! Our calculations have been done with sixteen digits of accuracy, yet the final results are accurate to only two or three digits. The individual rounding errors have been amplified by factors on the order of $10^{13}$. (Note that the computed $Q_2$ is close enough to $Q$ to indicate that changes in the signs of the columns cannot be responsible for any of the errors. If you try this experiment and get entirely different results, it may be that you need to multiply the columns of $Q$ and rows of $R$ by appropriate factors $\pm 1$ .)
+We seem to have lost twelve digits of accuracy. But now, an astonishing thing happens when we multiply these inaccurate matrices $Q_2$ and $R_2$:
+
+\begin{lstlisting}[language=Matlab]
+ norm(A-Q2*R2)/norm(A) &\Comment{ How accurate is $Q_2R_2$? } & 
+    ans = 1.432e-15
+\end{lstlisting}
+
+The product $Q_2 R_2$ is accurate to a full fifteen digits! The errors in $Q_2$ and $R_2$ must be ``diabolically correlated,'' as Wilkinson used to say. To one part in $10^{12}$, they cancel out in the product $Q_2 R_2$.
+
+To highlight how special this accuracy of $Q_2 R_2$ is, let us construct another pair of matrices $Q_3$ and $R_3$ that are equally accurate approximations to $Q$ and $R$, and multiply them.
+
+\begin{lstlisting}[language=Matlab]
+ Q3 = Q+1e-4*randn(50); &\Comment{ Set $Q_3$ to a random perturbation of $Q$ \\ that is closer to $Q$ than $Q_2$ is. } &   
+ R3 = R+1e-4*randn(50); &\Comment{ Set $R_3$ to a random perturbation of $R$ \\ that is closer to $R$ than $R_2$ is. } &
+ norm(A-Q3*R3)/norm(A)  &\Comment{ How accurate is $Q_3R_3$? } &
+    ans = 0.00088
+\end{lstlisting}
+This time, the error in the product is huge. $Q_2$ is no better than $Q_3$, and $R_2$ is no better than $R_3$, but $Q_2 R_2$ is twelve orders of magnitude better than $Q_3 R_3$.
+
+In this experiment, we did not take the trouble to make $R_3$ upper-triangular or $Q_3$ orthogonal, but there would have been little difference had we done so.
+
+The errors in $Q_2$ and $R_2$ are \textbf{forward errors}. In general, a large forward error can be the result of an ill-conditioned problem or an unstable algorithm (Theorem~\ref{thm: Accuracy of a back stap algo}). In our experiment, they are due to the former. As a rule, the sequences of column spaces of a random triangular matrix are exceedingly ill-conditioned as a function of the entries of the matrix.
+
+The error in $Q_2 R_2$ is the \textbf{backward error} or \textbf{residual}. The smallness of this error suggests that Householder triangularization is backward stable.
+
+\section{Theorem}
+In fact, Householder triangularization is backward stable for all matrices $A$ and all computers satisfying \eqref{eq: fler} and \eqref{eq:flop}. We shall now state a theorem to this effect. Our result will take the form 
+\[
+    \tilde Q \tilde R = A + \delta  A, 
+\]
+where $\delta A$ is small.  In words, the computed $Q$ times the computed $R$ equals a small perturbation of the given matrix $A$. Note that 
+\begin{itemize}
+    \item By $\tilde R$, we mean the upper-triangular matrix that is constructed by Householder traingularization in floating point arithmetic. 
+    \item By $\tilde Q$, we mean a special unitary matrix. Recall that $Q = Q_1Q_2 \cdots Q_n$, where $Q_k$ is defined by vector $v_k$. In the floating point computation, we obtain a sequence of vectors $\tilde v_k$. Let $\tilde Q_k$ be the exactly unitary reflector defined by the $\tilde v_k$. We define $\tilde Q = \tilde Q_1 \tilde Q_2 \cdots \tilde Q_n$. 
+\end{itemize}
+Then we have the following result: 
+
+%────────────────────────────────────────
+\begin{theorem}
+[Back stap of Householder]
+\label{thm: Back stap of Householder}
+Let the QR factorization $A= QR$ of a matrix $A\in \CC^{m\times n}$ be computed by Householder triangularization on a computer satisfying the axioms \eqref{eq: fler} and \eqref{eq:flop}, and let the computed factors $\tilde Q$ and $\tilde R$ be defined as indicated above. Then, we have 
+\begin{equation}
+    \label{eq: backstap of Householder}
+    \tilde Q \tilde R = A + \delta  A,  \quad \frac{\|\delta A\|}{\|A\|} = O(\mep)
+\end{equation}
+for some $\delta A \in \CC^{m\times n}$.  
+\end{theorem}
+%────────────────────────────────────────
+
+\section{Analyzing an Algorithm to Solve $Ax=b$}
+We have seen that Householder is backward stable but not always accurate in the forward sense. Now, QR factorization is generally not an end in itself, but a means to other ends such as solution of a system of equations, a least square problem, or an eigenvalue problem. The happy fact is that accuracy of $QR$ is indeed enough for most of purposes.   We can show this by surprisingly simple arguments. 
+
+The example we shall consider is the use of Householder triangularization to solve a nonsingular $m\times m$ linear system $Ax=b$. The idea was discussed at the end of Chapter 7 in \autoref{Algo 11.2}. 
+
+This algorithm is backward stable, proving this is straightforward, given that each of the three steps is itself backward stable. Here, we shall state backward stability results for the three steps, without proof, and then give the details of how they can be combined. 
+
+The first step of \autoref{Algo 11.2} is QR factorization of $A$, leading to computed matrices $\tilde R$ and $\tilde Q$. The backward stability of this process has already been expressed by \autoref{eq: backstap of Householder}.  
+
+The second step is computation of $\tilde Q^* b$ by \autoref{Algo 10.2}. When $\tilde Q^* b$ is computed, rounding errors will be made, so the result will not be exactly $\tilde Q ^* b$. Instead it will be some vector $\tilde y$. It can be shown that this vector satisfies the following backward stability estimate: 
+\begin{equation}
+    \label{eq: unitary error}
+    (\tilde Q + \delta Q) \tilde y = b, \quad \|\delta  Q\| = O(\mep). 
+\end{equation}
+Hence, the result of applying the Householder reflectors in floating point arithmetic is exactly equivalent to multiplying $b$ by a slightly perturbed matrix, $(\tilde Q + \delta  Q)^{-1} $.  
+
+The final step is back substitution to compute $\tilde R ^{-1}  \tilde y$. In this step new rounding errors will be introduced, but once more, the computation is backward stable. This time the estimate takes the form: 
+\begin{equation}
+    \label{eq: error of backsub} 
+    (\tilde R + \delta R) \tilde x = \tilde y, \quad \frac{\|\delta  R\|}{\|\tilde R\|}= O(\mep).  
+\end{equation}
+As always, the equality on the left is exact. We will derive this in full detail in the next chapter. Now, combine \eqref{eq: backstap of Householder} \eqref{eq: unitary error} and \eqref{eq: error of backsub}, we get the following theorem.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[Backstap of linear system]
+\label{thm: Backstap of linear system}
+\autoref{Algo 11.2} is backward stable, satisfying
+\begin{equation}
+    \label{eq: backstap of algo 11.2}
+    (A + \Delta  A) \tilde x = b, \quad \frac{\| \Delta  A\|}{\|A\|} = O(\mep)
+\end{equation}
+for some $ \Delta A \in \CC^{m\times m} $.   
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}
+Combine \eqref{eq: error of backsub} and \eqref{eq: unitary error}, we have 
+\[
+    b=(\tilde{Q}+\delta Q)(\tilde{R}+\delta R) \tilde{x}=[\tilde{Q} \tilde{R}+(\delta Q) \tilde{R}+\tilde{Q}(\delta R)+(\delta Q)(\delta R)] \tilde{x}. 
+\]
+Hence, by \eqref{eq: backstap of Householder}, 
+\[
+    b=[A+\delta A+(\delta Q) \tilde{R}+\tilde{Q}(\delta R)+(\delta Q)(\delta R)] \tilde{x}. 
+\]
+So $\Delta A = \delta A+(\delta Q) \tilde{R}+\tilde{Q}(\delta R)+(\delta Q)(\delta R)$. 
+
+Since $\tilde{Q} \tilde{R}=A+\delta A$ and $\tilde{Q}$ is unitary, we have
+\begin{align*}
+\frac{\|\tilde{R}\|}{\|A\|} \leq\left\|\tilde{Q}^*\right\| \frac{\|A+\delta A\|}{\|A\|}=O(1)
+\end{align*}
+as $\epsilon_{\text {machine }} \rightarrow 0$, by \eqref{eq: backstap of Householder}. (It is $1+O\left(\epsilon_{\text {machine}}\right)$ if $\|\cdot\|=\|\cdot\|_2$, but we have made no assumptions about $\|\cdot\|$.) This gives us
+\begin{align*}
+\frac{\|(\delta Q) \tilde{R}\|}{\|A\|} \leq\|\delta Q\| \frac{\|\tilde{R}\|}{\|A\|}=O\left(\epsilon_{\text {machine}}\right)
+\end{align*}
+by \eqref{eq: unitary error}. Similarly,
+\begin{align*}
+\frac{\|\tilde{Q}(\delta R)\|}{\|A\|} \leq\|\tilde{Q}\| \frac{\|\delta R\|}{\|\tilde{R}\|} \frac{\|\tilde{R}\|}{\|A\|}=O\left(\epsilon_{\text {machine}}\right)
+\end{align*}
+by \eqref{eq: error of backsub}. Finally,
+\begin{align*}
+\frac{\|(\delta Q)(\delta R)\|}{\|A\|} \leq\|\delta Q\| \frac{\|\delta R\|}{\|A\|}=O\left(\epsilon_{\text {machine}}^2\right)
+\end{align*}
+The total perturbation $\Delta A$ thus satisfies
+\begin{align*}
+\frac{\|\Delta A\|}{\|A\|} \leq \frac{\|\delta A\|}{\|A\|}+\frac{\|(\delta Q) \tilde{R}\|}{\|A\|}+\frac{\|\tilde{Q}(\delta R)\|}{\|A\|}+\frac{\|(\delta Q)(\delta R)\|}{\|A\|}=O\left(\epsilon_{\text {machine}}\right),
+\end{align*}
+as claimed.
+\end{proof}
+%────────────────────────────────────────
+
+Combining \autoref{thm: condition of Ainvb}, \autoref{thm: Accuracy of a back stap algo} and \autoref{thm: Backstap of linear system} gives the following result about accuracy of solutions of $Ax=b$.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[Error of LS]
+\label{thm: Error of LS}
+The solution $\tilde x$ computed by \autoref{Algo 11.2} satisfies 
+\begin{equation}
+    \label{eq: error of LS} 
+    \frac{\|\tilde x - x\|}{\|x\|} = O(\kappa(A) \mep). 
+\end{equation}
+\end{theorem}
+%────────────────────────────────────────

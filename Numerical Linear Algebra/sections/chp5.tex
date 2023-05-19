@@ -1,0 +1,59 @@
+\newpage 
+\section{Lecture 5: Stability Analysis}  
+Topics today: 
+\begin{itemize}
+    \item Sufficient conditions for stability in general 
+    \item stability analysis in $ \infty $ -norm 
+\end{itemize}
+
+\vspace{1em}
+\hrule 
+\vspace{1em}
+\subsection{Sufficient condition for stability} 
+
+%────────────────────────────────────────
+\begin{proposition}
+\label{prop: Sufficient stability}
+A sufficient condition for stability is that $ \exists C\ge 0, \epsilon >0 $ s.t. 
+\[
+    \|B(k)\|\le 1+ Ck, \quad \text{  for } 0<k<\epsilon. 
+\] 
+\end{proposition}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}
+\[
+    \left\|B(k)^n\right\| \leqslant\|B(k)\|^n \leqslant(1+C k)^n \le (e^{Ck})^n =e^{Ckn} \le E^{CT} = K_T. 
+\]
+\end{proof}
+%────────────────────────────────────────
+
+\subsection{Stability analysis in $ \infty $ -norm } 
+The only thing remained here is to show the stability of $B: l^\infty\to l^\infty$. Note that 
+\[
+    B {u_j} = \nu u_{j-1} + (1-2\nu) u_j + \nu u_{j+1}, \quad \nu = \frac{k}{h^2}
+\]
+
+Note that when $\nu\le \frac{1}{2}$, 
+\[
+    |B u_j| \le (\nu + |1-2\nu| + \nu) \max_j |u_j| = \|u\|_\infty. 
+\]
+Hence, $\|Bu\|_\infty \le \max_j |Bu_j| \le \|u\|_\infty$ and $\|B\|\le 1$.  If $\nu >\frac{1}{2}$, let $u_j = (-1)^j$, we get $Bu_j  = (1-4\nu) (-1)^j$. Hence, 
+\[
+    B^n u_j = (4\nu -1)^n (-1)^{n+j}.  
+\]
+Therefore, $\|B^n u\|_\infty \to \infty$ as $n\to \infty$.  In fact, we can think of the finite difference operator as an infinite tridiagonal metrix. 
+
+\[
+B = \begin{pNiceMatrix}[xdots/line-style=solid]
+        \Ddots &\Ddots &          &       &\\
+        \Ddots &       &          &       & \\ 
+               &\nu    &1-2\nu    &\nu    & \\
+               &       &   \Ddots &\Ddots &\Ddots  \\ 
+               &       &          &\Ddots &\Ddots   \\
+   \end{pNiceMatrix}
+\]
+
+The norm of $B$ is the absolute maximum row sum $|\nu| + |1-2\nu| + |\nu|$ just like in the finite-dimensional matrix case.  
+
+3

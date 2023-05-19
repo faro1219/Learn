@@ -1,0 +1,105 @@
+\chapter{More on Stability}
+We continue the discussion of stability by considering examples of stable and unstable algorithms. Then we discuss a fundamental idea linking conditioning and stability, whose power has been proved in innumerable applications since the 1950s: backward error analysis.
+
+\section{Stability of Floating Point Arithmetic}
+The four simplest computational problems are,,$+- x$, and $\div$ There is not much to say about choice of algorithms! Of course, we shall normally use the floating point operations $\oplus, \ominus, \otimes$, and $\odiv$ provided with the computer. As it happens, the axioms \eqref{eq:flop} and \eqref{eq: fler} imply that these four canonical examples of algorithms are all backward stable.
+
+Now we consider $\ominus$ here. For data $x=(x_1,x_2)^* \in X$, the subtraction is $f(x_1, x_2) = x_1 - x_2$, and the algorithm is: 
+\[
+    \tilde f(x_1, x_2) = \fl(x_1) \ominus \fl(x_2). 
+\]
+Hence, we have 
+\[
+    \fl(x_1) = x_1(1+\epsilon _1) , \quad \fl(x_2) = x_2 (1+\epsilon _2),
+\]
+for some $|\epsilon _1| , |\epsilon _2| \le \epsilon_{\text{epsilon}}$. By \autoref{eq:flop}, we have 
+\[
+    \fl(x_1) \ominus \fl(x_2) = \left( \fl(x_1) -\fl(x_2) \right) (1+\epsilon _3),
+\] 
+for some $|\epsilon _3| \le \mep$. Combine these, we have 
+\begin{align*}
+    \fl(x_1) \ominus \fl(x_2) &= \left[ x_1 (1+\epsilon _1) -x_2 (1+\epsilon _2) \right] (1+\epsilon _3) \\ 
+    & = x_1(1+\epsilon _1)(1+\epsilon _3) -x_2(1+\epsilon _2)(1+\epsilon _3) \\ 
+    & = x_1(1+\epsilon _4) - x_2(1+\epsilon _5)
+\end{align*}
+for some $|\epsilon _4|, |\epsilon _4| \le 2\mep + O(\mep^2)$.  Hence, $\tilde f(x) = \fl(x_1) \ominus \fl(x_2)$ is exactly equal to $\tilde x_1 - \tilde x_2$, where $\tilde x_1$ and $\tilde x_2$ satisfy 
+\[
+    \frac{\left|\tilde{x}_1-x_1\right|}{\left|x_1\right|}=O\left(\epsilon_{\text {machine}}\right), \quad \frac{\left|\tilde{x}_2-x_2\right|}{\left|x_2\right|}=O\left(\epsilon_{\text {machine}}\right). 
+\]
+
+
+%────────────────────────────────────────
+\begin{example}
+\label{eg: Stability}
+\begin{itemize}
+    \item []
+    \item Inner product is back stable. 
+    \item Outer product is stable but not back stable. 
+    \item $x+1$ with $\oplus$ is stable but not back stable. 
+    \item $\sin$ and $\cos$ are stable but not back stable. 
+    \item If the derivate of function is equal to zero at certain points, then it's not back stable. This is because a small change in the value will lead to a big change in the variables. 
+\end{itemize}
+
+\end{example}
+%────────────────────────────────────────
+
+
+\section{An Unstable Algorithm}
+Here is a more substantial example: the use of the characteristic polynomial to find the eigenvalues of a matrix. Given a matrix $A$, one method to compute the eigenvalues is: 
+\begin{itemize}
+    \item Find the coefficients of the characteristic polynomial, 
+    \item Find the roots of the characteristic polynomial. 
+\end{itemize}
+
+This scheme is not only backward unstable but unstable, and it should not be used. The instability is revealed in the rootfinding of the second step. As we saw in \autoref{eg: Root of Polynomial}, the problem of finding the roots of a polynomial is generally ill-conditioned.  It follows that small errors in the coefficients of the characteristic polynomial will tend to be amplified when finding roots, even if the rootfinding is done to perfect accuracy. 
+
+For example, suppose $A=I$, the $2 \times 2$ identity matrix. The eigenvalues of $A$ are insensitive to perturbations of the entries, and a stable algorithm should be able to compute them with errors $O\left(\epsilon_{\text {machine }}\right)$. However, the algorithm described above produces errors on the order of $\sqrt{\epsilon_{\text {machine }}}$. To explain this, we note that the characteristic polynomial is $x^2-2 x+1$, just as in \autoref{eg: Root of Polynomial}. When the coefficients of this polynomial are computed, they can be expected to have errors on the order of $\epsilon_{\text {machine}}$, and these can cause the roots to change by order $\sqrt{\epsilon_{\text {machine }}}$. For example, if $\epsilon_{\text {machine }}=10^{-16}$, the roots of the computed characteristic polynomial can be perturbed from the actual eigenvalues by approximately $10^{-8}$, a loss of eight digits of accuracy.
+
+Before you try this computation for yourself, we must be a little more honest. If you use the algorithm just described to compute the eigenvalues of the $2 \times 2$ identity matrix, you will probably find that there are no errors at all, because the coefficients and roots of $x^2-2 x+1$ are small integers that will be represented exactly on your computer. However, if the experiment is done on a slightly perturbed matrix, such as
+\begin{align*}
+A=\left[\begin{array}{cc}
+1+10^{-14} & 0 \\
+0 & 1
+\end{array}\right],
+\end{align*}
+the computed eigenvalues will differ from the actual ones by the expected order $\sqrt{\epsilon_{\text {machine }}}$. Try it!
+
+\section{Accuracy of a Backward Stable Algo} 
+Suppose we have backward stable algorithm $\tilde f$ for a problem $f: X\to Y$, the accuracy depends on the condition number $\kappa=\kappa(x)$ of $f$. If $\kappa(x)$ is small, the result will be accurate in a relative sense.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[Accuracy of a back stap algo]
+\label{thm: Accuracy of a back stap algo}
+Suppose a backward stable algorithm is applied to solve a problem $f:X\to Y$ with condition number $\kappa$ on a computer satisfying the axioms \eqref{eq: fler} and \eqref{eq:flop}. Then the relative errors satisfy 
+\begin{equation}
+    \label{eq: Acc of a back stap algo} 
+    \frac{\|\tilde f(x) - f(x)\|}{\|f(x)\|} = O(\kappa(x) \mep). 
+\end{equation}
+\end{theorem}
+%────────────────────────────────────────
+
+%────────────────────────────────────────
+\begin{proof}
+By the \autoref{def: Backward stable} of backward stability, we have $\tilde f(x) = f(\tilde x)$ for some $\tilde x\in X$ satisfying 
+\[
+    \frac{\|\tilde x - x\|}{\|x\|} = O(\mep). 
+\]
+By the \autoref{def: Relative condition number}, this implies 
+\[
+    \frac{\|\tilde f(x) - f(x)\|}{\|f(x)\|} \le (\kappa(x) +o(1)) \frac{\|\tilde x - x\|}{\|x\|}. 
+\]
+Combine this, we can prove the theorem. 
+\end{proof}
+%────────────────────────────────────────
+ 
+\section{Backward Error Analysis} 
+The process we have just carried out in proving \autoref{thm: Accuracy of a back stap algo} is known as \textbf{backward error analysis}. We obtained an accuracy estimate by two steps. One step was to investigate the condition of the problem. The other was to investigate the stability of the algorithm. Our conclusion was that if the algorithm is stable, then the final accuracy reflects that condition number.
+
+
+Mathematically, this is straightforward, but it is certainly not the first idea an unprepared person would think of if called upon to analyze a numerical algorithm. The first idea would be \textbf{forward error analysis}. Here, the rounding errors introduced at each step of the calculation are estimated, and somehow, a total is maintained of how they may compound from step to step.
+
+Experience has shown that for most of the algorithms of numerical linear algebra, forward error analysis is harder to carry out than backward error analysis. With the benefit of hindsight, it is not hard to explain why this is so. Suppose a tried-and-true algorithm is used, say, to solve $A x=b$ on a computer. It is an established fact (see Chapter 22) that the results obtained will be consistently less accurate when $A$ is ill-conditioned. Now, how could a forward error analysis capture this phenomenon? The condition number of $A$ is so global a property as to be more or less invisible at the level of the individual floating point operations involved in solving $A x=b$. (We dramatize this by an example in the next lecture.) Yet one way or another, the forward analysis will have to detect that condition number if it is to end up with a correct result.
+
+In short, it is an established fact that the best algorithms for most problems do no better, in general, than to compute exact solutions for slightly perturbed data. Backward error analysis is a method of reasoning fitted neatly to this backward reality.

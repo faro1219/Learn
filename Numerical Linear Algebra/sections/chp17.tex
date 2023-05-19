@@ -1,0 +1,258 @@
+\chapter{Stability of Back Substitution} 
+One of the easiest problems of numerical linear algebra is the solution of a triangular system of equations. The standard algorithm is successive substitution, called back substitution when the system is upper-triangular. Here we show in full detail that this algorithm is backward stable, obtaining quantitative bounds on the effects of rounding errors, with no ``$O(\mep)$''.
+
+\section{Triangular System}
+
+We have seen that a general system of equations $Ax=b$ can be reduced to an upper-triangular system $Rx=y$ by QR factorization.  Lower- and upper- triangular systems also arise in Gaussian elimination, in Cholesky factorization, and in numerous other computations of numerical linear algebra.  
+
+These systems are easily solved by a process of successive substitution, called \textbf{forward substitution} if the system is lower-triangular and \textbf{back substitution} if it's upper-triangular.  
+
+Suppose we wish to solve $Rx=b$, that is, 
+\begin{equation}
+    \label{eq: back sub} 
+    \begin{pmatrix}
+        r_{ 11 }  & r_{ 12 }  & \cdots &  r_{ 1m }  \\
+         & r_{ 22 }  &  &  \vdots \\
+         &  & \ddots &  \vdots \\
+         &  &  &  r_{mm} \\
+    \end{pmatrix} \begin{pmatrix}
+         x_1 \\
+         x_2 \\
+         \vdots \\
+         x_m \\
+    \end{pmatrix} = \begin{pmatrix}
+         b_1 \\
+         b_2 \\
+         \vdots \\
+         b_m \\
+    \end{pmatrix},   
+\end{equation}
+where $b\in \CC^m$ and $R \in \CC^{m\times m}$ and $x\in \CC^m$ is unknown.  We can solve this one after another, beginning with $x_m$ and finishing with $x_1$. 
+
+\begin{algorithm}[H]
+    \caption{Back Substitution}
+    \label{algo 17.1}
+    $x_m = b_m /r_{ mm } $\; 
+    $x_{ m-1 } =(b_{ m-1 } -x_m r_{ m-1,m } )/r_{ m-1,m-1 } $\; 
+    $x_{m-2} = (b_{ m-2 } -x_{m-1} r_{ m-2,m-1 } -x_m r_{ m-2,m } )/r_{ m-2,m-2 } $\; 
+    $\vdots$ \; 
+    $ x_j = (b_j - \sum_{k=j+1}^{m} x_kr_{ jk } )/r_{jj}$ 
+\end{algorithm}
+
+The structure is triangular, with a subtraction and multiplication at each position. The operation count is accordingly twice the area of an $m\times m$ triangle. 
+
+
+%────────────────────────────────────────
+\begin{corollary}
+\label{cor: Work for backsub}
+The work for back substitution: $ \sim m^2 $ flops.  
+\end{corollary}
+%────────────────────────────────────────
+
+\section{Backward Stability Theorem} 
+Now we will try to show \eqref{eq: error of backsub}, and this will be the only case in this book in which we give all the details of such a proof.  
+
+Before the proof, we must pin down one detail of the algorithm. Let us decide, arbitrarily, that in the expressions in parentheses above, the subtractions will be carried out from left to right.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[Backstap of backsub]
+\label{thm: Backstap of backsub}
+Let \autoref{algo 17.1} be applied to a problem \eqref{eq: back sub} consisting of floating point numbers on a computer satisfying \eqref{eq:flop}. This algorithm is backward stable in the sense that the computed solution $\tilde x \in \CC^m$ satisfies 
+\begin{equation}
+    \label{eq: backstap of backsub}
+    (R+ \delta  R) \tilde x = b
+\end{equation}
+
+for some upper-triangular $ \delta R \in \CC^{m\times m} $ with 
+\begin{equation}
+    \label{eq: err of backstap of backsub}
+    \frac{\|\delta  R\|}{\|R\|} = O(\mep). 
+\end{equation}
+Specifically, for each $i,j$, 
+\begin{equation}
+    \label{eq: pointwise err of backstap of backsub}
+    \frac{|\delta r_{ij}|}{|r_{ij}|} \le m \mep + O(\mep^2).  
+\end{equation}
+\end{theorem}
+%────────────────────────────────────────
+
+To keep the ideas clear and interesting, our proof will be most leisurely.  
+
+\section{$ m=1 $} 
+When $d=1$, the problem is: 
+\[
+    \tilde x_1 = b_1 \odiv r_{11}. 
+\]
+The axiom \eqref{eq:flop} for $\odiv$ guarantees that: 
+\[
+    \tilde x_1 = \frac{b_1}{r_{ 11 } } (1+\epsilon _1), \quad |\epsilon _1| \le \mep. 
+\] 
+However, we would like to express the error from a perturbation in $R$. To this end, we set $\epsilon _1' = -\epsilon _1 /(1+\epsilon _1)$, where the formula becomes, 
+\begin{equation}
+    \label{eq: m=1}
+    \tilde x_1 = \frac{b_1}{r_{11} (1+\epsilon _1')}, \quad |\epsilon '_1| \le \mep + O(\mep^2). 
+\end{equation}
+
+Hence, we have 
+\[
+    (r_{ 11 } + \delta r_{ 11 } ) \tilde x_1 = b_1, 
+\]
+with $\Delta r_{ 11 }  = \epsilon _1' r_{ 11 } $. In other words, 
+\[
+    \frac{|\delta r_{ 11 } |}{|r_{ 11 } |} \le \mep + O(\mep^2).  
+\]
+
+\section{$m=2$} 
+The $2\times 2$ case is slightly less trivial. Suppose we have an upper-triangular matrix $R\in \CC^{2\times 2}$ and a vector $b\in \CC^2$. We firstly, solve $\tilde x_2$ by: 
+\begin{equation}
+    \label{eq: m=2 x2}
+    \tilde x_2 = b_2 \odiv r_{ 22 }  = \frac{b_2}{r_{ 22 } (1+\epsilon _1)}, \quad |\epsilon _1|\le \mep + O(\mep^2).     
+\end{equation}
+
+The second step is defined by the formula 
+\[
+    \tilde x_1 = \left( b_1 \ominus (\tilde x_2 \otimes r_{ 12 } ) \right) \odiv r_{ 11 } . 
+\]
+In fact, if we apply \eqref{eq:flop}, we have 
+\[
+    \tilde x_1 = \frac{(b_1 - \tilde x_2 r_{ 12 } (1+\epsilon _2))(1+\epsilon _3)}{r_{11}} (1+\epsilon _4),
+\]
+where $|\epsilon _2|, |\epsilon _3|, |\epsilon _4| \le \mep$. Now we shift the $ \epsilon _3 $ and $\epsilon _4$ terms from the number to the denominator, we have, 
+\[
+    \tilde{x}_1=\frac{b_1-\tilde{x}_2 r_{12}\left(1+\epsilon_2\right)}{r_{11}\left(1+\epsilon_3^{\prime}\right)\left(1+\epsilon_4^{\prime}\right)},
+\]
+where $ \left|\epsilon_3^{\prime}\right|,\left|\epsilon_4^{\prime}\right| \leq \epsilon_{\text {machine }}+O\left(\epsilon_{\text {machine }}^2\right) $, or equivalently, 
+\begin{equation}
+    \label{eq:m=2 x1}
+    \tilde{x}_1=\frac{b_1-\tilde{x}_2 r_{12}\left(1+\epsilon_2\right)}{r_{11}\left(1+2 \epsilon_5\right)},
+\end{equation} 
+where $|\epsilon _5| \le \mep + O(\mep^2)$.  Hence, 
+\[
+    (R+ \delta R) \tilde x = b, 
+\]
+where the entries $\delta _{ ij } $ of $\delta R$ satisfy
+\[
+    \begin{pmatrix}
+        |\delta r_{ 11 } | /|r_{ 11 } | &  |\delta r_{ 12 } | / |r_{ 12} |   \\
+         &  |\delta  r_{ 22 } |/ |r_{ 22 }|  \\ 
+    \end{pmatrix}  = \begin{pmatrix}
+        2|\epsilon _5| &  |\epsilon _2| \\
+         &  |\epsilon _1| \\
+    \end{pmatrix} \le \begin{pmatrix}
+        2 &  1 \\
+         &  1 \\
+    \end{pmatrix}\mep + O(\mep^2).   
+\]
+Hence, the $2\times 2$ back substitution is stable.  
+
+\section{$m=3$} 
+
+The analysis for a $3\times 3$ matrix includes all the reasoning necessary for the general case. The first two steps are the same as before:  
+\begin{align*}
+\begin{aligned}
+& \tilde{x}_3=b_3 \odot r_{33}=\frac{b_3}{r_{33}\left(1+\epsilon_1\right)} \\
+& \tilde{x}_2=\left(b_2 \ominus\left(\tilde{x}_3 \otimes r_{23}\right)\right) \odot r_{22}=\frac{b_2-\tilde{x}_3 r_{23}\left(1+\epsilon_2\right)}{r_{22}\left(1+2 \epsilon_3\right)}
+\end{aligned}
+\end{align*}
+where
+\begin{align*}
+\left[\begin{array}{cc}
+2\left|\epsilon_3\right| & \left|\epsilon_2\right| \\
+& \left|\epsilon_1\right|
+\end{array}\right] \leq\left[\begin{array}{ll}
+2 & 1 \\
+& 1
+\end{array}\right] \epsilon_{\text {machine }}+O\left(\epsilon_{\text {machine }}^2\right) .
+\end{align*}
+The third step involves the computation
+\begin{align*}
+\tilde{x}_1=\left[\left(b_1 \ominus\left(\tilde{x}_2 \otimes r_{12}\right)\right) \ominus\left(\tilde{x}_3 \otimes r_{13}\right)\right] \odot r_{11} .
+\end{align*}
+Firstly, we have 
+\[
+    \tilde{x}_1=\left[\left(b_1-\tilde{x}_2 r_{12}\left(1+\epsilon_4\right)\right)\left(1+\epsilon_6\right)-\tilde{x}_3 r_{13}\left(1+\epsilon_5\right)\right]\left(1+\epsilon_7\right) \odot r_{11} .
+\]
+The $\odiv$ is eliminated using $\epsilon_8$; let us immediately replace this by $\epsilon_8^{\prime}$ with $\left|\epsilon_8\right| \leq \epsilon_{\text {machine }}+O\left(\epsilon_{\text {machine }}^2\right)$ and put the result in the denominator:
+\begin{align*}
+\tilde{x}_1=\frac{\left[\left(b_1-\tilde{x}_2 r_{12}\left(1+\epsilon_4\right)\right)\left(1+\epsilon_6\right)-\tilde{x}_3 r_{13}\left(1+\epsilon_5\right)\right]\left(1+\epsilon_7\right)}{r_{11}\left(1+\epsilon_8^{\prime}\right)}.
+\end{align*}
+
+Now, the expression above has everything as we need it except the terms involving $\epsilon_6$ and $\epsilon_7$, which originated from operations $\Theta$. If these are distributed, they will affect the number $b_1$, whereas our aim is to perturb only the entries $r_{i j}$. The term involving $\epsilon_7$ is easily dispatched: we change $\epsilon_7$ to $\epsilon_7^{\prime}$ and move it to the denominator as usual. The term involving $\epsilon_6$ requires a new trick. We move it to the denominator too, but to keep the equality valid, we compensate by putting the new factor $\left(1+\epsilon_6^{\prime}\right)$ into the $r_{13}$ term as well. Thus
+\begin{align*}
+\tilde{x}_1=\frac{b_1-\tilde{x}_2 r_{12}\left(1+\epsilon_4\right)-\tilde{x}_3 r_{13}\left(1+\epsilon_5\right)\left(1+\epsilon_6^{\prime}\right)}{r_{11}\left(1+\epsilon_6^{\prime}\right)\left(1+\epsilon_7^{\prime}\right)\left(1+\epsilon_8^{\prime}\right)} .
+\end{align*}
+Now $r_{13}$ has two perturbations of size at most $\epsilon_{\text {machine }}$, and $r_{11}$ has three. In this formula, all the errors in the computation have been expressed as perturbations in the entries of $R$.
+
+The result can be summarized as
+\begin{align*}
+(R+\delta R) \tilde{x}=b,
+\end{align*}
+where the entries $\delta r_{i j}$ satisfy
+\[
+    \left[\begin{array}{ccc}
+        \left|\delta r_{11}\right| /\left|r_{11}\right| & \left|\delta r_{12}\right| /\left|r_{12}\right| & \left|\delta r_{13}\right| /\left|r_{13}\right| \\
+        & \left|\delta r_{22}\right| /\left|r_{22}\right| & \left|\delta r_{23}\right| /\left|r_{23}\right| \\
+        & & \left|\delta r_{33}\right| /\left|r_{33}\right|
+        \end{array}\right] \leq\left[\begin{array}{ccc}
+        3 & 1 & 2 \\
+        & 2 & 1 \\
+        & & 1
+        \end{array}\right] \epsilon_{\text {machine }}+O\left(\epsilon_{\text {machine }}^2\right). 
+\]
+
+\section{General $m$} 
+The analysis in higher-dimensional cases is similar. For example, in the $5 \times 5$ case we obtain the componentwise bound
+\begin{align*}
+\frac{|\delta R|}{|R|} \leq\left[\begin{array}{lllll}
+5 & 1 & 2 & 3 & 4 \\
+& 4 & 1 & 2 & 3 \\
+& & 3 & 1 & 2 \\
+& & & 2 & 1 \\
+& & & & 1
+\end{array}\right] \epsilon_{\text {machine }}+O\left(\epsilon_{\text {machine }}^2\right) .
+\end{align*}
+The entries of the matrix in this formula are obtained from three components. The multiplications $\tilde{x}_k r_{j k}$ introduce $\epsilon_{\text {machine }}$ perturbations in the pattern
+\begin{align*}
+\otimes: \quad \left[\begin{array}{lllll}
+0 & 1 & 1 & 1 & 1 \\
+& 0 & 1 & 1 & 1 \\
+& & 0 & 1 & 1 \\
+& & & 0 & 1 \\
+& & & & 0
+\end{array}\right] .
+\end{align*}
+
+The divisions by $r_{k k}$ introduce perturbations in the pattern
+\begin{align*}
+\odiv: \quad\left[\begin{array}{lllll}
+1 & & & & \\
+& 1 & & & \\
+& & 1 & & \\
+& & & 1 & \\
+& & & & 1
+\end{array}\right] \text {. }
+\end{align*}
+Finally, the subtractions also occur in the pattern (17.15), and, due to the decision to compute from left to right, each one introduces a perturbation on the diagonal and at each position to the right. This adds up to the pattern
+\begin{align*}
+\ominus: \quad\left[\begin{array}{lllll}
+4 & 0 & 1 & 2 & 3 \\
+& 3 & 0 & 1 & 2 \\
+& & 2 & 0 & 1 \\
+& & & 1 & 0 \\
+& & & & 0
+\end{array}\right] \text {. }
+\end{align*}
+Adding them produces the result we want. This completes the proof of \autoref{thm: Backstap of backsub}.
+
+
+
+
+
+
+
+
+
+
+

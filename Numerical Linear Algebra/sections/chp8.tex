@@ -1,0 +1,78 @@
+\newpage 
+\section{Lecture 8: Z-transform} 
+Topics today: 
+\begin{itemize}
+    \item $ \|B^n\|_{l_h^2} = \|G^n\|_{L^2(-\pi, \pi)} $
+    \item 2-norm of a multiplication operator 
+    \item Z-transform of a sampled function  
+\end{itemize}
+
+\vspace{1em}
+\hrule 
+\vspace{1em} 
+
+\subsection{$ \|B^n\|_{l_h^2} = \|G^n\|_{L^2(-\pi, \pi)} $}
+We saw last time that the $Z$-transform is unitary and it diagonalizes any finite difference operator: 
+\[
+    B^n = Z^{-1}\cG^n Z,
+\] 
+where $  Bu_j = \sum_{m} c_m u_{j+m}, \cG f(\xi) = G(\xi) f(\xi), G(\xi) = \sum_{m} c_m e^{im\xi}$.  This is just like an eigen-decomposition and $\cG$ plays the role of the diagonal matrix. Since $\sqrt{\frac{h}{2\pi}} Z$ is unitary, we have 
+\begin{align*}
+    \|B^n\| \le  \|Z^{-1}\| \cdot  \|\cG^n\| \cdot \|Z\| = \|\cG^n\| \\ 
+    \|\cG^n\| \le \|Z\| \cdot \|B^n\| \cdot \|Z^{-1}\| = \|B^n\|
+\end{align*}  
+Hence, $\|B^n\|_{l_h^2} = \|\cG^n\|_{L^2(-\pi, \pi)}$.  Note that $\cG$ is the multiplication by $\cG(\xi)$, which is continuous. 
+
+
+%────────────────────────────────────────
+\begin{proposition}
+\label{prop: Amplification factor}
+$\|\cG\|_{L^2} = \|G\|_\infty  = \max_{-\pi \le \xi \le \pi} |G(\xi)|.$ Hence, 
+\[
+    \|B^n\| = \|G\|^n. 
+\]
+\end{proposition}
+%────────────────────────────────────────
+
+We will be able to consider implicit methods since 
+\[
+    B^{-1} = Z^{-1} \cG^{-1} Z, \quad \|\cG^{-1}\|_{l^2} = \|\frac{1}{G}\|_{\infty}. 
+\]
+So far, Z-transform ignores the grid spacing. Now we will given $u_j$ on grid of size $h$. Now we def $\tilde u(\kappa) = h\sum_j u_j e^{-ijh \kappa }$.  Here $ \kappa $ is the wave number.  $\epsilon  = hk$ is the dimensionless wave number.  
+
+
+%────────────────────────────────────────
+\begin{proposition}
+[Parseval's identity II]
+\label{prop: Parsevals identity II}
+\[
+    h \sum_j |u_j|^2 = \frac{1}{2\pi}\int_{-\pi /h}^{\pi /h}  |\tilde u (\kappa)|^2\, d\kappa. 
+\]
+\end{proposition}
+%────────────────────────────────────────
+
+We have the following observations: 
+\begin{itemize}
+    \item $ \tilde u(K) = h\hat u (hk) $ 
+    \item $ \hat u (\xi)  $ and $\tilde u(\kappa)$ are periodic with periods $2\pi$ and $\frac{2\pi}{h}$, respectively 
+\end{itemize}
+
+\subsection{Z-transform of a sampled function}
+We now show that if the sequence $u_j$ comes from sampling a continuous function $U(x)$, i.e. $u_j = U(jh)$, then $\tilde u(\kappa)$ and the Fourier transform of $U$ are closely related.  
+
+Let $V(x) = U(x) e^{-ikx}$, we have 
+\[
+    \tilde u(K) = h \sum_j u_j e^{-{ijhk}} = h \sum_j U(jh) e^{-i(jh)k} = h \sum_j V(jh). 
+\]
+Let 
+\[
+    \hat V(r) = \int_{-\infty}^{\infty} V(x) e^{-irx} \, dx = \int_{-\infty}^\infty U(x) e^{-i(K+r)x} \, dx = \hat U(k+r).  
+\]
+With the Poisson summation formula, we have 
+\[
+    h \sum_{j=-\infty}^{\infty} V(jh) = \sum_{m=-\infty}^{\infty} \hat V\left( -\frac{2\pi }{h}m \right).   
+\]
+Hence, 
+\[
+    \tilde u(K) = \sum_{m} \hat U\left( K - \frac{2\pi }{h}m \right) . 
+\]

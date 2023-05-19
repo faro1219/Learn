@@ -1,0 +1,81 @@
+\newpage 
+\section{Lecture 4: Functional Analysis of Finite Difference}
+Recap: 
+\begin{itemize}
+    \item Truncation error for $D_t^{+} u=D_x^{+} D_x^{-} u$
+    \item Statement of Lax-Richtmyer equivalence theorem 
+\end{itemize}
+Topics today: 
+\begin{itemize}
+    \item Functional analysis review 
+    \item Proof of Lax-Richtmyer 
+\end{itemize}
+
+\vspace{1em}
+\hrule 
+\vspace{1em} 
+
+\subsection{Functional analysis} 
+Functional analysis is the study of linear algebra in infinite dimensions.  
+
+%────────────────────────────────────────
+\begin{definition}
+[Banach space]
+\label{def: Banach space}
+A complete normed vector space.
+\end{definition}
+%────────────────────────────────────────
+
+%────────────────────────────────────────
+\begin{definition}
+[Hilbert space]
+\label{def: Hilbert space}
+A complete inner product space.
+\end{definition}
+%────────────────────────────────────────
+We skip the introduction to norms, inner products and linear functionals. 
+
+\subsection{Proof of Lax-Richtmyer}
+
+Note that Thm~\ref{thm: Lax-Richtmyer equation} is equivalent to say 
+\[
+    \text{ consistency } + \text{ stability } \Rightarrow \text{ convergence }. 
+\]
+
+\begin{proof}[Proof of Thm~\ref{thm: Lax-Richtmyer equation}] 
+We denote errors by: 
+\[
+    e_j^n = u_j^n - u(jh, nk). 
+\]
+Note that we have 
+\[
+    u_j^{n+1}=B(k) u^n_j, \quad u(jh, (n+1)k) = B(k) u(jh, nk) + k \tau_j^n. 
+\]
+We subtract them and will get 
+\[
+    e_j^{n+1} = B(k) e_j^n - k \tau_j^n. 
+\]
+By induction, we will get 
+\[
+    e_j^n = B(k)^n e_j^0 - B(k)^{n-1} k \tau_j^0 - B(k)^{n-2} k \tau_j^1 - \cdots - B(k) k\tau_j^{n-2} - k \tau_j^{n-1}. 
+\]
+Take norms and use triangle inequality and $\|B(k)^l\|\le K$, we get 
+$$
+\left\|e^n\right\| \leqslant K \underbrace{\left\|e^0\right\|}_0+K k\left(\left\|\tau^0\right\|+\left\|\tau^{\prime}\right\|+\cdots+\left\|\tau^{n-1}\right\|\right) \le K n k \max _l\left\|\tau^l\right\|, n k \leqslant T
+$$
+In our case, we have show that 
+\[
+    \|\tau^l\|_\infty \le \begin{cases}
+        O(k+h^2) \quad & \nu \neq \frac{1}{6}\\ 
+        O(k^2 +h^4) & \nu =\frac{1}{6}
+    \end{cases}
+\]
+we will show that if $\nu\le \frac{1}{2}$, $K=1$ and $\epsilon =\infty$.  Hence, we have 
+\[
+    \|e^n\|_{l^\infty} \le \begin{cases}
+        TM\left( \frac{k}{2} + \frac{h^2}{12} \right) \quad & \nu \neq \frac{1}{6}, 0<\nu \le \frac{1}{2} \\ 
+        TM\left( \frac{k^2}{6} + \frac{h^2}{360} \right) = \frac{TMh^4}{135} &\nu = \frac{1}{6}
+    \end{cases}
+\]
+This is true for all $n$ satisfying $0\le nk\le T$.  So the maximal value of the error on the grid goes to zero as $k,h\to 0$ with $\nu = \frac{k}{h^2}$ held fixed. 
+\end{proof}

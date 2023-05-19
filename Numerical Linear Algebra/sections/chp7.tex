@@ -1,0 +1,147 @@
+\newpage
+\section{Lecture 7: Von-Neumann Stability Analysis} 
+\begin{itemize}
+    \item Plan of today: Von-Neumann stability analysis (theory)
+    \item Goal: General method to compute $\|B\|_{2,h}, \|B^n\|_{2,h}$ for a finite difference operator $B$ acting on $\ell _h^2$.
+\end{itemize}
+\vspace{1em}
+\hrule
+
+
+%────────────────────────────────────────
+\begin{definition}
+[Z-transform]
+\label{def: Z-transform}
+Z-transform is a bijection $Z$ from $\ell^2(Z)$ to $\L^2(-\pi,\pi)$: 
+\[
+    u \mapsto \hat u (\xi ) = \sum_{j=-\infty}^\infty u_j e^{-ij \xi }.  
+\]
+The inverse map $Z^{-1}$ is given by: 
+\[
+    f(\xi ) \mapsto f_j^{\vee} = \frac{1}{2\pi } \int_{-\pi }^{\pi} f(\xi ) e^{ij \xi}\; d\xi. 
+\]
+\end{definition}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{proposition}
+[Parseval]
+\label{prop: Parseval}
+The Parseval equality for Z-transform is: $\sum_j |u_j|^2 = \frac{1}{2\pi } \int_{-\pi}^\pi |\hat u (\xi )|^2 \, d \xi.$ 
+\end{proposition}
+%────────────────────────────────────────
+This is equivalent to say $\|u\|_{\ell^2} = \frac{1}{\sqrt{2\pi } } \|\hat u\|_{L^2}$. Since $\|u\|_{\cB_h} = \sqrt{h \sum_{j}|u_j|^2} = \sqrt{h}\|u\|_{\ell ^2} = \sqrt{\frac{h}{2\pi }}  \|\hat u \|_{L^2}$, we get $\|u\|_{\cB_h} = \|\sqrt{\frac{h}{2\pi } }Zu\|_{L^2}$. Hence, $\sqrt{\frac{h}{2\pi }} Z$ is unitary from $\cB_h$ to $L^2(-\pi ,\pi )$.  
+
+Now consider the shift operator $S{u_j} = u_{j+1}$ on $\ell_h^2$. The matrix presentation is: 
+\[
+S = \begin{pNiceMatrix}[xdots/line-style=solid]
+    0  & 1 &   & 0      \\
+          & \Ddots &\Ddots   & \\
+     &  & & 1 \\
+    0      & &  & 0  \\
+   \end{pNiceMatrix}. 
+\]
+The inverse of $S$ shifts right by:$S^{-1}u_j = u_{j-1}$.  
+
+A general finite difference operator (or a banded Toeplitz matrix) has the form: 
+\[
+    \cB = \sum_{m=m_1}^{m_2} c_m S^m, \quad B_{ij} = c_{j-i}. 
+\]
+
+
+%────────────────────────────────────────
+\begin{example}
+\label{eg: postive derivative operator}
+\begin{itemize}
+    \item []
+    \item Positive gradient: $ D_x^+ u = \frac{S-I}{h}.   $ 
+    \item Heat equation scheme: $\cB = \nu S^{-1} + (1-2v) S^0 + \nu S^1$. 
+\end{itemize}
+\end{example}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{note}
+In numerical linear algebra, the index convention for Toeplitz operators is often reversed: $B_{ij} = c_{i-j}$. The reason is that it's better to see it's a convolution in numerical linear algebra. 
+\[
+    \cB u_j = \sum_{m} c_{-m} u_{j+m}   = \sum_{\ell } u_{j-\ell } c_{\ell }. 
+\]
+\end{note}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[Z-transform diagonalize operator]
+\label{thm: Z-transform diagonalizeoperator}
+The Z-transform diagonalizes any finite difference operator $\cB = \sum_m c_m S^m$. 
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}
+We are going to define $\cG$ and show the following diagram:
+\[\begin{tikzcd}[ampersand replacement=\&]
+	{\ell_h^2} \&\& {\ell_h^2} \\
+	\\
+	{L^2(-\pi,\pi)} \&\& {L^2(-\pi,\pi)}
+	\arrow["Z"', from=1-1, to=3-1]
+	\arrow["Z", from=1-3, to=3-3]
+	\arrow["\cG"', from=3-1, to=3-3]
+	\arrow["\cB", from=1-1, to=1-3]
+\end{tikzcd}\]
+In fact, this is equal to say $ZB = \cG Z$. Note that $\cG f(\xi ) =G(\xi ) f(\xi)$. Hence, $\cG$ is diagonal.  
+\begin{align*}
+    (z\cB)[u](\xi) = \hat {\cB u} (\xi ) &= \sum_j \cB u_j e^{-ij\xi}
+    = \sum_j(\sum_m c_m u_{j+m}) e^{-ij\xi}\\ 
+    &= \sum_m \sum_j c_m u_{j+m} e^{-ij\xi} 
+     = \sum_m \sum_{\ell} c_m u_\ell  e^{-j(\ell -m)\xi} \\ 
+    & = \underbrace{(\sum_m c_m e^{im\xi})}_{G(\xi)} \underbrace{(\sum_\ell  u_l e^{-il \xi})}_{\hat u (\xi)} 
+     = (\cG \hat u ) (\xi ) = (\cG Z)[u] (\xi ). 
+\end{align*}
+\end{proof}
+%────────────────────────────────────────
+
+Here $\cG(\xi )$ is known as the amplification factor: 
+\[
+    \cB{u_j} = \sum_m c_m u_{j+m} \mapsto G(\xi) = \sum_m c_m e^{im\xi}. 
+\]
+We can think of $w_j = e^{ij \xi }$ as an infinite column vector indexed by $j$ with $\xi $ fixed. Hence, 
+\[
+    \cB w_j = \sum_{m} c_m w_{j+m} = \sum_{m} c_m e^{i(j+m)\xi } = \left( \sum_{m} c_m e^{im\xi}  \right) e^{ij \xi } = \left( \sum_{m} c_m e^{im\xi}  \right)w_j. 
+\]
+Therefore, $ \cB w = G(\xi ) w $ is like an eigenvalue decomposition.  This is true in $\ell ^\infty$ since $w\in \ell ^\infty$ but no in $\ell ^2$. $w$ is not square summable.  In fact, the operator $\cB$ (on $\ell_h^2$) doesn't have any eigenvalues since none of the candidate eigenvectors are in the space.  
+
+
+%────────────────────────────────────────
+\begin{definition}
+[Spectrum of operator]
+\label{def: Spectrum of operator}
+Given an operator $\cB$, the spectral is: 
+\[
+    \sigma (\cB) \coloneqq \{\lambda \in \CC: \lambda I - \cB \text{ is not invertible }\} 
+\]
+\end{definition}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{proposition}
+[Spectrum of $\cB$]
+\label{prop: Spectrum of cB}
+Given $\cB = \sum_{m} c_m S^m$, 
+\[
+    \sigma(\cB) = \cG([-\pi, \pi]). 
+\] 
+\end{proposition}
+%────────────────────────────────────────
+
+Nevertheless, since $Z$ is unitary, we have diagonalized $\cB$ and we will see next time that: 
+\[
+    \|cB\|_{\ell_h^2} = \|\cG\|_{L^2(-\pi, \pi)} = \|G\|_{L^\infty (-\pi,\pi)}. 
+\]
+and 
+\[
+    \|\cB\|_{ \ell_h^2 }  = \| \cG^n\|_{ L^2 } =  \| G^n\|_{ L^\infty }.  
+\]
