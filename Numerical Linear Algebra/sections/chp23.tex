@@ -1,0 +1,207 @@
+\chapter{Cholesky Factorization}
+Hermitian positive definite matrices can be decomposed into triangular factors twice as quickly as general matrices. The standard algorithm for this, Cholesky factorization, is a variant of Gaussian elimination that operates on both the left and the right of the matrix at once, preserving and exploiting symmetry.
+
+\section{Symmetric Gaussian Elimination}
+
+First we recall the definition of Hermitian positive definite matrices. 
+
+%────────────────────────────────────────
+\begin{definition}
+[Hermitian positive definite matrix]
+\label{def: Hermitian positive definite matrix}
+A matrix $A\in \CC^{m\times m}$ is Hermitian positive definite if 
+\begin{itemize}
+    \item $A^*= A$,
+    \item $\forall x\neq 0\in \CC^m, x^*Ax >0$. 
+\end{itemize}
+\end{definition}
+%────────────────────────────────────────
+Note that all the eigenvalues of a Hermitian positive definite (PD) matrix are positive real numbers. Besides, eigenvectors corresponding to distinct eigenvalues are orthogonal. 
+
+We turn now to the problem of decomposing a PD matrix. To begin, we apply one step of GE to a PD matrix $A$ with a $1$ in the upper-left position: 
+\[
+    A = \begin{bmatrix}[1] 
+        1 &  w^* \\
+        w &  K \\
+    \end{bmatrix} 
+    = 
+    \begin{bmatrix}[1] 
+        1 &  0 \\
+        w &  I \\
+    \end{bmatrix}
+    \begin{bmatrix}[1] 
+        1 &  w^* \\
+        0 &  K-ww^* \\
+    \end{bmatrix}.   
+\]
+However, to obtain symmetry, Cholesky factorization first introduces zeros in the first row to match the zeros just introduced in the first column. We can do this by a right upper-triangular operation:
+\[
+    \begin{bmatrix}[1] 
+        1 &  w^* \\
+        0 &  K-ww^* \\
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}[1] 
+        1 & 0 \\
+        0 &  K-ww^* \\
+    \end{bmatrix} 
+    \begin{bmatrix}[1] 
+        1 &  w^* \\
+        0 &  I \\
+    \end{bmatrix}.    
+\]
+Combine them, we get 
+\begin{equation}
+\label{eq: symmetric GE}
+    A = \begin{bmatrix}[1] 
+        1 &  w^* \\
+        w &  K \\
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}[1] 
+        1 & 0  \\
+        w & I  \\
+    \end{bmatrix}
+    \begin{bmatrix}[1] 
+        1 &  0 \\
+        0 &  K-ww^* \\
+    \end{bmatrix}   
+    \begin{bmatrix}[1] 
+        1 &  w^* \\
+        0 &  I \\
+    \end{bmatrix}.  
+\end{equation}
+The idea of Cholesky factorization is to continue this process, zeroing one column and one row of $A$ symmetrically until it is reduced to the identity.
+
+\section{Cholesky Factorization}
+In order for the symmetric triangular reduction to work in general, we need a factorization that works for any $a_{11}>0$, not just $a_{11}=1$. The generalization of \eqref{eq: symmetric GE} is accomplished by adjusting some of the elements of $R_1$ by a factor of $\sqrt{a_{11}}$. Let $\alpha=\sqrt{a_{11}}$ and observe:
+$$
+\begin{aligned}
+A & =\left[\begin{array}{cc}
+a_{11} & w^* \\
+w & K
+\end{array}\right] \\
+& =\left[\begin{array}{cc}
+\alpha & 0 \\
+w / \alpha & I
+\end{array}\right]\left[\begin{array}{cc}
+1 & 0 \\
+0 & K-w w^* / a_{11}
+\end{array}\right]\left[\begin{array}{cc}
+\alpha & w^* / \alpha \\
+0 & I
+\end{array}\right]=R_1^* A_1 R_1
+\end{aligned}
+$$
+This is the basic step that is applied repeatedly in Cholesky factorization. If the upper-left entry of the submatrix $K-w w^* / a_{11}$ is positive, the same formula can be used to factor it; we then have $A_1=R_2^* A_2 R_2$ and thus $A=$ $R_1^* R_2^* A_2 R_2 R_1$. The process is continued down to the bottom-right corner, giving us eventually a factorization
+\begin{equation}
+\label{eq: extend cholesky factor}
+A=\underbrace{R_1^* R_2^* \cdots R_m^*}_{R^*} \underbrace{R_m \cdots R_2 R_1}_R.     
+\end{equation}
+This equation has the form
+\begin{equation}
+\label{eq: cholesky factor}
+A=R^* R, \quad r_{j j}>0,    
+\end{equation}
+where $R$ is upper-triangular. A reduction of this kind of a hermitian positive definite matrix is known as a \textbf{Cholesky factorization}.
+
+The description above left one item dangling. How do we know that the upper-left entry of the submatrix $K-w w^* / a_{11}$ is positive? The answer is that it must be positive because $K-w w^* / a_{11}$ is positive definite, since it is the $(m-1) \times(m-1)$ lower-right principal submatrix of the positive definite matrix $R_1^{-*} A R_1^{-1}$.
+
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[Cholesky factorization]
+\label{thm: Cholesky factorization}
+Every Hermitian positive definite matrix $A\in \CC^{m\times m}$ has a unique Cholesky factorization \eqref{eq: cholesky factor}. 
+\end{theorem}
+%────────────────────────────────────────
+Note that the uniquenessss comes from the form $RR^*$. Check the first row of $A$ will lead to uniqueness of first row of $R$. Then, we can use induction.  
+
+\section{The Algorithm}
+When Cholesky factorization is implemented, only half of the matrix being operated on needs to be represented explicitly. This simplification allows half of the arithmetic to be avoided. A formal statement of the algorithm (only one of many possibilities) is given below. The input matrix $A$ represents the superdiagonal half of the $m \times m$ hermitian positive definite matrix to be factored. (In practical software, a compressed storage scheme may be used to avoid wasting half the entries of a square array.) The output matrix $R$ represents the upper-triangular factor for which $A=R^* R$. Each outer iteration corresponds to a single elementary factorization: the upper-triangular part of the submatrix $R_{k: m, k: m}^*$ represents the superdiagonal part of the hermitian matrix being factored at step $k$.
+
+\begin{algorithm}[H]
+    \caption{Cholesky Factorization}
+    \label{Algo 23.1}
+    $R = A$\; 
+    \For{$k=1$ \KwTo $m$}{
+        \For{$ j=k+1 $ \KwTo $m$}{
+            $ R_{j,j:m} = R_{j,j:m} - R_{k,j:m}R_{kj}/R_{kk} $ 
+        }
+        $R_{k,k:m} = R_{k,k:m} / \sqrt{R_{kk}}$ 
+    }
+    
+\end{algorithm}
+
+\section{Operation Count}
+
+The arithmetic done in Cholesky factorization is dominated by the inner loop. A single execution of the line
+$$
+R_{j, j: m}=R_{j, j: m}-R_{k, j: m} R_{k j} / R_{k k}
+$$
+requires one division, $m-j+1$ multiplications, and $m-j+1$ subtractions, for a total of $\sim 2(m-j)$ flops. This calculation is repeated once for each $j$ from $k+1$ to $m$, and that loop is repeated for each $k$ from 1 to $m$. The sum is straightforward to evaluate:
+$$
+\sum_{k=1}^m \sum_{j=k+1}^m 2(m-j) \sim 2 \sum_{k=1}^m \sum_{j=1}^k j \sim \sum_{k=1}^m k^2 \sim \frac{1}{3} m^3 \text { flops. }
+$$
+Thus, Cholesky factorization involves only half as many operations as Gaussian elimination, which would require $\sim \frac{2}{3} m^3$ flops to factor the same matrix.
+
+As usual, the operation count can also be determined graphically. For each $k$, two floating point operations are carried out (one multiplication and one subtraction) at each position of a triangular layer. The entire algorithm corresponds to stacking $m$ layers:
+%────────────────────────────────────────
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/23-1.png}
+\end{figure}
+%────────────────────────────────────────
+
+It's obvious that the volume is $\frac{1}{6}m^3$. 
+
+
+%────────────────────────────────────────
+\begin{corollary}
+\label{cor: Work for cholesky factor}
+Work for Cholesky factorization: $ \sim \frac{1}{3}m^3 $ flops. 
+\end{corollary}
+%────────────────────────────────────────
+
+\section{Stability}
+All of the subtleties of the stability analysis of Gaussian elimination vanish for Cholesky factorization. This algorithm is always stable. Intuitively, the reason is that the factors $R$ can never grow large. In the 2-norm, for example, we have $\|R\|=\left\|R^*\right\|=\|A\|^{1 / 2}$ (proof: SVD), and in other $p$-norms with $1 \leq p \leq \infty,\|R\|$ cannot differ from $\|A\|^{1 / 2}$ by more than a factor of $\sqrt{m}$. Thus, numbers much larger than the entries of $A$ can never arise.
+
+Note that the stability of Cholesky factorization is achieved without the need for any pivoting. Intuitively, one may observe that this is related to the fact that most of the weight of a hermitian positive definite matrix is on the diagonal.
+
+%────────────────────────────────────────
+\begin{theorem}
+[Backstap of Cholesky]
+\label{thm: Backstap of Cholesky}
+Let $A \in \mathbb{C}^{m \times m}$ be hermitian positive definite, and let a Cholesky factorization of $A$ be computed by \autoref{Algo 23.1} on a computer satisfying \eqref{eq: fler} and \eqref{eq:flop}. For all sufficiently small $\mep$, this process is guaranteed to run to completion (i.e., no zero or negative corner entries $r_{k k}$ will arise), generating a computed factor $\tilde{R}$ that satisfies
+\begin{equation}
+\label{eq: Backstap of Cholesky}
+\tilde{R}^* \tilde{R}=A+\delta A, \quad \frac{\|\delta A\|}{\|A\|}=O\left(\epsilon_{\text {machine }}\right)
+\end{equation}
+for some $\delta A \in \mathbb{C}^{m \times m}$.
+\end{theorem}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{note}
+    Like so many algorithms of numerical linear algebra, this one would look much worse if we tried to carry out a forward error analysis rather than a backward one. If $A$ is ill-conditioned, $\tilde{R}$ will not generally be close to $R$; the best we can say is $\|\tilde{R}-R\| /\|R\|=O\left(\kappa(A) \epsilon_{\text {machine }}\right.$ ). (In other words, Cholesky factorization is in general an ill-conditioned problem.) It is only the product $\tilde{R}^* R$ that satisfies the much better error bound \eqref{eq: Backstap of Cholesky}. Thus the errors introduced in $\tilde{R}$ by rounding are large but ``diabolically correlated,'' just as we saw in Chapter 16 for QR factorization.
+\end{note}
+%────────────────────────────────────────
+
+\section{Solution of $Ax=b$}
+If $A$ is hermitian positive definite, the standard way to solve a system of equations $A x=b$ is by Cholesky factorization. \autoref{Algo 23.1} reduces the system to $R^* R x=b$, and we then solve two triangular systems in succession: first $R^* y=b$ for the unknown $y$, then $R x=y$ for the unknown $x$. Each triangular solution requires just $\sim m^2$ flops, so the total work is again $\sim \frac{1}{3} m^3$ flops.
+
+By reasoning analogous to that of Chapter 16, it can be shown that this process is backward stable.
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: Backstap of Cholesky on LS}
+The solution of hermitian positive definite systems $A x=b$ via Cholesky factorization (\autoref{Algo 23.1}) is backward stable, generating a computed solution $\tilde{x}$ that satisfies
+$$
+(A+\Delta A) \tilde{x}=b, \quad \frac{\|\Delta A\|}{\|A\|}=O\left(\epsilon_{\text {machine }}\right)
+$$
+for some $\Delta A \in \mathbb{C}^{m \times m}$. 
+\end{theorem}
+%────────────────────────────────────────

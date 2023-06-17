@@ -267,7 +267,8 @@ urlcolor=[RGB]{65,105,225}
 \definecolor{dblue}{HTML}{006EB8}
 \definecolor{violet}{HTML}{7F00FF}
 \definecolor{lviolet}{HTML}{fcf9ff}
-\definecolor{yellow}{HTML}{F4C430}
+% \definecolor{yellow}{HTML}{F4C430}
+\definecolor{yellow}{HTML}{DA9100}
 \definecolor{lyellow}{HTML}{FFF8DC}
 \definecolor{red}{HTML}{ff3e3e}
 \definecolor{lred}{HTML}{ffe2e2}
@@ -362,6 +363,14 @@ postheadspace = \newline,
   }
 ]{coloredremark}
 
+%% Matrix formats 
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
 
 %% Theorem formats
 \declaretheorem[
@@ -534,7 +543,7 @@ postheadspace = \newline,
 
 % Stat setting 
 \newcommand{\var}{\mathrm{Var}}
-
+\newcommand{\err}{\mathrm{Err}}
 % Title Page 
 \definecolor{HR}{RGB}{65,105,225}
 

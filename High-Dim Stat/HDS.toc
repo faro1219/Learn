@@ -1,0 +1,5 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Classical versus high-dimensional theory}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}What can go wrong in HD?}{3}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Linear discriminant analysis}{4}{subsection.1.2.1}%

@@ -1,0 +1,94 @@
+\chapter{Introduction}
+
+As an area of intellectual inquiry, high-dimensional statistics is not new: it has roots going back to the seminal work of Rao, Wigner, Kolmogorov, Huber and others, from the 1950s onwards. What is new—and very exciting—is the dramatic surge of interest and activity in highdimensional analysis over the past two decades. 
+
+Developments in high-dimensional statistics have connections with many areas of applied mathematics—among them machine learning, optimization, numerical analysis, functional and geometric analysis, information theory, approximation theory and probability theory.
+
+\section{Classical versus high-dimensional theory}
+Classical theory in probability and statistics provides statements that apply to a fixed class of models, parameterized by an index $n$ that is allowed to increase. In statistical settings, this integer-valued index has an interpretation as a sample size. 
+
+We have two major theorems: 
+\begin{itemize}
+    \item Law of large numbers,
+    \item Central limit theorem.
+\end{itemize}
+
+In order to appreciate the motivation for high-dimensional statistics, it is worthwhile considering the following:
+
+
+%────────────────────────────────────────
+\begin{example}
+\label{eg: motiv of HDS}
+Suppose that we are given $n=1000$ samples from a statistical model in $d=500$ dimensions. Will theory that requires $n \rightarrow+\infty$ with the dimension $d$ remaining fixed provide useful predictions?
+\end{example}
+%────────────────────────────────────────
+
+Of course, this question cannot be answered definitively without further details on the model under consideration. Some essential facts that motivate our discussion are the following:
+\begin{itemize}
+    \item The data sets arising in many parts of modern science and engineering have a `highdimensional flavor', with $d$ on the same order as, or possibly larger than, the sample size $n$.
+    \item For many of these applications, classical ``large $n$, fixed $d$'' theory fails to provide useful predictions.
+    \item Classical methods can break down dramatically in high-dimensional regimes. 
+\end{itemize}
+These facts motivate the study of high-dimensional statistical models, as well as the associated methodology and theory for estimation, testing and inference in such models.
+
+\section{What can go wrong in HD?}
+In order to appreciate the challenges associated with high-dimensional problems, it is worthwhile considering some simple problems in which classical results break down. Accordingly, this section is devoted to three brief forays into some examples of high-dimensional phenomena.
+
+\subsection{Linear discriminant analysis}
+We consider the binary hypothesis testing problem. Given a vector $x\in \RR^d$, the goal is to determine whether it's drawn from $\PP_1$ or $\PP_2$. 
+
+As for the classical method, if we assume two distributions are known: 
+\begin{itemize}
+    \item A natural decision rule is $ \log \frac{P_2[x]}{P_1[x]} $, 
+    \item Varying the threshold leads to the trade-off between two types of errors,
+    \item Neyman-Pearson lemma guarantees this family of decision rules works. 
+\end{itemize}
+
+A special case is to consider two multivariate Gaussian, $\cN(\mu_1, \Sigma)$ and $\cN(\mu_2, \Sigma)$. Then the log-likelihood ratio reduces to the linear statistics: 
+\begin{equation}
+\label{eq: linear statistics}
+\Psi(x) \coloneqq \left< \mu_1 - \mu_2, \Sigma^{-1} \left( x - \frac{\mu _1 + \mu _2}{2} \right)  \right>.  
+\end{equation}
+If $ \PP(x \text{ from } \PP_1) = \PP(x\text{ from }\PP_2)=\frac{1}{2} $, then 
+\[
+    \err (\Psi) \coloneqq \frac{1}{2} \PP_1[\psi(X') \le 0 ] + \frac{1}{2} \PP_2[\Psi(X'') >0], 
+\] 
+where $X'\sim \PP_1$ and $X'' \sim \PP_2$. We can show that 
+\begin{equation}
+\label{eq: error of linear stat}
+\operatorname{Err}(\Psi)=\underbrace{\frac{1}{\sqrt{2 \pi}} \int_{-\infty}^{-\gamma / 2} e^{-t^2 / 2} d t}_{\Phi(-\gamma / 2)}, \quad \text { where } \gamma=\sqrt{\left(\mu_1-\mu_2\right)^{\mathrm{T}} {\Sigma}^{-1}\left(\mu_1-\mu_2\right)}. 
+\end{equation}
+In practice, we don't know the distributions, but observes a collection if samples, say $ \{x_1,\ldots ,x_{ n_1 } \}  $  drawn independently from $\PP_1$, and $ \{x_{n_1+1},\ldots ,x_{n_1+n_2}\}  $ drawn independently from $\PP_2$. Then, we will estimate the means and covariance:
+\begin{equation}
+\label{eq: LDA mean}
+\hat{\mu}_1:=\frac{1}{n_1} \sum_{i=1}^{n_1} x_i \quad \text { and } \quad \hat{\mu}_2:=\frac{1}{n_2} \sum_{i=n_1+1}^{n_1+n_2} x_i,
+\end{equation}
+and 
+\begin{equation}
+\label{eq: LDA covariance}
+\widehat{\Sigma}:=\frac{1}{n_1-1} \sum_{i=1}^{n_1}\left(x_i-\hat{\mu}_1\right)\left(x_i-\hat{\mu}_1\right)^{\mathrm{T}}+\frac{1}{n_2-1} \sum_{i=n_1+1}^{n_1+n_2}\left(x_i-\hat{\mu}_2\right)\left(x_i-\hat{\mu}_2\right)^{\mathrm{T}} .
+\end{equation}
+Substituting these estimates into the log-likelihood ratio \eqref{eq: linear statistics} yields the \textbf{Fisher linear discriminant function}
+\begin{equation}
+\label{eq: Fisher linear discrimination}
+    \hat \Psi (x) = \left< \hat \mu_1 - \hat \mu_2, \hat \Sigma ^{-1}  \left( x - \frac{\hat \mu_1 + \hat \mu_2}{2} \right)  \right>. 
+\end{equation}
+Note that the sample covariance is invertible, and hence we need $n_i>d$. Let us assume that the two classes are equally likely \textit{a priori}. In this case, the error probability obtained by using a zero threshold is given by
+$$
+\operatorname{Err}(\widehat{\Psi}):=\frac{1}{2} \mathbb{P}_1\left[\widehat{\Psi}\left(X^{\prime}\right) \leq 0\right]+\frac{1}{2} \mathbb{P}_2\left[\widehat{\Psi}\left(X^{\prime \prime}\right)>0\right],
+$$
+where $X^{\prime}$ and $X^{\prime \prime}$ are samples drawn independently from the distributions $\mathbb{P}_1$ and $\mathbb{P}_2$, respectively. Note that the error probability is itself a random variable, since the discriminant function $\widehat{\Psi}$ is a function of the samples $\left\{X_i\right\}_{i=1}^{n_1+n_2}$.
+
+In the 1960s, Kolmogorov analyzed a simple version of the Fisher linear discriminant, in which the covariance matrix $\Sigma$ is known a priori to be the identity, so that the linear statistic \eqref{eq: linear statistics} simplifies to
+\begin{equation}
+\label{eq: linear stat identity}
+\widehat{\Psi}_{\mathrm{id}}(x)=\left\langle\hat{\mu}_1-\hat{\mu}_2, x-\frac{\hat{\mu}_1+\hat{\mu}_2}{2}\right\rangle .    
+\end{equation}
+
+Working under an assumption of Gaussian data, he analyzed the behavior of this method under a form of high-dimensional asymptotics, in which the triple $\left(n_1, n_2, d\right)$ all tend to infinity, with the ratios $d / n_i$, for $i=1,2$, converging to some non-negative fraction $\alpha>0$, and the Euclidean ${ }^1$ distance $\left\|\mu_1-\mu_2\right\|_2$ converging to a constant $\gamma>0$. Under this type of high-dimensional scaling, he showed that the error $\operatorname{Err}(\widehat{\Psi}_{\mathrm{id}})$ converges in probability to a fixed number-in particular,
+\begin{equation}
+\label{eq: err linear stat identity Kolmo}
+\operatorname{Err}\left(\widehat{\Psi}_{\mathrm{id}}\right) \stackrel{\text { prob. }}{\longrightarrow} \Phi\left(-\frac{\gamma^2}{2 \sqrt{\gamma^2+2 \alpha}}\right).     
+\end{equation}
+
+If $\frac{d}{n_i}\to 0$, the error is simply $\Phi(-\gamma /2)$, as is predicted by classical scaling \eqref{eq: error of linear stat}. If $\alpha >0$, the error will be larger. 
