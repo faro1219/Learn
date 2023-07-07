@@ -1,147 +1,131 @@
-\newpage
-\section{Lecture 7: Von-Neumann Stability Analysis} 
-\begin{itemize}
-    \item Plan of today: Von-Neumann stability analysis (theory)
-    \item Goal: General method to compute $\|B\|_{2,h}, \|B^n\|_{2,h}$ for a finite difference operator $B$ acting on $\ell _h^2$.
-\end{itemize}
-\vspace{1em}
-\hrule
+\chapter{QR Factorization}
+One algorithmic idea in numerical linear algebra is more important than all the others: QR factorization.
 
+\section{Reduced QR Factorization}
+For many applications, we find ourselves interested in the column spaces of a matrix $A$. Note the plural: these are the successive spaces spanned by the columns $a_1, a_2, \ldots$ of $A$ :
+\begin{align*}
+\left\langle a_1\right\rangle \subseteq\left\langle a_1, a_2\right\rangle \subseteq\left\langle a_1, a_2, a_3\right\rangle \subseteq \cdots
+\end{align*}
+Here, as in Lecture 5 and throughout the book, the notation $\langle\cdots\rangle$ indicates the subspace spanned by whatever vectors are included in the brackets. Thus $\left\langle a_1\right\rangle$ is the one-dimensional space spanned by $a_1,\left\langle a_1, a_2\right\rangle$ is the two-dimensional space spanned by $a_1$ and $a_2$, and so on. The idea of QR factorization is the construction of a sequence of orthonormal vectors $q_1, q_2, \ldots$ that span these successive spaces.
 
-%────────────────────────────────────────
-\begin{definition}
-[Z-transform]
-\label{def: Z-transform}
-Z-transform is a bijection $Z$ from $\ell^2(Z)$ to $\L^2(-\pi,\pi)$: 
+To be precise, assume for the moment that $A \in \mathbb{C}^{m \times n}(m \geq n)$ has full rank $n$. We want the sequence $q_1, q_2, \ldots$ to have the property
+\begin{align*}
+\left\langle q_1, q_2, \ldots, q_j\right\rangle=\left\langle a_1, a_2, \ldots, a_j\right\rangle, \quad j=1, \ldots, n .
+\end{align*}
+From the observations of Lecture 1, it is not hard to see that this amounts to the condition 
 \[
-    u \mapsto \hat u (\xi ) = \sum_{j=-\infty}^\infty u_j e^{-ij \xi }.  
+    \left[\begin{array}{l|l|l|l}
+        & &\\ 
+        a_1 & a_2 & \cdots & a_n \\
+        & &
+        \end{array}\right]=\left[\begin{array}{l|l|l|l} 
+        & & & \\
+        q_1 & q_2 & \cdots & q_n\\ 
+        & & & 
+        \end{array}\right]\left[\begin{array}{cccc}
+        r_{11} & r_{12} & \cdots & r_{1 n} \\
+        & r_{22} & & \vdots \\
+        & & \ddots & \vdots \\
+        & & & r_{n n}
+        \end{array}\right],
 \]
-The inverse map $Z^{-1}$ is given by: 
+where the diagonal entries $r_{kk}$ are nonzero. Written out, these equations take the form
+\begin{align*}
+\begin{aligned}
+& a_1=r_{11} q_1, \\
+& a_2=r_{12} q_1+r_{22} q_2, \\
+& a_3=r_{13} q_1+r_{23} q_2+r_{33} q_3, \\
+& \quad \vdots \\
+& a_n=r_{1 n} q_1+r_{2 n} q_2+\cdots+r_{n n} q_n .
+\end{aligned}
+\end{align*}
+As a matrix formula, we have
+\begin{align*}
+A=\hat{Q} \hat{R},
+\end{align*}
+where $\hat{Q}$ is $m \times n$ with orthonormal columns and $\hat{R}$ is $n \times n$ and uppertriangular. Such a factorization is called a \textbf{reduced $Q R$ factorization} of $A$.
+
+\section{Full QR Factorization}
+A full $Q R$ factorization of $A \in \mathbb{C}^{m \times n}(m \geq n)$ goes further, appending an additional $m-n$ orthonormal columns to $\hat{Q}$ so that it becomes an $m \times m$ unitary matrix $Q$. This is analogous to the passage from the reduced to the full SVD. In the process, rows of zeros are appended to $\hat{R}$ so that it becomes an $m \times n$ matrix $R$, still upper-triangular. The relationship between the full and reduced QR factorizations is as follows.
+
+%────────────────────────────────────────
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/7-1.png}
+\end{figure}
+%────────────────────────────────────────
+
+In the full QR factorization, $Q$ is $m \times m, R$ is $m \times n$, and the last $m-n$ columns of $Q$ are multiplied by zeros in $R$ (enclosed by dashes). In the reduced QR factorization, the silent columns and rows are removed. Now $\hat{Q}$ is $m \times n, \hat{R}$ is $n \times n$, and none of the rows of $\hat{R}$ are necessarily zero.
+
+%────────────────────────────────────────
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/7-2.png}
+\end{figure}
+%────────────────────────────────────────
+
+\section{Gram-Schmidt Orthogonalization}
+Given $a_1, a_2, \ldots$, we can construct the vectors $q_1, q_2, \ldots$ and entries $r_{i j}$ by a process of successive orthogonalization. This is an old idea, known as GramSchmidt orthogonalization. The process is that: 
 \[
-    f(\xi ) \mapsto f_j^{\vee} = \frac{1}{2\pi } \int_{-\pi }^{\pi} f(\xi ) e^{ij \xi}\; d\xi. 
+    \begin{aligned}
+        q_1 & =\frac{a_1}{r_{11}} \\
+        q_2 & =\frac{a_2-r_{12} q_1}{r_{22}} \\
+        q_3 & =\frac{a_3-r_{13} q_1-r_{23} q_2}{r_{33}} \\
+        & \vdots \\
+        q_n & =\frac{a_n-\sum_{i=1}^{n-1} r_{i n} q_i}{r_{n n}}. 
+        \end{aligned}
 \]
-\end{definition}
-%────────────────────────────────────────
-
-
-%────────────────────────────────────────
-\begin{proposition}
-[Parseval]
-\label{prop: Parseval}
-The Parseval equality for Z-transform is: $\sum_j |u_j|^2 = \frac{1}{2\pi } \int_{-\pi}^\pi |\hat u (\xi )|^2 \, d \xi.$ 
-\end{proposition}
-%────────────────────────────────────────
-This is equivalent to say $\|u\|_{\ell^2} = \frac{1}{\sqrt{2\pi } } \|\hat u\|_{L^2}$. Since $\|u\|_{\cB_h} = \sqrt{h \sum_{j}|u_j|^2} = \sqrt{h}\|u\|_{\ell ^2} = \sqrt{\frac{h}{2\pi }}  \|\hat u \|_{L^2}$, we get $\|u\|_{\cB_h} = \|\sqrt{\frac{h}{2\pi } }Zu\|_{L^2}$. Hence, $\sqrt{\frac{h}{2\pi }} Z$ is unitary from $\cB_h$ to $L^2(-\pi ,\pi )$.  
-
-Now consider the shift operator $S{u_j} = u_{j+1}$ on $\ell_h^2$. The matrix presentation is: 
+where 
 \[
-S = \begin{pNiceMatrix}[xdots/line-style=solid]
-    0  & 1 &   & 0      \\
-          & \Ddots &\Ddots   & \\
-     &  & & 1 \\
-    0      & &  & 0  \\
-   \end{pNiceMatrix}. 
+    r_{i j}=q_i^* a_j \quad(i \neq j), \quad \left|r_{j j}\right|=\left\|a_j-\sum_{i=1}^{j-1} r_{i j} q_i\right\|_2 .
 \]
-The inverse of $S$ shifts right by:$S^{-1}u_j = u_{j-1}$.  
 
-A general finite difference operator (or a banded Toeplitz matrix) has the form: 
-\[
-    \cB = \sum_{m=m_1}^{m_2} c_m S^m, \quad B_{ij} = c_{j-i}. 
-\]
+Note that the sign of $r_{j j}$ is not determined. Arbitrarily, we may choose $r_{j j}>0$, in which case we shall finish with a factorization $A=\hat{Q} \hat{R}$ in which $\hat{R}$ has positive entries along the diagonal. The algorithm is the Gram-Schmidt iteration. Mathematically, it offers a simple route to understanding and proving various properties of QR factorizations. Numerically, it turns out to be unstable because of rounding errors on a computer. To emphasize the instability, numerical analysts refer to this as the classical Gram-Schmidt iteration, as opposed to the modified Gram-Schmidt iteration, discussed in the next lecture.
+
+\begin{algorithm}[H]
+    \caption{Classical Gram Schmidt (unstable)}
+    \label{Algo 7.1}
+    \For{$j=1$ \KwTo $n$}{ 
+        $v_j = a_j$\; 
+        \For{$i=1$ \KwTo $j-1$}{ 
+            $r_{ij} = q_i^*a_j$\; 
+            $v_j = v_j - r_{ij}q_i$ \; 
+         } 
+        $r_{jj} = \|v_j\|_2$\; 
+        $q_j = v_j /r_{jj}$\; 
+     } 
+\end{algorithm}
+
+\section{Existence and Uniqueness} 
+All matrices have QR factorizations, and under suitable restrictions, they are unique. We state first the existence result.
 
 
 %────────────────────────────────────────
-\begin{example}
-\label{eg: postive derivative operator}
-\begin{itemize}
-    \item []
-    \item Positive gradient: $ D_x^+ u = \frac{S-I}{h}.   $ 
-    \item Heat equation scheme: $\cB = \nu S^{-1} + (1-2v) S^0 + \nu S^1$. 
-\end{itemize}
-\end{example}
-%────────────────────────────────────────
-
-
-%────────────────────────────────────────
-\begin{note}
-In numerical linear algebra, the index convention for Toeplitz operators is often reversed: $B_{ij} = c_{i-j}$. The reason is that it's better to see it's a convolution in numerical linear algebra. 
-\[
-    \cB u_j = \sum_{m} c_{-m} u_{j+m}   = \sum_{\ell } u_{j-\ell } c_{\ell }. 
-\]
-\end{note}
+\begin{theorem}
+\label{thm: Existence of QR}
+Every $A \in \mathbb{C}^{m \times n}(m \geq n)$ has a full $Q R$ factorization, hence also a reduced $Q R$ factorization.
+\end{theorem}
 %────────────────────────────────────────
 
 
 %────────────────────────────────────────
 \begin{theorem}
-[Z-transform diagonalize operator]
-\label{thm: Z-transform diagonalizeoperator}
-The Z-transform diagonalizes any finite difference operator $\cB = \sum_m c_m S^m$. 
+\label{thm: uniqueness of QR}
+Each $A \in \mathbb{C}^{m \times n}(m \geq n)$ of full rank has a unique reduced $Q R$ factorization $A=\hat{Q} \hat{R}$ with $r_{j j}>0$.
 \end{theorem}
-%────────────────────────────────────────
-%────────────────────────────────────────
-\begin{proof}
-We are going to define $\cG$ and show the following diagram:
-\[\begin{tikzcd}[ampersand replacement=\&]
-	{\ell_h^2} \&\& {\ell_h^2} \\
-	\\
-	{L^2(-\pi,\pi)} \&\& {L^2(-\pi,\pi)}
-	\arrow["Z"', from=1-1, to=3-1]
-	\arrow["Z", from=1-3, to=3-3]
-	\arrow["\cG"', from=3-1, to=3-3]
-	\arrow["\cB", from=1-1, to=1-3]
-\end{tikzcd}\]
-In fact, this is equal to say $ZB = \cG Z$. Note that $\cG f(\xi ) =G(\xi ) f(\xi)$. Hence, $\cG$ is diagonal.  
+%───────────────────────────────────────
+
+\section{Solution of $Ax=b$ by QR Factorization} 
+
+In closing this lecture we return for a moment to discrete, finite matrices. Suppose we wish to solve $A x=b$ for $x$, where $A \in \mathbb{C}^{m \times m}$ is nonsingular. If $A=Q R$ is a $Q R$ factorization, then we can write $Q R x=b$, or
 \begin{align*}
-    (z\cB)[u](\xi) = \hat {\cB u} (\xi ) &= \sum_j \cB u_j e^{-ij\xi}
-    = \sum_j(\sum_m c_m u_{j+m}) e^{-ij\xi}\\ 
-    &= \sum_m \sum_j c_m u_{j+m} e^{-ij\xi} 
-     = \sum_m \sum_{\ell} c_m u_\ell  e^{-j(\ell -m)\xi} \\ 
-    & = \underbrace{(\sum_m c_m e^{im\xi})}_{G(\xi)} \underbrace{(\sum_\ell  u_l e^{-il \xi})}_{\hat u (\xi)} 
-     = (\cG \hat u ) (\xi ) = (\cG Z)[u] (\xi ). 
+R x=Q^* b .
 \end{align*}
-\end{proof}
-%────────────────────────────────────────
-
-Here $\cG(\xi )$ is known as the amplification factor: 
-\[
-    \cB{u_j} = \sum_m c_m u_{j+m} \mapsto G(\xi) = \sum_m c_m e^{im\xi}. 
-\]
-We can think of $w_j = e^{ij \xi }$ as an infinite column vector indexed by $j$ with $\xi $ fixed. Hence, 
-\[
-    \cB w_j = \sum_{m} c_m w_{j+m} = \sum_{m} c_m e^{i(j+m)\xi } = \left( \sum_{m} c_m e^{im\xi}  \right) e^{ij \xi } = \left( \sum_{m} c_m e^{im\xi}  \right)w_j. 
-\]
-Therefore, $ \cB w = G(\xi ) w $ is like an eigenvalue decomposition.  This is true in $\ell ^\infty$ since $w\in \ell ^\infty$ but no in $\ell ^2$. $w$ is not square summable.  In fact, the operator $\cB$ (on $\ell_h^2$) doesn't have any eigenvalues since none of the candidate eigenvectors are in the space.  
-
-
-%────────────────────────────────────────
-\begin{definition}
-[Spectrum of operator]
-\label{def: Spectrum of operator}
-Given an operator $\cB$, the spectral is: 
-\[
-    \sigma (\cB) \coloneqq \{\lambda \in \CC: \lambda I - \cB \text{ is not invertible }\} 
-\]
-\end{definition}
-%────────────────────────────────────────
-
-
-%────────────────────────────────────────
-\begin{proposition}
-[Spectrum of $\cB$]
-\label{prop: Spectrum of cB}
-Given $\cB = \sum_{m} c_m S^m$, 
-\[
-    \sigma(\cB) = \cG([-\pi, \pi]). 
-\] 
-\end{proposition}
-%────────────────────────────────────────
-
-Nevertheless, since $Z$ is unitary, we have diagonalized $\cB$ and we will see next time that: 
-\[
-    \|cB\|_{\ell_h^2} = \|\cG\|_{L^2(-\pi, \pi)} = \|G\|_{L^\infty (-\pi,\pi)}. 
-\]
-and 
-\[
-    \|\cB\|_{ \ell_h^2 }  = \| \cG^n\|_{ L^2 } =  \| G^n\|_{ L^\infty }.  
-\]
+The right-hand side of this equation is easy to compute, if $Q$ is known, and the system of linear equations implicit in the left-hand side is also easy to solve because it is triangular. This suggests the following method for computing the solution to $A x=b$ :
+\begin{itemize}
+    \item [1.] Compute a QR factorization $A=Q R$.
+    \item [2.] Compute $y=Q^* b$.
+    \item [3.] Solve $R x=y$ for $x$.
+\end{itemize}
+In later lectures we shall present algorithms for each of these steps.
+The combination 1-3 is an excellent method for solving linear systems of equations; in Lecture 16, we shall prove this. However, it is not the standard method for such problems. Gaussian elimination is the algorithm generally used in practice, since it requires only half as many numerical operations.

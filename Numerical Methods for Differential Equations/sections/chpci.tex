@@ -1,0 +1,120 @@
+\chapter{Classical Methods}
+In this Chapter, we introduce three classical iterative methods for the linear system $ Ax=b $.  
+
+\section{Jacobi Method} 
+Given 
+\[
+    A = \begin{bmatrix}[] 
+        a_{11} & a_{12} & \cdots &  a_{1n} \\
+        a_{21} & a_{22} & \cdots &  a_{2n} \\
+        \vdots & \vdots & \ddots &  \vdots \\
+        a_{n1} & a_{n2} & \cdots &  a_{nn} \\
+    \end{bmatrix}\in \RR^{n\times n}, 
+\]
+we define, 
+\[
+    D = \diag(A),\quad L = \begin{bmatrix}[] 
+        0 & 0 & \cdots &  0 \\
+        a_{21} & 0 & \cdots & 0   \\
+        \vdots & \vdots  &\ddots  &\vdots    \\
+         a_{n1} &a_{n2}  &\cdots  & 0   \\
+    \end{bmatrix} , \quad U = \begin{bmatrix}[] 
+        0 & a_{12} & \cdots &  a_{1n} \\
+        0 & 0 & \cdots &  a_{2n} \\
+        \vdots & \vdots & \ddots &  \vdots \\
+        0 & 0 & \cdots &  0 \\
+    \end{bmatrix}. 
+\]
+Then, the iteration is 
+\[
+    x^{(k+1)} = D^{-1} (b-(L+U)x^{(k)}).    
+\]
+And the element-based formula for each row is: 
+\[
+    x_{i}^{(k)} = \frac{1}{a_{ii}} (b_i - \sum_{j\neq i}a_{ij} x_j^{(k)}). 
+\]
+As for the convergence, we know that 
+\[
+    (D+L+U) x_* = b \Rightarrow x_* = D^{-1} (b- (L+U) x_*). 
+\]
+Combine this with the iteration, we have 
+\[
+    (x^{(k+1)}-x_*) = D^{-1} (L+U)(x^{(k)}-x_*). 
+\]
+Hence, we can get some convergence condition. 
+
+
+%────────────────────────────────────────
+\begin{corollary}
+[Convergence of Jacobi Method]
+\label{cor: Convergence of Jacobi Method}
+Jacobi method will converge if: 
+\begin{itemize}
+    \item $ \|D^{-1} (L+U)\|_2 \le 1 $ or, 
+    \item $ |a_{ii}| > \sum_{j\neq i}|a_{ij}| $. 
+\end{itemize}
+\end{corollary}
+%────────────────────────────────────────
+
+\section{Gauss-Seidel Method}
+With the same settings as the Jacobi method, the iteration is 
+\[
+    x^{(k+1)} = (L+D)^{-1} (b- U x^{(k)}). 
+\] 
+Similarly, we have 
+\[
+    (x^{(k+1)} - x_*) = (L+D)^{-1} U(x_* - x^{(k)}).  
+\]
+
+%────────────────────────────────────────
+\begin{corollary}
+\label{cor: Convergence of Gauss Seidel Method}
+Gauss-Seidel method will converge if either: 
+\begin{itemize}
+    \item $A$ is symmetric and strictly positive definite or, 
+    \item $ |a_{ii}| > \sum_{j\neq i} |a_{ij}|  $.
+\end{itemize}
+
+\end{corollary}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+For the first part, we only need to care $ G_{GS}= -(L+D)^{-1}  U $.  This is similar to 
+\[
+    G = D^{\frac{1}{2}} G_{GS}D^{-\frac{1}{2}} = - (I + \hat L) ^{-1}  \hat L^\top , 
+\]
+where $\hat L = D^{-\frac{1}{2}}L  D^{-\frac{1}{2}} $. If 
+\[
+    -(I+\hat L)^{-1}  \hat L^\top  v = \lambda v, 
+\]
+then $ -v^\top  \hat L^\top v = \lambda (1 + v^\top   \hat L v) $. If $ v^\top Lv = a+bi $, then 
+\[
+    |\lambda | ^{2}  = \left| \frac{-a+bi}{1+a+bi} \right| ^{2}  = \frac{a^{2} +b^{2} }{1+2a+a^{2} +b^{2} }. 
+\]
+Beside, $ D^{-\frac{1}{2}}A D^{-\frac{1}{2}} = I + \hat L +\hat L^\top  $ is positive define.  Hence, $ 1+2a >0 $ and hence $ |\lambda |<1 $. 
+
+For the second part, we just use the induction method. 
+\end{proof}
+%────────────────────────────────────────
+\section{SOR Method} 
+ SOR is the abbreviation for  successive over-relaxation. The update is 
+ \[
+    (D+ wL) x = wb - [wU + (w-1)D]x. 
+ \]
+ The error part is 
+ \[
+    (D+wL) (x^{(k+1)} - x_*) = - [wU + (w-1)D] (x^{(k)} - x_*). 
+ \]
+Ostrowski proved the following theorem in 1947. 
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ [Convergence of SOR]
+ \label{thm: Convergence of SOR}
+ If $ A $ is symmetric and positive-definite, 
+ \[
+    \rho(L_w) <1 , \quad \forall 0<w<2. 
+ \]
+ \end{theorem}
+ %────────────────────────────────────────
+ 

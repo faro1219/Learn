@@ -1,0 +1,328 @@
+\part{Systems of Equations}
+\chapter{Gaussian Elimination}
+
+Gaussian elimination is undoubtedly familiar to the reader. It's the simplest way to solve linear systems of equations by hand, and  also the standard method for solving them on computers. We first describe Gaussian elimination in its pure form, and then, in the next lecture, add the feature of row pivoting that is essential to stability. 
+
+\section{LU Factorization}
+Gaussian elimination transform a full linear system into an upper-triangular one by applying linear transformation on the left, which is quite close to householder triangularization. However, the difference is that the operations of Gaussian elimination are not unitary. 
+
+Let $A\in \CC^{m\times m}$ be a square matrix. THe ideal is to transform $A$ into an $m\times m$ upper traingular matrix $ U$ by introducing zeros below the diagonal. This is done by subtracting multiples of each row from subsequent rows, which is equivalent to left multiplying $A$ by a sequence of lower-triangular matrices $L_k$: 
+\begin{equation}
+    \label{eq: Gauss Elim}
+    \underbrace{L_{m-1} \cdots L_2 L_1}_{L^{-1}} A=U.
+\end{equation}
+Setting $L= L_1^{-1} L_2 ^{-1}  \cdots L_{m-1}^{-1} $ gives $A= LU$. Then, we obtain an \textbf{LU factorization} of $A$, 
+\begin{equation}
+\label{eq: LU}
+    A=LU,
+\end{equation}
+where $U$ is upper-triangular and $ L $ is lower-triangular. It turns out $L$ is \textbf{unit lower-triangular}, which means the diagonal entries are all $1$. 
+
+
+%────────────────────────────────────────
+\begin{note}
+Gaussian elimination augments our taxonomy of algorithms for factoring a matrix: 
+\begin{itemize}
+    \item GS: $A=QR$ by triangular orthogonalization,
+    \item Householder: $A=QR$ by orthogonal triangularization, 
+    \item Gaussian elimination: $A=LU$ by triangular triangularization.  
+\end{itemize}
+\end{note}
+%────────────────────────────────────────
+
+\section{Example}
+Consider: 
+\[
+    A = \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+        4 & 3 & 3 &  1 \\
+        8 & 7 & 9 &  5 \\
+        6 & 7 & 9 &  8 \\
+    \end{bmatrix}.  
+\]
+We have 
+\[
+    L_1 A = \begin{bmatrix}
+        1 &  &  &   \\
+        -2 & 1 &  &   \\
+        -4 &  & 1 &   \\
+        -3 &  &  &  1 \\
+    \end{bmatrix} 
+    \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+        4 & 3 & 3 &  1 \\
+        8 & 7 & 9 &  5 \\
+        6 & 7 & 9 &  8 \\
+    \end{bmatrix}
+     = \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+         & 1 & 1 &  1 \\
+         & 3 & 5 &  5 \\
+         & 4 & 6 &  8 \\
+     \end{bmatrix} . 
+\]
+Then 
+\[
+    L_2 L_1 A = \begin{bmatrix}
+        1 &  &  &   \\
+         & 1 &  &   \\
+         & -3 & 1 &   \\
+         & -4 &  &  1 \\
+    \end{bmatrix}  
+    \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+         & 1 & 1 &  1 \\
+         & 3 & 5 &  5 \\
+         & 4 & 6 &  8 \\
+     \end{bmatrix} = \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+         & 1 & 1 &  1 \\
+         &  & 2 &  2 \\
+         &  & 2 &4   \\
+     \end{bmatrix}.  
+\]
+Finally, 
+\[
+    L_3 L_2 L_1 A = \begin{bmatrix}
+        1 &  &  &   \\
+         & 1 &  &   \\
+         &  & 1 &   \\
+         &  & -1 &  1 \\
+    \end{bmatrix}  \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+         & 1 & 1 &  1 \\
+         &  & 2 &  2 \\
+         &  & 2 &4   \\
+     \end{bmatrix} = \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+         & 1 & 1 &  1 \\
+         &  & 2 &  2 \\
+         &  &  &  2 \\
+     \end{bmatrix} = U.  
+\]
+Note that we can compute inverses of $L_1, L_2, L_3$ easily. 
+\[
+    L_1^{-1}  = \begin{bmatrix}
+        1 &  &  &   \\
+        -2 & 1 &  &   \\
+        -4 &  & 1 &   \\
+        -3 &  &  &  1 \\
+    \end{bmatrix}^{-1}  = \begin{bmatrix}
+        1 &  &  &   \\
+        2 & 1 &  &   \\
+        4 &  & 1 &   \\
+        3 &  &  &  1 \\
+    \end{bmatrix}.   
+\]
+Hence, we can get the LU factorization: 
+\[
+    A= \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+        4 & 3 & 3 &  1 \\
+        8 & 7 & 9 &  5 \\
+        6 & 7 & 9 &  8 \\
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+        1 &  &  &   \\
+        2 & 1 &  &   \\
+        4 & 3 & 1 &   \\
+        3 & 4 & 1 &  1 \\
+    \end{bmatrix}
+    \begin{bmatrix}
+        2 & 1 & 1 &  0 \\
+         & 1 & 1 &  1 \\
+         &  & 2 &  2 \\
+         &  &  &  2 \\
+    \end{bmatrix}  . 
+\]
+
+\section{General Formulas and Two Strokes of Luck}
+Assume $A\in \CC^{m\times m}$ and $x_k$ is the $k$th column of $A$ at the beginning of step $k$. Then $L_k$ must be chosen so that: 
+\[
+    x_k = \begin{bmatrix}
+         x_{1k} \\
+         \vdots \\
+         x_{kk} \\
+         x_{k+1, k} \\
+         \vdots \\
+         x_{mk}
+    \end{bmatrix}
+    \stackrel{L_k }{\longrightarrow} L_k x_k = \begin{bmatrix}
+         x_{1k} \\
+         \vdots \\
+         x_{kk} \\
+         0 \\
+         \vdots \\
+         0 \\
+    \end{bmatrix}.   
+\]
+To do this we subtract $l_{jk}$ times row $k$ from row $j$, where $l_{jk}$ is the \textbf{multiplier}
+\[
+    l_{jk} = \frac{x_{jk}}{x_{kk}} \quad (k<j\le m). 
+\]
+The matrix $L_k$ takes the form 
+\[
+    L_k = \begin{bmatrix}
+        1 &  &  &  &  &   \\
+         & \vdots &  &  &  &   \\
+         &  & 1 &  &  &   \\
+         &  & -l_{k+1,k} & 1 &  &   \\
+         &  & \vdots &  & \ddots &   \\
+         &  & -l_{m,k} &  &  &  1 \\
+    \end{bmatrix},  
+\]
+with the nonzero subdiagonal entries situated in column $k$. In the numerical example above, w get two strokes of luck: 
+\begin{itemize}
+    \item $L_k$ can be inverted by negating its subdiagonal entries; 
+    \item $L$ can be formed be collecting the entries $l_{jk}$. 
+\end{itemize}
+
+We can explain these bits of good fortune as follows. Let's define 
+\[
+    l_k = \begin{bmatrix}
+         0 \\
+         \vdots \\
+         0 \\
+         l_{k+1,k} \\
+         \vdots \\
+         l_{m,k} \\
+    \end{bmatrix}.  
+\]
+Then $L_k$ can be written $L_k = I - l_k e_k^*$. Note that $\langle e_k, l_k \rangle  = e_k^* l_k=0$. Hence, 
+\[
+    (I-l_ke_k^*)(I+l_ke_k^*) = I - l_k e_k^* l_k e_k^* = I. 
+\] 
+For the second stroke of luck, we just consider $L_k^{-1} L_{k+1}^{-1} $. Note that $e_k^*l_{k+1} = 0$, and therefore, 
+\[
+    L_k^{-1} L_{k+1}^{-1}  = (I+ l_k e_k^*)(I+l_{k+1}e_{k+1}^*) = I + l_k e_k^* + l_{k+1}e_{k+1}^*. 
+\]
+From this, we can observe that: 
+\[
+    L = L_1^{-1}  L_2^{-1}  \cdots L_{m-1}^{-1}  = \begin{bmatrix}
+        1 &  &  &  &   \\
+        l_{21} & 1 &  &  &   \\
+        l_{31} & l_{32} & 1 &  &   \\
+        \vdots & \vdots & \ddots & \ddots &   \\
+        l_{m1} & l_{m2} & \cdots & l_{m,m-1} &  1 \\
+    \end{bmatrix}.  
+\]
+Note that the modified GS process also have a similar result. In practice, we won't form $L_k$ but store $l_{jk}$ and form $L$.  
+
+\begin{algorithm}[H]
+    \caption{Gaussian Elimination without Pivoting}
+    \label{Algo 20.1}
+    $U=A, L=I$\; 
+    \For{$k=1$ \KwTo $m-1$}{
+        \For{$j=k+1$ \KwTo $m$}{
+            $ l_{jk} = u_{jk}/u_{kk} $\; 
+            $ u_{j,k:m} = u_{j,k:m} - l_{jk}u_{k,k,:m} $  
+        }
+    }
+\end{algorithm}
+
+
+%────────────────────────────────────────
+\begin{note}
+Three matrices $A, L, U$ are not really needed; to minimize memory use on the computer, both $L$ and $U$ can be written into the same array as $A$. 
+\end{note}
+%────────────────────────────────────────
+
+\section{Operation Count}
+As usual, the asymptotic operation count of this algorithm can be derived geometrically. The work is dominated by the vector operation in the inner loop, $u_{j, k: m}=u_{j, k: m}-\ell_{j k} u_{k, k: m}$, which executes one scalar-vector multiplication and one vector subtraction. If $l=m-k+1$ denotes the length of the row vectors being manipulated, the number of flops is $2 l$ : two flops per entry.
+
+For each value of $k$, the inner loop is repeated for row $k+1,\ldots ,m$. The work involved corresponds to one layer of the following solid: 
+
+%────────────────────────────────────────
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/20-1.png}
+\end{figure}
+%────────────────────────────────────────
+Note that the solid converges as $m\to \infty$ to a pyramid, with volume $\frac{1}{3}m^3$. At two flops per unit of volume, we have 
+
+%────────────────────────────────────────
+\begin{corollary}
+\label{cor: Work for GE}
+Work fo Gaussian elimination: $ \sim \frac{2}{3}m^3 $ flops. 
+\end{corollary}
+%────────────────────────────────────────
+
+\section{Solution of $Ax=b$ by LU}
+We can solve $Ax=b$ with three steps: 
+\begin{itemize}
+    \item Decompose $A= LU$, 
+    \item Solve $Ly=b$,
+    \item Solve $Ux=y$. 
+\end{itemize}
+The total works is $\frac{2}{3}m^3 + 2m^2\sim \frac{2}{3}m^3$. Which is half of the flops of Householder triangularization (\autoref{Algo 16.1}).  
+
+
+%────────────────────────────────────────
+\begin{note}
+   \textbf{ Why is Gaussian elimination usually used rather than QR factorization to solve square systems of equations?} 
+   
+   The factor of 2 is certainly one reason. Also important, however, may be the historical fact that the elimination idea has been known for centuries, whereas QR factorization of matrices did not come along until after the invention of computers. To supplant Gaussian elimination as the method of choice, QR factorization would have to have had a compelling advantage.
+\end{note}
+%────────────────────────────────────────
+
+\section{Instability of Gaussian Elimination without Pivoting}
+Unfortunately, Gaussian elimination as presented so far is unusable for solving general linear systems, for it is not backward stable. The instability is related to another, more obvious difficulty. For certain matrices, Gaussian elimination fails entirely, because it attempts division by zero.
+
+For example, consider
+\[
+    A = \begin{bmatrix}
+        0 &  1 \\
+        1 &  1 \\
+    \end{bmatrix}.  
+\]
+This matrix has full rank and is well-conditioned, with $\kappa(A)=(3+\sqrt{5}) / 2 \approx$ 2.618 in the 2-norm. Nevertheless, Gaussian elimination fails at the first step.
+
+A slight perturbation of the same matrix reveals the more general problem. Suppose we apply Gaussian elimination to
+\begin{equation}
+\label{eq: bad eg for GE}
+    A = \begin{bmatrix}
+        10^{-20} &1   \\
+         1 &1   \\
+    \end{bmatrix} . 
+\end{equation}
+If we apply the Gaussian elimination, we will get 
+\[
+    L= \begin{bmatrix}
+        1 &  0 \\
+        10^{20} &  1 \\
+    \end{bmatrix}, \quad U = \begin{bmatrix}
+        10^{-20} &  1 \\
+        0 &  1-10^{20} \\
+    \end{bmatrix}.   
+\]
+Since $\mep\approx 10^{-16}$, the number $1-10^{20}$ cannot be represented exactly. Assume it's rounded by $-10^{20}$. Then, 
+\[
+    \tilde L = \begin{bmatrix}
+        1 &  0 \\
+        10^{20} &  1 \\
+    \end{bmatrix}, \quad \tilde U = \begin{bmatrix}
+        10^{-20} &  1 \\
+        0 &  -10^{20} \\
+    \end{bmatrix}.  
+\]
+Then, we have 
+\[
+    \tilde L \tilde U = \begin{bmatrix}
+        10^{-20} &1   \\
+         1& 0   \\
+    \end{bmatrix}.   
+\]
+
+If we solve $\tilde L \tilde U x = b$, the answer will be completely different.  
+
+A careful consideration of what has occurred in this example reveals the following. Gaussian elimination has computed the LU factorization stably: $\tilde{L}$ and $\tilde{U}$ are close to the exact factors for a matrix close to $A$ (in fact, $A$ itself). Yet it has not solved $A x=b$ stably. The explanation is that the LU factorization, though stable, was \textbf{not backward stable}. 
+
+
+%────────────────────────────────────────
+\begin{note}
+    As a rule, if one step of an algorithm is a stable but not backward stable algorithm for solving a subproblem, the stability of the overall calculation may be in jeopardy.
+\end{note}
+%────────────────────────────────────────
+
+In fact, for general $m \times m$ matrices $A$, the situation is worse than this. Gaussian elimination without pivoting is neither backward stable nor stable as a general algorithm for LU factorization. Additionally, the triangular matrices it generates have condition numbers that may be arbitrarily greater than those of $A$ itself, leading to additional sources of instability in the forward and back substitution phases of the solution of $A x=b$.

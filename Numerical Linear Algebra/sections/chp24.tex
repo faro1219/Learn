@@ -1,0 +1,258 @@
+\part{Eigenvalues} 
+\chapter{Eigenvalue Problems}
+
+Eigenvalue problems are particularly interesting in scientific computing, because the best algorithms for finding eigenvalues are powerful, yet particularly far from obvious. Here, we review the mathematics of eigenvalues and eigenvectors. 
+
+
+\section{Eigenvalues and Eigenvectors}
+
+%────────────────────────────────────────
+\begin{definition}
+[Eigenvalues and eigenvectors]
+\label{def: Eigenvalues and eigenvectors}
+Let $ A \in \CC^{ m \times m  }  $ be a square matrix. A nonzero vector $x\in \CC^m$ is an eigenvector of $A$ and $ \lambda \in \CC $ is its corresponding eigenvalue, if 
+\[
+Ax = \lambda x.          
+\] 
+The set of all eigenvalues of a matrix $ A $ is the spectrum of $A$ denoted by $ \Lambda (A) $.    
+\end{definition}
+%────────────────────────────────────────
+Broadly speaking, eigenvalues and eigenvectors are useful for two reasons. 
+\begin{itemize}
+    \item Algorithmically, eigenvalue analysis can simplify solutions of certain problems by reducing a coupled system to a collection of scalar problems. 
+    \item Physically, eigenvalue analysis can give insight into the behavior of evolving systems governed by linear equations. 
+\end{itemize}
+
+The most familiar examples in this latter class are the study of resonance and of stability. 
+
+\section{Eigenvalue Decomposition} 
+
+%────────────────────────────────────────
+\begin{definition}
+[Eigenvalue Decomposition]
+\label{def: Eigenvalue Decomposition}
+An eigenvalue decomposition of a square matrix $A$ is factorization 
+\[
+A = X\Lambda X ^{-1} .   
+\]      
+Here $X$ is nonsingular and $\Lambda $ is diagonal. 
+\end{definition}
+%────────────────────────────────────────
+This formula is equivalent to $AX= X\Lambda $. This makes it clear that if $X_j$ is the jth column of $ X $ and $ \lambda _j $ is the jth diagonal entry of $ \Lambda $, then $Ax_j = \lambda _jx_j$.    
+
+\section{Geometric Multiplicity} 
+As stated above, the set of eigenvector corresponding to a single eigenvalue, together with the zero vector, forms a subspace of $ \CC^m $ known as an eigenspace. If $ \lambda $ is an eigenvalue of $A$, let us denote the corresponding eigenspace by $ E_\lambda $. An eigenspace $ E_\lambda $ is an example of in invariant subspace of $A$; that is, $ AE_\lambda \subset E_\lambda $.     
+
+The dimension of $ E_\lambda  $ can be interpreted as the maximum number of linearly independent eigenvector that can be found, all with the same eigenvalue $ \lambda  $.  This number is known as the \textbf{geometric multiplicity} of $ \lambda  $. The geometric multiplicity can also be described as the dimension of the nullspace $ A-\lambda I$, since that nullspace is again $ E_\lambda  $.  
+
+\section{Characteristic Polynomial}
+
+%────────────────────────────────────────
+\begin{definition}
+[Characteristic Polynomial]
+\label{def: Chracteristic Polynomial}
+The characteristic polynomial of $A\in \CC^{m\times m}$, denoted by $p_A$ is the degree $m$ polynomial defined by
+\[
+p_A(z) = \det (zI - A).  
+\] 
+\end{definition}
+%────────────────────────────────────────
+
+Note that $p$ is monic, due to the placement of the minus sign. 
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: eigenvalue and characteristic polynomial}
+$\lambda$ is an eigenvalue of $A$ if and only if $p_A(\lambda ) = 0$.  
+\end{theorem}
+%────────────────────────────────────────
+Thm~\ref{thm: eigenvalue and characteristic polynomial} has an important consequence. Even if a matrix is real, some of its eigenvalues may be complex.  Physically, this is related to the phenomenon that real dynamical systems can have motions that oscillate as well as grow or decay. 
+
+\section{Algebraic Multiplicity} 
+By the fundamental theorem of algebra, we can write $p_A$ in the form 
+\begin{equation}
+\label{eq: decomp of cha polynomial}
+    p_A(z) = (z-\lambda _1) (z-\lambda _2) \cdots (z-\lambda _m)
+\end{equation}
+for some numbers $\lambda _j\in \CC$. By \autoref{thm: eigenvalue and characteristic polynomial}, each $\lambda _j$ is an eigenvalue of $A$, and all eigenvalues of $A$ appear somewhere in this list. In general, an eigenvalue might appear more that once. We define the \textbf{algebraic multiplicity} of an eigenvalue $ \lambda  $ of $ A $ to be its multiplicity as a root $p_A$. An eigenvalue is \textbf{simple} if its algebraic multiplicity is $1$. 
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: eigenvalues algebra multiplicity}
+If $ A\in \CC^{ m\times m }  $, then $A$ has $ m $ eigenvalues, counted with algebraic multiplicity. In particular, if the roots of $p_A$ are simple, then $A$ has $ m $ distinct eigenvalues.      
+\end{theorem}
+%────────────────────────────────────────
+
+\section{Similarity Transformation} 
+
+%────────────────────────────────────────
+\begin{definition}
+[Similarity transformation]
+\label{def: Similarity transformation}
+If $X\in \CC^{m\times m}$ is nonsingular, then the map $A\mapsto X^{-1} A X$ is called a similarity transformation of $A$. We say two matrices $ A $ and $ B $ are similar if there is a similarity transformation relating one the other.  
+\end{definition}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: Similarity and cha poly}
+If $A$ and $B$ are similar, they have the same characteristic polynomial, eigenvalues and algebraic and geometric multiplicities. 
+\end{theorem}
+%────────────────────────────────────────
+
+We can now relate geometric multiplicity to algebraic multiplicity. 
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: geo and alge multiplicity}
+The algebraic multiplicity of an eigenvalue $ \lambda  $ is at least as great as its geoemtric multiplicity.
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+Form a unitary matrix $V$ with the first several columns as the orthonormal basis for the specific eigenvalues.
+\end{proof}
+%────────────────────────────────────────
+
+\section{Defective Eigenvalues and Matrices}
+
+%────────────────────────────────────────
+\begin{example}
+\label{eg: Defective eigenvalues and matrices}
+Consider the matrices
+\[
+A = \begin{pmatrix}[] 
+    2 &  &   \\
+     & 2 &   \\
+     &  &  2 \\
+\end{pmatrix}, \quad 
+B = \begin{pmatrix}[] 
+    2 & 1 &   \\
+     & 2 &  1 \\
+     &  &  2 \\
+\end{pmatrix}.    
+\] 
+Both $A$ and $B$ have characteristic polynomial $(z-2)^3$, so there is a single eigenvalue $ \lambda =2 $ of algebraic multiplicity $3$. In the case of $A$, we can find 3 eigenvectors for $2$, while there is only one for $B$. So the geometric multiplicity of $2$ for $A$ is $ 3 $, while for $B$ is $1$.      
+
+\end{example}
+%────────────────────────────────────────
+
+ An eigenvalue whose algebraic multiplicity exceeds its geometric multiplicity is a \textbf{defective eigenvalue}. A matrix that one or more defective eigenvalues is a \textbf{defective matrix}. Any diagonal matrix is non defective.  
+
+ \section{Diagonalizability}
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: defective eig}
+An $m\times m$ matrix $A$ is nondefective if and only if it has an eigenvalue decomposition $ A = X\Lambda X^{-1}  $. 
+\end{theorem}
+%────────────────────────────────────────
+
+In view of this result, another term for nondefective is \textbf{diagonalizable}. 
+
+\section{Determinant and Trace}
+
+%────────────────────────────────────────
+\begin{definition}
+[trace]
+\label{def: trace}
+The trace of $A\in \CC^{m\times m}$ is the sum of its diagonal elements:
+\[
+    \tr(A) = \sum_{j=1}^{m} a_{jj}. 
+\]
+\end{definition}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: det trace eig}
+Given the square matrix $A\in\CC^{m\times m}$, we have 
+\begin{equation}
+\label{eq: det trace eig}
+\det (A) = \prod_{j=1}^m \lambda _j, \quad \tr(A) = \sum_{j=1}^{m} \lambda _j. 
+\end{equation}
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+As for the trace equation, use the characteristic polynomial to prove it. 
+\end{proof}
+%────────────────────────────────────────   
+
+\section{Unitary Diagonalization} 
+
+%────────────────────────────────────────
+\begin{definition}
+[Unitarily diagonalizable]
+\label{def: Unitarily diagonalizable}
+Given $A\in\CC^{m\times m}$, $A$ is unitarily diagonalizable if $\exists Q$ s.t. 
+\[
+A = Q\Lambda Q^*.  
+\] 
+
+\end{definition}
+%────────────────────────────────────────
+Note that this factorization is both an eigenvalue decomposition and a singular value decomposition, aside from the matter of the signs (possibly complex) of entries of $\Lambda $. 
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: Hermit eig}
+A hermitian matrix is unitarily diagonalizable, and its eigenvalues are real. 
+\end{theorem}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: norm eig}
+A matrix is unitarily diagonalizable if and only if it's normal i.e., $A^*A = AA^*$. 
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+Use Schur decomposition to show $A= QT Q^*$. $T$ should be also normal and a normal upper triangular matrix is diagonal.  
+\end{proof}
+%────────────────────────────────────────
+
+
+\section{Schur Factorization} 
+
+%────────────────────────────────────────
+\begin{definition}
+[Schur factorization]
+\label{def: Schur factorization}
+A Schur factorization of a matrix $A$ is 
+\[
+A = QT Q^*,  
+\] 
+where $Q$ is unitary and $T$ is upper-triangular. 
+\end{definition}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: Schur factor}
+Every square matrix $A$ has a Schur factorization. 
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+Use induction on the first column of $A$ and extend it to a full unitary matrix.  
+\end{proof}
+%────────────────────────────────────────
+
+\section{Eigenvalue-Revealing factorizations} 
+In the preceding pages we have described three examples of eigenvalue-revealing factorizations, factorizations of a matrix that reduce it to a form in which the eigenvalues are explicitly displayed. we can summarize these as follows. 
+\begin{itemize}
+    \item A diagonalization $A = X\Lambda X^{-1} $ exists if and only if $A$ is nondefective. 
+    \item A unitary diagonalization $A = Q\Lambda Q^*$ exists if and only if $A$ is normal. 
+    \item A unitary triangularization $A = QTQ^*$ always exists.    
+\end{itemize}
+
+To compute eigenvalues, we shall construct one of these factorizations. In general, this will be Schur factorization, since this applies without restriction to all matrices. Moreover, since unitary transformations are involved, the algorithms that result tend to be numerically stable. If $A$ is normal, then the Schur form comes out diagonal, and in particular, if $A$ is hermitian, then we can take advantage of this symmetry throughout the computation and reduce $A$ to diagonal form with half as much work or less than is required for general $A$. 

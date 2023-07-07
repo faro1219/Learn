@@ -1,0 +1,182 @@
+\chapter{From Lanczos to Gauss Quadrature}
+
+If discrete vectors become continuous functions on $[-1,1]$, and the matrix $A$ is taken to be the operator of pointwise multiplication by $x$, then the Lanczos iteration becomes the standard procedure for constructing orthogonal polynomials via a three-term recurrence relation. From here it is a short step to Gauss quadrature formulas, whose nodes and weights can be computed by solving a symmetric tridiagonal matrix eigenvalue problem.
+
+\section{Orthogonal Polynomials} 
+Here we consider $ L^2[-1,1] $ instead of $ \RR^{m} $.  $ L^2[-1,1] $ is a Hilbert space with inner product 
+\begin{equation}
+\label{eq: inner product l2[-1,1]}
+        (u,v) = \int_{-1}^{1} u(x) v(x) \, dx,
+\end{equation}
+
+$ \forall u,v\in L^{2} [-1,1] $.  Now we define $ A $ as the linear operator by 
+\[
+    (Au)(x) =xu(x)
+\]
+$ \forall u\in L^{2} [-1,1] $. This operator is analogous to a diagonal matrix. In particular, $ A $ is symmetric, and because of the symmetry, the Arnoldi process specializes to the Lanczos process. Furthermore, we assume the initial function $ b(x) $ is a nonzero constant. The corresponding normalized initial function $ q_1(x) $ will be $ q_1(x) = \frac{1}{\sqrt{2} } $. 
+
+\begin{algorithm}[H]
+    \caption{Construction of Orthogonal Polynomials}
+    \label{Algo 37.1}
+    $ \beta _0=0, q_0(x) = 0, q_1(x) = \frac{1}{\sqrt{2} } $\; 
+    \For{$ n=1,2,3,\ldots  $}{
+        $ v(x) = xq_n(x) $\; 
+        $ \alpha _n = (q_n,v) $\; 
+        $ v(x) = v(x) - \beta _{n-1}q_{n-1}(x) - \alpha _n q_n(x) $\; 
+        $ \beta _n = \|v\| $\; 
+        $ q_{n+1}(x) = v(x) /\beta_n $\; 
+    }
+\end{algorithm}
+
+Note that the polynomials $ q_1,q_2,q_3,\ldots  $ are of degrees $ 0,1,2,\ldots  $ and thus the polynomial of degree $ n $ in this sequence is $ q_{n+1} $. 
+
+Algo~\ref{Algo 37.1} will construct the sequence of Legendre polynomials. We labeled Algo~\ref{37.1} ``Construction of orthogonal polynomials'' rather than "Construction of Legendre polynomials" because it is, in fact, more general. If \eqref{eq: inner product l2[-1,1]} is modified by the inclusion of a nonconstant positive weight function $w(x)$ in the integrand, then one obtains other families of orthogonal polynomials such as Chebyshev polynomials and Jacobi polynomials. All of the developments of this lecture apply to these more general families, but we shall not give details.
+
+\section{Jacobi Matrices} 
+Right now we have $ K_n = (1,x,\ldots ,x^{n-1}) $ and $ Q_n = (q_1(x), q_2(x),\ldots ,q_n(x)) $. The tridiagonal matrices $ T_n $ described in the preivous chapter are parituclar important. There are still $ n\times n $ discrete matrices, related to $ Q_n $ and $ A $ by \eqref{eq: Lanczos iterate} and \eqref{eq: Lanczos projection}.  Their entries are given by the analogue of \eqref{eq: element of H }, 
+\[
+    t_{ij} = (q_i(x), x q_j(x)). 
+\]
+In the context of orthogonal polynomials, the matrices $ \{T_n\}  $ are known as  \textbf{Jacobi matrices.} Now the three-term recurrence \eqref{eq: Lanczos three item} takes the form 
+\[
+    xq_n(x) = \beta_{n-1}q_{n-1}(x) + \alpha _n q_n(x) + \beta _n q_{n+1}(x). 
+\]
+
+The statement of \autoref{Algo 37.1} is perhaps misleading as written. It would appear that nontrivial computations are involved at each step of this algorithm: the evaluation of the inner product $\left(q_n, v\right)$ and norm $\|v\|$ that define $\alpha_n$ and $\beta_n$. If \eqref{eq: inner product l2[-1,1]} contained an arbitrary weight function $w(x)$, these computations would indeed be nontrivial. However, for the particular choice $w(x)=1$ associated with Legendre polynomials, and also for various choices associated with other classical families of polynomials, the entries $\left\{\alpha_n\right\}$ and $\left\{\beta_n\right\}$ are known analytically. We have
+\begin{equation}
+\label{eq: anbn for Legendre polynomials}
+    \alpha _n = 0, \beta _n = \frac{1}{2} (1-(2n)^{-2})^{-\frac{1}{2}}
+\end{equation}
+for Legendre polynomials.  With the use of these formulas \autoref{Algo 37.1} becomes a trivial mechanical procedure.  
+
+\section{The Characteristic Polynomial} 
+In this context of orthogonal polynomials, the Arnoldi approximation problem becomes the following problem: 
+
+%────────────────────────────────────────
+\begin{example}
+[Orthogonal Polynomials Approximation Problem]
+\label{eg: Orthogonal Polynomials Approximation Problem}
+\[
+    \arg \min_{p^n \in P^n} \|p^n (x)\|. 
+\]
+
+\end{example}
+%────────────────────────────────────────  
+ According to Thm~\ref{thm: Properties of Lanczos iteration}, the solution is the characteristic polynomial of the matrix $ T_n $.  
+
+ We should notice that for any $ p \in P^{n} $, $ p(x) = Cq_{n+1}(x) +Q_ny $, where $ C $ is a constant-the inverse of the leading coefficient of $ q_{n+1}(x) $. Note that $ \{q_n(x)\}  $ are orthogonal, we have $ \|p\| = (C^{2} +\|y\|^{2} )^{\frac{1}{2}} $. It's obvious that the minimum is achieved by setting $ y=0 $. Hence, $ p^n(x) = C q_{n+1}(x) $.  
+
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ \label{thm: chractersitic polynomial of Tn}
+ Let $\left\{q_n(x)\right\}$ be the sequence of orthogonal polynomials generated by \autoref{Algo 37.1}, let $\left\{T_n\right\}$ be the associated sequence of tridiagonal Jacobi matrices, and let $p^n$ be the characteristic polynomial of $T_n$. Then for $n=0,1,2, \ldots$,
+\begin{equation}
+\label{eq: chractersitic polynomial of Tn}
+p^n(x)=C_n q_{n+1}(x),
+\end{equation}
+where $C_n$ is a constant. In particular, the zeros of $q_{n+1}(x)$ are the eigenvalues of $T_n$. These $n$ zeros are distinct and lie in the open interval $(-1,1)$.
+ \end{theorem}
+ %────────────────────────────────────────
+ 
+ This theorem is of great computational importance. To determine the zeros of the Legendre polynomials, all one has to do is compute the eigenvalues of the associated Jacobi matrices, whose entries are given in closed form by \eqref{eq: anbn for Legendre polynomials}. As we have seen in previous lectures, the eigenvalue problem for an $n \times n$ symmetric tridiagonal matrix is well-conditioned and can be solved very quickly, requiring only $O\left(n^2\right)$ flops. By contrast, computing the zeros of the Legendre polynomials directly, starting from the coefficients of the polynomials rather than the Jacobi matrices, is inefficient and numerically unstable.
+
+ \section{Quadrature Formulas} 
+There is a reason why the zeros of the Legendre polynomials are of computational interest: they are the nodes of the Gauss—Legendre quadrature formulas. 
+
+Let us briefly review the idea of numerical quadrature. Given $ f(x)$ on $ [-1,1] $, we want to compute 
+\[
+    I(f) = \int_{-1}^{1} f(x)\,dx.  
+\]
+It's natural to consider 
+\begin{equation}
+\label{eq: quadrature formula}
+        I_n(f) = \sum_{j=1}^{n} w_j f(x_j) 
+\end{equation}
+
+defined by a set of $ n $ nodes or abscissas $ x_j \in [-1,1] $ and corresponding weights $ w_j $, chosen independently of $ f $. This is an $ n $-point \textbf{quadrature formula}. Various forms of such formulas, often coupled with adaptive error estimation, interval subdivision, and order control, are the basis of most numerical integration carried out on computers today.
+
+Any set of nodes is a candidate for a quadrature formula. The following result is a consequence of the nonsingularity of Vandermonde matrices.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: quadrature formula}
+Let the nodes $\left\{x_j\right\}$ be an arbitrary set of $n$ distinct points in $[-1,1]$. Then there is a unique choice of weights $\left\{w_j\right\}$ with the property that the quadrature formula \eqref{eq: quadrature formula} has order of accuracy at least $n-1$ in the sense that it is exact if $f(x)$ is any polynomial of degree $\leq n-1$.
+\end{theorem}
+%────────────────────────────────────────
+
+
+If the nodes $\left\{x_j\right\}$ are taken equally spaced from -1 to 1 , the quadrature formula provided by this theorem is known as a \textbf{Newton-Cotes} formula, the $n$-point generalization of the familiar trapezoid and Simpson rules. NewtonCotes formulas have the order of accuracy guaranteed by this theorem but no higher. These formulas are simple and useful, especially for lower values of $n$. For larger $n$, their weights $w_j$ have oscillating signs and huge amplitudes, of order $2^n$, causing numerical instability.
+
+\section{Gauss Quadrature} 
+ The idea of Gauss quadrature is to pick not just the weights $ \{w_j\}  $ but also the nodes $ \{x_j\}  $ optimally, so as to raise the order of accuracy of \eqref{eq: quadrature formula} as high as possible. As it happens, there is a unique choice of nodes and weights that achieves this, and the resulting formula has order $ 2n-1 $.  This is a dramatic improvement over order $ n-1 $, a doubling of the number of digits of accuracy typically attainable for smooth functions and a fixed number of function evaluations.  Moreover, the weights $ w_j $ are all positive, making these formulas stable even for high $ n $. 
+
+ The \textbf{Gauss-Legendre quadrature formula} is defined as the quadrature formula \eqref{eq: quadrature formula} provided by Thm~\ref{thm: Properties of Lanczos iteration} whose nodes $ x_1, \ldots ,x_n $ are the zeros of $ q_{n+1}(x) $.  
+
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ [Accuracy of Gauss-Legendre quadrature]
+ \label{thm: Accuracy of Gauss-Legendre quadrature}
+ Theorem 37.3. The n-point Gauss-Legendre quadrature formula has order of accuracy exactly $2 n-1$, and no quadrature formula \eqref{eq: quadrature formula} has order of accuracy higher than this.
+ \end{theorem}
+ %────────────────────────────────────────
+ %────────────────────────────────────────
+ \begin{proof}
+ Given any set of distinct points $\left\{x_j\right\}$, let $f(x)$ be the polynomial $\Pi_{j=1}^n\left(x-x_j\right)^2$ of degree $2 n$. Then $I(f)>0$, but $I_n(f)=0$ since $f\left(x_j\right)=0$ for each node $x_j$. Thus the quadrature formula is not exact for polynomials of degree $2 n$.
+
+On the other hand, suppose $f(x)$ is any polynomial of degree $\leq 2 n-1$, and take $\left\{x_j\right\}$ to be the Gauss quadrature nodes, the zeros of $\left\{q_{n+1}(x)\right\}$. The function $f(x)$ can be factored in the form
+$$
+f(x)=g(x) q_{n+1}(x)+r(x),
+$$
+where $g(x)$ is a polynomial of degree $\leq n-1$ and $r(x)$, the remainder term, is also a polynomial of degree $\leq n-1$. (In fact, $r(x)$ is the degree $n-1$ polynomial interpolant to $f$ in the points $\left\{x_j\right\}$.) Now since $q_{n+1}(x)$ is orthogonal to all polynomials of lower degree, we have $I\left(g q_{n+1}\right)=0$. At the same time, since $g\left(x_j\right) q_{n+1}\left(x_j\right)=0$ for each node $x_j$, we have $I_n\left(g q_{n+1}\right)=0$. Since $I$ and $I_n$ are linear operators, these identities imply $I(f)=I(r)$ and $I_n(f)=I_n(r)$. But since $r(x)$ is of degree $\leq n-1$, we have $I(r)=I_n(r)$ by Theorem~\ref{thm: quadrature formula} and combining these results gives $I(f)=I_n(f)$, as claimed.
+ \end{proof}
+ %────────────────────────────────────────
+ 
+ \section{Gauss Quadrature via Jacobi Matrices} 
+ We have gone from the Lanczos iteration to Legendre polynomials and from Legendre polynomials to Gauss quadrature. We have even provided a fast and stable algorithm for determining the nodes of Gauss quadrature formulas: just set up the Jacobi matrices $ \{T_n\}  $ and compute their eigenvalues. 
+
+ One final observation will finish the story. Not only the nodes but also the weights of Gauss quadrature formulas can be obtained from the eigenvalue problem for $ T_n $.The $ j$ th weight turns out to be simply $ w_j = 2(v_j)_1^{2}  $, that is, twice the square of the first component of the $ j $th eigenvector of $ T_n $. This can be extended to general weight function $ w(x) $. 
+
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ [Gauss-Legendre quadrature formula]
+ \label{thm: Gauss-Legendre quadrature formula}
+Let $T_n$ be the $n \times n$ Jacobi matrix defined by Algorithm~\ref{Algo 37.1} with entries $\beta_1, \ldots, \beta_{n-1}$ given by \eqref{eq: anbn for Legendre polynomials} . Let $T_n=$ $V D V^T$ be an orthogonal diagonalization of $T_n$ with $V=\left[v_1|\cdots| v_n\right]$ and $D=$ $\operatorname{diag}\left(\lambda_1, \ldots, \lambda_n\right)$. Then the nodes and weights of the Gauss-Legendre quadrature formula are given by
+$$
+x_j=\lambda_j, \quad w_j=2\left(v_j\right)_1^2, \quad j=1, \ldots, n .
+$$
+ \end{theorem}
+ %────────────────────────────────────────
+
+ \section{Example} 
+ As an illustration of the power of Gauss quadrature for integrating smooth functions, suppose we wish to evaluate the integral
+$$
+I\left(e^x\right)=\int_{-1}^1 e^x d x=2.35040239 .
+$$
+Taking $n=4$, we find that the Jacobi matrix for four-point Gauss-Legendre quadrature is
+$$
+T_4=\left[\begin{array}{cccc}
+0 & 0.577350269 & & \\
+0.577350269 & 0 & 0.516397779 & \\
+& 0.516397779 & 0 & 0.507092553 \\
+& & 0.507092553 & 0
+\end{array}\right] .
+$$
+The eigenvalues of this matrix give the nodes
+$$
+x_1=-x_4=0.861136312, \quad x_2=-x_3=0.339981044,
+$$
+and the first components of the eigenvectors give the corresponding weights
+$$
+w_1=w_4=0.347854845, \quad w_2=w_3=0.652145155 .
+$$
+Evaluating the sum \eqref{eq: quadrature formula} gives
+$$
+I_n\left(e^x\right)=2.35040209,
+$$
+which agrees with the exact result to about seven digits. The four-point Newton-Cotes formula, by contrast, gives $I_n\left(e^x\right) \approx 2.3556$, accurate to only about three digits. 
+ 
+  

@@ -44,7 +44,12 @@
 \usepackage{pgffor}
 \usepackage{fancyhdr}
 \usepackage{array,booktabs}
-
+\usepackage[
+  open,
+  openlevel=2,
+  atend,
+  numbered
+]{bookmark}
 \providecommand{\willpdftitle}{notes}
 \hypersetup{
 	pdftitle={\willpdftitle},
@@ -497,7 +502,7 @@ postheadspace = \newline,
 
 %% Category theory setting 
 \DeclareMathOperator{\range}{range}
-
+\DeclareMathOperator{\nul}{null}
 %% Geometry Setting 
 \DeclareMathOperator{\GL}{GL}
 \DeclareMathOperator{\SL}{SL}

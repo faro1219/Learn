@@ -1,0 +1,210 @@
+\chapter{QR Algorithm without Shifts}
+The QR algorithm, dating to the early 1960s, is one of the jewels of numerical analysis. Here we show that in its simplest form, this algorithm can be viewed as a stable procedure for computing QR factorizations of the matrix powers $A, A^{2}, A^{3},\ldots $. 
+
+\section{The QR Algorithm}
+The most basic version of the QR algorithm seems impossibly simple.  
+
+\begin{algorithm}[H]
+    \caption{``Pure'' QR Algorithm}
+    \label{Algo 28.1}
+    $ A^{(0)}=A $\; 
+    \For{$ k=1,2,\ldots  $}{
+        $ Q^{(k)}R^{(k)} = A^{(k-1)} $  \tcp*{QR factorization of $A^{(k-1)}$}
+        $ A^{(k)}=R^{(k)}Q^{(k)} $ \tcp*{Recombine factors in reverse order}
+    }
+\end{algorithm}
+Under suitable assumptions, this single algorithm converges to a Schur form for the matrix $A$. Note that here we assume $A$ is real and symmetric, with real eigenvalues $\lambda _j$ and orthonormal eigenvectors $ q_j $.  
+
+We should notice that $A^{(k)} = (Q^{(k)})^\top  A^{(k-1)}Q^{(k)}$. This is the ``bad idea'' mentioned in Chapter 25.  Although this transformation is a bad idea when trying to reduce $A$ to triangular form in a single step, it turns out to be quite powerful as the basis of an iteration.  
+
+Like the Rayleigh quotient iteration, the QR algorithm for real symmetric matrices converges cubically. To achieve this performance, however, the algorithm as presented above must be modified by the introduction of shifts at each step. The use of shifts is one of three modifications of Algo~\ref{Algo 28.1} that are required to bring it closer to a practical algorithm: 
+
+\begin{itemize}
+    \item [1.] Before starting the iteration, $ A $ is reduced to tridiagonal form, as discussed in Chapter 25. 
+    \item [2.] Instead of $A^{(k)}$, a shifted matrix $A^{(k)}- \mu ^{(k)}I$ is factored at each step, where $\mu^{(k)}$ is some eigenvalue estimate. 
+    \item [3.] Whenever possible, and in particular whenever an eigenvalue is found, the problem is ``deflated'' by breaking $A^{(k)}$ into submatrices. 
+\end{itemize}
+A QR algorithm incorporating these modifications has the following outline. 
+
+\begin{algorithm}[H]
+    \caption{``Practical'' QR Algorithm}
+    \label{Algo 28.2}
+    $ (Q^{(0)})^\top A^{(0)}Q^{(0)}=A $ \tcp*{$ A^{(0)} $ is a tridiagonalization of $A$} 
+    \For{$ k=1,2,\ldots  $}{
+        Pick a shift $ \mu^{(k)} $ \tcp*{e.g., choose $\mu ^{(k)} = A_{mm}^{(k-1)}$} 
+        $Q^{(k)}R^{(k)} = A^{(k-1)} - \mu ^{(k)}I$ \tcp*{QR factorization of $A^{(k-1)} - \mu^{(k)}I$ } 
+        $ A^{(k)} = R^{(k)}Q^{(k)}+ \mu^{(k)}I $\; 
+        If any off-diagonal element $A_{j,j+1}^{(k)}$ is sufficient close to zero, set $A_{j,j+1} = A_{j+1,j} = 0$ to obtain 
+        \[
+            \begin{bmatrix}[] 
+                A_1 &  0 \\
+                0 &  A_2 \\
+            \end{bmatrix} = A^{(k)} 
+        \]and now apply the QR algorithm to $A_1$ and $ A_2 $. 
+    }
+\end{algorithm}
+
+This algorithm, the QR algorithm with well-chosen shifts, has been the standard method for computing all the eigenvalues of a matrix since the early 1960s. Only in the 1990s has a competitor emerged, the divide-and -conquer algorithm described in Chapter 29.  
+
+Tridiagonalization was discussed in Chapter 25, shifts are discussed in the next chapter, and deflation is not discussed further in this note. For now, let us confine our attention to the ``pure'' QR algorithm and explain how it finds eigenvalues.
+
+\section{Unnormalized Simultaneous Iteration}
+
+
+Our approach will be to relate the QR algorithm to another method called \textbf{simultaneous iteration}, whose behavior is more obvious.  
+
+The idea of simultaneous iteration is to apply the power iteration to several vectors at once. (An equivalent term is \textbf{block power iteration}.) Suppose we start with a set of $n$ linearly independent vectors $ v_1^{(0)},\ldots ,v_n^{(0)} $. It seems plausible that as $A^{k}v_1^{(0)}$ converges as $k\to \infty$ (under suitable assumptions) to the eigenvector corresponding the largest eigenvalue of $A$ in absolute value, the space $ \langle A^{k}v_1^{(0)},\ldots , A^{k}v_n^{(0)} \rangle  $ should converge (again under suitable assumptions) to the space $ \langle q_1,\ldots ,q_n \rangle  $ spanned by the eigenvectors $q_1,\ldots ,q_n$ of $A$ corresponding to the $n$ largest eigenvalues in absolute value.  
+
+In matrix notation, we might proceed like this. Define $V^{(0)}$ to be the $m\times n$ initial matrix 
+\begin{equation}
+\label{eq: sim iter v0}
+    V^{(0)} = \left[ \begin{array}{c|c|c}
+        & &\\ 
+        v_1^{(0)}& \cdots & v_n^{(0)} \\ 
+        & & 
+    \end{array} \right] ,
+\end{equation}
+
+and define $V^{(k)}$ to be the result after $k$ applications of $A$: 
+\begin{equation}
+\label{eq: sim iter vk}
+        V^{(k)} = A^{k}V^{(0)}= \left[ \begin{array}{c|c|c}
+        & & \\ 
+        v_1^{(k)} & \cdots & v_n^{(k)} \\ 
+        & &         
+    \end{array} \right].  
+\end{equation}
+
+Since our interest is in the column space of $V^{(k)}$, let us extract a well-behaved basis for this space by computing a reduced QR factorization of $V^{(k)}$: 
+\begin{equation}
+\label{eq: Qr sim iter k}
+    \hat Q ^{(k)} \hat R ^{(k)}= V^{(k)}. 
+\end{equation}
+Here $\hat Q ^{(k)}\in \CC^{m \times n}, \hat R ^{(k)}\in \CC^{n \times n}$.  It seems plausible that as $k\to \infty$, under suitable assumptions, the successive columns of $ \hat Q ^{(k)} $ should converge to the eigenvectors $ \pm q_1, \pm q_2,\ldots , \pm q_n $.  
+
+If we expand $v_j^{(0)}$ and $v_j^{(k)}$ in the eigenvectors of $A$, we have 
+\begin{align*}
+    &v_j^{(0)} = a_{1j} q_1 + \cdots + a_{mj}q_m, \\ 
+    &v_j^{(k)} = \lambda _1^{k}a_{1j} q_1 + \cdots + \lambda _m^{k}a_{mj} q_m.  
+\end{align*}
+As in the last section, simple convergence results will hold provided that two conditions are satisfied. 
+\begin{itemize}
+    \item [1.] The leading $n+1$ eigenvalues are distinct in absolute value: $ |\lambda _1 | > |\lambda _2| > \cdots > |\lambda _n| > |\lambda _{n+1}| \ge |\lambda _{n+2} | \ge \cdots \ge |\lambda _m|.  $
+    \item [2.] The collection of expansion coefficients $a_{ij}$ is in an appropriate sense nonsingular. Define $\hat Q$ to be the $ m \times n$ matrix whose columns are the eigenvectors $ q_1, q_2,\ldots ,q_n $. We assume the following: All the leading principal minors of $ \hat Q ^\top  V^{(0)} $ are nonsingular. 
+\end{itemize}
+
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ \label{thm: covergence simultaneous iteration}
+ Suppose that the iteration \eqref{eq: sim iter v0}-\eqref{eq: Qr sim iter k}  is carried out and that two assumptions are satisfied. Then as $k\to \infty$, the columns of the matrices $\hat Q^{(k)}$ converge linearly to the eigenvectors of $A$: 
+ \begin{equation}
+ \label{eq: convergence simulataneous iteration}
+    \|q_j^{(k)} -\pm q_j\| = O(C^{k})
+ \end{equation}
+ for each $j$ with $1\le j \le n$, where $C = \max_{1\le k\le n } \frac{|\lambda _{k+1}|}{|\lambda _k|} <1$. 
+ \end{theorem}
+ %────────────────────────────────────────
+ 
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+We extend $\hat Q$ to the full $m\times m$ orthogonal matrix $Q$ of $A$, and we have the eigenvalue decomposition $A = Q\Lambda Q^\top $. We also define $\hat \Lambda $ to be the leading $n\times n$ section of $\Lambda $. Then we have 
+\[
+    V^{(k)} = A^{k}V^{(0)} = Q\Lambda ^{k}Q^\top V^{(0)} = \hat Q \hat \Lambda  ^{k} \hat Q ^\top  V^{(0)} + O(|\lambda_{n+1}|^k) = (\hat Q \hat \Lambda ^{k} + O(|\lambda _{n+1} | ^{k})) \hat Q ^\top  V^{(0)}. 
+\]
+Then we can tell the column space of 
+\[
+    \hat Q \hat \Lambda ^k  + O(|\lambda _{n+1}|^k) 
+\]
+will converge to that of $\hat Q$ linearly. Besides, due to all principals minors of $\hat Q^\top  V^{(0)}$ are nonsingular, the first several columns will converge linearly to the space spanned by the corresponding columns of $\hat Q$. 
+\end{proof}
+%────────────────────────────────────────
+
+
+\section{Simultaneous Iteration} 
+As $k\to \infty$, the vectors $ v_1^{(k)}, \ldots ,v_n^{(k)} $ in the algorithm \eqref{eq: sim iter v0}-\eqref{eq: Qr sim iter k} all converge to multiples of the same dominant eigenvector $q_1$ of $A$. Thus although the space they span, $ \langle v_1^{(k)},\ldots ,v_j^{(k)} \rangle  $, converges to something useful, these vectors constitute a high ill-conditioned basis of that space. 
+
+The remedy is simple: we do orthonormalize at each step rather than once and for all by QR decomposition. 
+
+\begin{algorithm}[H]
+    \caption{Simultaneous Iteration}
+    \label{Algo 28.3}
+    Pick $ \hat Q ^{(0)} \in \RR^{m\times n} $ with orthonormal columns. \; 
+    \For{$k=1,2,...$} {
+        $ Z = A\hat Q ^{(k-1)} $\; 
+        $ \hat Q ^{(k)} \hat R^{(k)}=Z $ \tcp*{reduced QR factorization of $Z$} 
+    }
+\end{algorithm}
+
+Since the columns spaces are the same for $Z$ and $\hat Q ^{(k)}$, this new formulation of simultaneous iteration converges under the same condition as the old one.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: Covergence normalize sim iter}
+Algo~\ref{Algo 28.3} generate the same matrices $\hat Q^{(k)}$ as the iteration \eqref{eq: sim iter v0} and \eqref{eq: Qr sim iter k} considered in Thm~\ref{thm: covergence simultaneous iteration} and converges as described in that theorem.  
+\end{theorem}
+%────────────────────────────────────────
+
+\section{Simultaneous Iteration $ \Longleftrightarrow $ QR Algorithm} 
+ 
+Now we can show QR algorithm is equivalent to the simultaneous iteration applied to a full set of $n=m$ initial vectors, namely, the identity matrix, $ \hat Q^{(0)}=I $. Since the matrices $\hat{Q}^{(k)}$ are now square, we are dealing with full QR factorizations and can drop the hats on $\hat{Q}^{(k)}$ and $\hat{R}^{(k)}$. In fact, we shall replace $\hat{R}^{(k)}$ by $R^{(k)}$ but $\hat{Q}^{(k)}$ by $\underline{Q}^{(k)}$ in order to distinguish the $Q$ matrices of simultaneous iteration from those of the $\mathrm{QR}$ algorithm.
+
+Now we compare the two methods. Here are the three formulas that define simultaneous iteration with $\underline{Q}^{(0)}=$ $I$, followed by a fourth formula that we shall take as a definition of an $\bar{m} \times m$ $\operatorname{matrix} A^{(k)}$ :
+\begin{align}
+    \text{Simultaneous Iteration: } & \notag\\ 
+    Q^{(0)}& = I, \label{eq: SI start}\\ 
+    Z & = A\underline Q^{(k-1)}, \\ 
+    Z & = \underline Q ^{(k)} R^{(k)}, \\ 
+    A^{(k)} &= (\underline Q ^{(k)})^\top  A \underline Q ^{(k)}. \label{eq: SI end}
+\end{align}
+And here are the three formulas that define the pure QR algorithm, followed by a fourth formula that we shall take as a definition of an $m\times m$ matrix $\underline Q^{(k)}$: 
+\begin{align}
+    \text{ Unshifted QR Algorithm: } &\notag \\ 
+        A^{(0)} & =A \label{eq: UQR start} \\
+        A^{(k-1)} & =Q^{(k)} R^{(k)} \\
+        A^{(k)} & =R^{(k)} Q^{(k)} \\
+        \underline{Q}^{(k)} & =Q^{(1)} Q^{(2)} \cdots Q^{(k)} \label{eq: UQR end}.
+\end{align}
+Additionally, for both algorithms, let us define one further $m\times m$ matrix $\underline R ^{(k)}$, 
+\begin{equation}
+\label{eq: underline Rk}
+    \underline R ^{(k)} = R^{(k)} R ^{(k-1)}\cdots R^{(1)}. 
+\end{equation}
+
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ \label{thm: equiv sim iter QR}
+ The processes \eqref{eq: SI start}-\eqref{eq: SI end} and \eqref{eq: UQR start}-\eqref{eq: UQR end} generate identical sequences of matrices $\underline R^{(k)}, \underline Q^{(k)}$ and $ A^{(k)} $, namely, those defined by the QR factorization of the $k$th power of $A$, 
+ \begin{equation}
+ \label{eq: QR Ak}
+    A^{k} = \underline Q ^{(k)} \underline R ^{(k)},
+ \end{equation}
+ together with the projection 
+ \begin{equation}
+ \label{eq: A bk projection QR}
+    A^{(k)} = (\underline Q ^{(k)}) ^\top  A \underline Q^{(k)}. 
+ \end{equation}
+ \end{theorem}
+ %────────────────────────────────────────
+ 
+
+\section{Convergence of the QR Algorithm} 
+ All the pieces are in place. We can now say a great deal about the convergence of the unshifted QR algorithm. 
+
+ For qualitative understanding: \eqref{eq: QR Ak} and \eqref{eq: A bk projection QR} are the key.  
+\begin{itemize}
+    \item The QR algorithm can find the eigenvectors because it construct orthonormal bases for successive powers $A^{k}$. 
+    \item It finds the eigenvalues since the diagonal elements of $ A^{(k)} $ are Rayleigh quotients of $A$ corresponding to the columns of $\underline Q ^{(k)}$.  
+\end{itemize}
+
+We also have the following consequences of Thm~\ref{thm: Covergence normalize sim iter}.  
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: convergence of pure QR}
+Let the pure $Q R$ algorithm (Algo~\ref{Algo 28.1}) be applied to a real symmetric matrix $A$ whose eigenvalues satisfy $\left|\lambda_1\right|>\left|\lambda_2\right|>\cdots>\left|\lambda_m\right|$ and whose corresponding eigenvector matrix $Q$ has all nonsingular leading principal minors. Then as $k \rightarrow \infty, A^{(k)}$ converges linearly with constant $\max _k\left|\lambda_{k+1}\right| /\left|\lambda_k\right|$ to $\operatorname{diag}\left(\lambda_1, \ldots, \lambda_m\right)$, and $\underline{Q}^{(k)}$ (with the signs of its columns adjusted as necessary) converges at the same rate to $Q$.
+\end{theorem}
+%────────────────────────────────────────

@@ -1,0 +1,99 @@
+\chapter{Floating Point Arithmetic}
+
+It did not take long after the invention of computers for consensus to emerge on the right way to represent real numbers on a digital machine. The secret is floating point arithmetic, the hardware analogue of scientific notation. Before we can begin to study the accuracy of the algorithms of numerical linear algebra, we must examine this topic.
+
+\section{Limitations of Digital Representations} 
+Using a finite number of bits to  represent a number presents two problems: 
+\begin{itemize}
+    \item The represented numbers cannot be arbitrarily large or small;
+    \item There must be gaps between them. 
+\end{itemize}
+
+Modern computers represent numbers sufficiently large and small that the first constraint rarely poses difficulties. For example, the widely used IEEE double precision arithmetic permits numbers as large as $1.79 \times 10^{308}$ and as small as $2.23 \times 10^{-308}$, a range great enough for most of the problems considered in this book. In other words, \textbf{overflow} and \textbf{underflow} are usually not a serious hazard (but watch out if you are asked to evaluate a determinant!). 
+
+By contrast, the problem of gaps between represented numbers is a concern throughout scientific computing. For example, in IEEE double precision arithmetic, the interval $[1,2]$ is represented by the discrete subset
+\begin{equation}
+    \label{eq: float interval}
+    1,1+2^{-52}, 1+2 \times 2^{-52}, 1+3 \times 2^{-52}, \ldots, 2 \text {. } 
+\end{equation}
+
+
+The interval $[2,4]$ is represented by the same numbers multiplied by 2 ,
+$$
+2,2+2^{-51}, 2+2 \times 2^{-51}, 2+3 \times 2^{-51}, \ldots, 4,
+$$
+and in general, the interval $\left[2^j, 2^{j+1}\right]$ is represented by \autoref{eq: float interval} times $2^j$. Thus in IEEE double precision arithmetic, the gaps between adjacent numbers are in a relative sense never larger than $2^{-52} \approx 2.22 \times 10^{-16}$. This may seem negligible, and so it is for most purposes if one uses stable algorithms (see the next chapter). But it is surprising how many carelessly constructed algorithms turn out to be unstable!
+
+\section{Floating Point Numbers} 
+IEEE arithmetic is an example of an arithmetic system based on a floating point representation of the real numbers. This is the universal practice on general purpose computers nowadays. In a floating point number system, the position of the decimal (or binary) point is stored separately from the digits, and the gaps between adjacent represented numbers scale in proportion to the size of the numbers. This is distinguished from a \textbf{fixed point} representation, where the gaps are all of the same size.
+
+Specifically, let us consider an idealized floating point number system defined as follows. The system consists of a discrete subset $\mathbf{F}$ of the real numbers $\mathbb{R}$ determined by an integer $\beta \geq 2$ known as the base or radix (typically 2 ) and an integer $t \geq 1$ known as the precision (24 and 53 for IEEE single and double precision, respectively). The elements of $\mathbf{F}$ are the number 0 together with all numbers of the form
+$$
+x= \pm\left(m / \beta^t\right) \beta^e
+$$
+where $m$ is an integer in the range $1 \leq m \leq \beta^t$ and $e$ is an arbitrary integer. Equivalently, we can restrict the range to $\beta^{t-1} \leq m \leq \beta^t-1$ and thereby make the choice of $m$ unique. The quantity $\pm\left(m / \beta^t\right)$ is then known as the fraction or mantissa of $x$, and $e$ is the exponent. In other words: 
+\[
+    \mathbf{F} = \{\pm\left(m / \beta^t\right) \beta^e| e\in \ZZ,  1\le m \le \beta ^t\}.  
+\]
+
+Our floating point number system is idealized in that it ignores over- and underflow. As a result, F is a countably infinite set, and it is self-similar: $\mathbf{F}=\beta \mathbf{F}$. 
+
+\section{Machine Epsilon} 
+The resolution of $\mathbf{F}$ is traditionally summarized by a number known as machine epsilon. Provisionally, let us define this number by
+\begin{equation}
+    \label{eq: machine epsilon}
+    \epsilon_{\text {machine }}=\frac{1}{2} \beta^{1-t}. 
+\end{equation}
+This number is half the distance between 1 and the next larger floating point number. In a relative sense, this is as large as the gaps between floating point numbers get. That is, $\epsilon_{\text {machine }}$ has the following property:
+
+%────────────────────────────────────────
+\begin{proposition}
+[Property of machine epsilon]
+\label{prop: Property of machine epsilon}
+For all $x \in \mathbb{R}$, there exists $x^{\prime} \in \mathbf{F}$ such that $\left|x-x^{\prime}\right| \leq \epsilon_{\text {machine }}|x|$.
+\end{proposition}
+%────────────────────────────────────────
+
+For the values of $\beta$ and $t$ common on various computers, $\epsilon_{\text {machine }}$ usually lies between $10^{-6}$ and $10^{-35}$. In IEEE single and double precision arithmetic, $\epsilon_{\text {machine }}$ is specified to be $2^{-24} \approx 5.96 \times 10^{-8}$ and $2^{-53} \approx 1.11 \times 10^{-16}$, respectively.
+
+Let $\fl : \mathbb{R} \rightarrow \mathbf{F}$ be a function giving the closest floating point approximation to a real number, its rounded equivalent in the floating point system. Then, the \autoref{prop: Property of machine epsilon} can be rewritten as: 
+
+
+%────────────────────────────────────────
+\begin{proposition}
+\label{prop: fl function}
+For all $x \in \mathbb{R}$, there exists $\epsilon$ with $|\epsilon| \leq \epsilon_{\text {machine }}$ such that 
+\begin{equation}
+    \label{eq: fler}
+    \fl(x)=x(1+\epsilon).     
+\end{equation}
+
+\end{proposition}
+%────────────────────────────────────────
+
+
+\section{Floating Point Arithmetic} 
+It is not enough to represent real numbers, of course; one must compute with them. On a computer, all mathematical computations are reduced to certain elementary arithmetic operations, of which the classical set is,,$+- \times$, and $\div$. Mathematically, these symbols represent operations on $\mathbb{R}$. On a computer, they have analogues that are operations on F. It is common practice to denote these floating point operations by $\oplus, \ominus, \otimes$, and $\odiv$.
+
+A computer might be built on the following design principle. Let $x$ and $y$ be arbitrary floating point numbers, that is, $x, y \in \mathbf{F}$. Let $*$ be one of the operations,,$+- x$, or $\div$, and let $\circledast$ be its floating point analogue. Then $x \circledast y$ must be given exactly by
+$$
+x \circledast y=\mathrm{fl}(x * y) .
+$$
+
+Hence, we have 
+
+%────────────────────────────────────────
+\begin{theorem}
+[Fundamental Axiom of FPA]
+\label{thm: Fundamental Axiom of FPA}
+For all $x, y \in \mathbf{F}$, there exists $\epsilon$ with $|\epsilon| \leq \epsilon_{\text {machine }}$ such that
+\begin{equation}
+    \label{eq:flop} 
+    x \circledast y=(x * y)(1+\epsilon).
+\end{equation}
+\end{theorem}
+%────────────────────────────────────────
+
+\section{Complex Floating Point Arithmetic} 
+Floating point complex numbers are generally represented as pairs of floating point real numbers, and the elementary operations upon them are computed by reduction to real and imaginary parts. The result is that the axiom is valid for complex as well as real floating point numbers, except that for $\otimes$ and $\Theta, \epsilon_{\text {machine }}$ must be enlarged from \autoref{eq: machine epsilon} by factors on the order of $2^{3 / 2}$ and $2^{5 / 2}$, respectively. Once $\epsilon_{\text {machine }}$ is adjusted in this manner, rounding error analysis for complex numbers can proceed just as for real numbers.
+

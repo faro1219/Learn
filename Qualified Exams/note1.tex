@@ -1,0 +1,242 @@
+\documentclass[11pt]{article}
+\usepackage{note}
+\setcitestyle{authoryear,open={(},close={)}} 
+\begin{document}
+	\title{Qual}%replace X with the appropriate number
+  \author{Yuhang Cai} 
+	\maketitle
+
+In this note, we consider the MAB with full information. We mainly apply the methods from \citep{zhao2022dynamic}.  
+
+An MAB is specified by a tuple $M = (A,\{l_k\}_{k=1}^K )$, where $A$ is the set of arms and $l_k:A\to [0,1]$ is the reward function in episode $k\in [K]$. For our case we will consider the simplex measures. 
+\[
+    \Delta M = \{\pi:A\to [0,1]| \sum_{a\in A}\pi(a) =1\}.  
+\]
+And $\Delta(M,\alpha) = \{\pi| \pi\in \Delta(M), \pi(a) \ge \alpha, \forall a\in A\} $. 
+The expected loss of any policy $\pi$ at episode $k$ can be written as 
+\[
+    \sum_{a\in A} \pi(a) l_k(a) = \langle \pi, l_k \rangle.   
+\]
+Our dynamic regret is: 
+\[
+    \reg_K (\pi^c_{1:K}) = \sum_{k=1}^K \langle \pi_k, l_k \rangle - \sum_{k=1}^K \langle \pi_k^c, l_k \rangle . 
+\]
+The O-REPS algorithm is: 
+$$
+\pi_{k+1}=\underset{\pi \in \Delta(M)}{\argmin } \eta\left\langle \pi, \l_k\right\rangle+D_\psi\left(\pi, \pi_k\right),
+$$
+where $\eta>0$ is step size, $\psi(\pi)=\sum_{a\in A} \pi(a) \log \pi( a)$ is the standard negative entropy.
+Our algorithm is: 
+\begin{algorithm}[!ht]
+\DontPrintSemicolon
+\KwInput{step size pool $\cH$, learning rate $\varepsilon$, clipping param $\alpha$}
+$\text { Define } \psi(\pi)=\sum_{a\in A} \pi(a) \log \pi(a)$ 
+
+Initialization: set $\pi_{1, i}=\arg \min _{\pi \in \Delta(M, \alpha)} \psi(\pi)$ and $p_{1, i}=1 / N, \forall i \in[N]$
+
+\For{$k=1$ to $K$}
+{
+    Receive $\pi_{k,i}$ from base-learner $\cB_i$ for $i\in [N]$
+
+    Compute policy $\pi_k = \sum_{i=1}^N p_{k,i}\pi_{k,i}$ 
+
+    Update the weight by $p_{k+1, i} \propto \exp \left(-\varepsilon \sum_{s=1}^k h_{s, i}\right)$ where $h_{k, i}=\left\langle \pi_{k,i}, \ell_k\right\rangle, \forall i \in[N]$
+
+    Each base-learner $\mathcal{B}_i$ updates prediction by $\pi_{k+1, i}=\arg \min _{\pi \in \Delta(M, \alpha)} \eta_i\left\langle \pi, \ell_k\right\rangle+D_\psi\left(\pi, \pi_{k, i}\right)$
+}
+\caption{DO-REPS for MAB}
+\end{algorithm}
+
+
+
+
+\section{Main Results}
+%────────────────────────────────────────
+\begin{lemma}
+\label{lem: bound for single agent}
+Set $\pi_1 = \argmin_{q\in \Delta(M,\alpha)} \psi(a)$. For any compared policies $\pi_1^{\mathrm{c}}, \ldots, \pi_K^{\mathrm{c}} \in \Delta(M, \alpha)$,
+O-REPS over a clipped space $\Delta(M, \alpha)$ ensures
+$$
+\sum_{k=1}^K\left\langle \pi_k-\pi_k^c, l_k\right\rangle \leq \eta K+\frac{1}{\eta}\left( \log | A|+P_K \log \frac{1}{\alpha}\right)
+$$
+where $P_K=\sum_{k=2}^K\left\|\pi_k^c-\pi_{k-1}^c\right\|_1$ is the path-length of compared policies. 
+\end{lemma}
+%────────────────────────────────────────
+%────────────────────────────────────────
+
+
+
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: DO-REPS for MAB}
+Set the clipping parameter $\alpha = 1/K^2$, the step size pool $\mathcal{H}=\left\{\eta_i=2^{i-1} \sqrt{K^{-1} \log |A|} \mid i \in\right.$
+$[N]\}$, where $N=\left\lceil\frac{1}{2} \log \left(1+\frac{4 K \log K}{\log (|A| )}\right)\right\rceil+1$, and the
+learning rate of meta-algorithm as $\varepsilon=\sqrt{(\log N) /K}$. DO-REPS (Algorithm 1) satisfies
+$$
+\begin{aligned}
+\mathbb{E}\left[\operatorname{REG}_K\left(\pi_{1: K}^c\right)\right]  \leq \mathcal{O}\left( \sqrt{K\left(\log | A|+P_K \log K\right)}\right)
+\end{aligned}
+$$
+where  $P_K=\sum_{k=2}^K  \| \pi_{k}^c-$ $\pi_{k-1}^c \|_{1}$ is the path-length of the compared policies.
+\end{theorem}
+%────────────────────────────────────────
+%────────────────────────────────────────
+
+%────────────────────────────────────────
+\begin{remark}
+This result is much sharper than the result in \citep{abbasi2022new}. Their rate is $\tilde O(\sqrt{|A|K(S+1)})$, where $P_K \le (S+1)$. However, they assume the MAB has bandit feedback. 
+\end{remark}
+%────────────────────────────────────────
+
+\newpage
+
+\section{Proof of Lemma 1}
+\begin{proof}[Proof of Lemma \ref{lem: bound for single agent}]
+    Let $\pi'_{k+1} = \argmin \eta \langle \pi, l_k \rangle + D_\psi(\pi, \pi_k)$. Then, $\pi'_{k+1} = \pi_k(a)exp(-\eta l_k(a))$.  Then, 
+    \begin{align*}
+        \sum_{k=1}^K \langle \pi_k - \pi_k^c, l_k \rangle & = \sum_{k=1}^K \langle \pi_k -\pi'_{k+1}, l_k \rangle  + \langle \pi'_{k+1} - \pi_k^c \rangle \\ 
+        & \le \sum_{k=1}^K \langle \pi_k - \pi_{k+1}', l_k \rangle + \frac{1}{\eta}\sum_{k=1}^K \left( D_\psi (\pi_k^c, \pi_k) - D_\psi(\pi_k^c , \pi'_{k+1}) \right)\\ 
+        &\le \sum_{k=1}^K \langle \pi_k - \pi_{k+1}', l_k \rangle + \frac{1}{\eta}\sum_{k=1}^K \left( D_\psi (\pi_k^c, \pi_k) - D_\psi(\pi_k^c , \pi_{k+1}) \right),
+    \end{align*} 
+    where the first inequality holds due to Lemma~\ref{lem: bound of mirror descent} and the last one holds due to Pythagoras theorem. 
+    
+    For the first term, we know $1-e^{-x} \le x$ and we have 
+    \[
+        \sum_{k=1}^K\left\langle \pi_k-\pi_{k+1}^{\prime}, l_k\right\rangle \leq \eta \sum_{k=1}^K \sum_{ a\in A} \pi_k( a) l_k^2( a) \leq \eta \sum_{k=1}^K \sum_{ a\in A} \pi_k( a) \leq \eta K .
+    \]
+    For the lat term, we obtain: 
+    \[
+        \begin{aligned}
+            & \sum_{k=1}^K\left(D_\psi\left(\pi_k^c, \pi_k\right)-D_\psi\left(\pi_k^c, \pi_{k+1}\right)\right) \\
+            =& D_\psi\left(\pi_1^c, \pi_1\right)+\sum_{k=2}^K\left(D_\psi\left(\pi_k^c, \pi_k\right)-D_\psi\left(\pi_{k-1}^c, \pi_k\right)\right) \\
+            =& D_\psi\left(\pi_1^c, \pi_1\right)+\sum_{k=2}^K \sum_{ a\in A}\left(\pi_k^c(a) \log \frac{\pi_k^c(a)}{\pi_k(a)}-\pi_{k-1}^c(a) \log \frac{\pi_{k-1}^c(a)}{\pi_k(a)}\right) \\
+            =& D_\psi\left(\pi_1^c, \pi_1\right)+\sum_{k=2}^K \sum_{x, a}\left(\pi_k^c(a)-\pi_{k-1}^c(a)\right) \log \frac{1}{\pi_k(a)}+\psi\left(\pi_K^c\right)-\psi\left(\pi_{1}^c\right) \\
+            \leq & \sum_{k=2}^K\left\|\pi_k^c-\pi_{k-1}^c\right\|_1 \log \frac{1}{\alpha}+D_\psi\left(\pi_1^c, \pi_1\right)+\psi\left(\pi_K^c\right)-\psi\left(\pi_{1}^c\right).
+            \end{aligned}
+    \]
+    Since $\pi_1$ minimize $\psi$, we have $\langle \nabla \psi(\pi_1), \pi_1^c- \pi_1 \rangle \ge 0$. Thus, 
+    \[
+        D_\psi (\pi_1^c, \pi_1) + \psi(\pi_K^c) - \psi(\pi_1^c) \le \psi(\pi_K^c) - \psi(\pi_1)\le \sum_{a\in A}\pi_1(a)\log \frac{1}{\pi_1(a)} \le \log |A|. 
+    \] 
+    Combine them, we obtain: 
+    \[
+        \sum_{k=1}^K\left\langle\pi_k-\pi_k^c, l_k\right\rangle \leq \eta K+\frac{1}{\eta}\left(\log |A|+P_K \log \frac{1}{\alpha}\right), 
+    \]
+    where $P_K=\sum_{k=2}^K\left\|\pi_k^c-\pi_{k-1}^c\right\|_1$. 
+    \end{proof}
+
+\section{Proof of Theorem~\ref{thm: DO-REPS for MAB}}
+
+\begin{proof}[Proof of Thm~\ref{thm: DO-REPS for MAB}]
+    Let $\pi^u(a) = \frac{1}{|A|}, \forall a\in A$. We choose large $K$ s.t. $\pi^u \in \Delta(M, \frac{1}{K})$. Then, we define, $u_k = (1-\frac{1}{T})\pi_k^c + \frac{1}{T}\pi^u \in \Delta(M, \frac{1}{K^2})$. Then, 
+    
+        \begin{align}
+            \sum_{k=1}^K\left\langle \pi_k-\pi_k^c, \ell_k\right\rangle &=\sum_{k=1}^K\left\langle \pi_k-u_k, \ell_k\right\rangle+\frac{1}{K} \sum_{k=1}^K\left\langle \pi^u-\pi_k^c, \ell_k\right\rangle \notag\\
+            & \leq \sum_{k=1}^K\left\langle \pi_k-u_k, \ell_k\right\rangle+2 \notag\\
+            & \leq \underbrace{\sum_{k=1}^K\left\langle \pi_k-\pi_{k, i}, \ell_k\right\rangle}_{\text {meta-regret }}+\underbrace{\sum_{k=1}^K\left\langle \pi_{k, i}-u_k, \ell_k\right\rangle}_{\text {base-regret }}+2, \label{eq: decomposition} 
+            \end{align}
+    
+    where the last inequality holds for any index $i$. 
+    
+    \noindent \textbf{Upper bound of base-regret. } 
+    Since $u_k\in \Delta(M, \frac{1}{K^2}), \forall k \in [K]$. From Lemma~\ref{lem: bound for single agent}, we have 
+    \[
+        \text { base-regret } \leq \eta K+\frac{\log |A| +2 \sum_{k=2}^K\left\|u_k-u_{k-1}\right\|_1 \log K}{\eta} \leq \eta K+\frac{\log |A|+2 P_K \log K}{\eta} \text {, }
+    \]
+    where $\sum_{k=2}^K\left\|u_k-u_{k-1}\right\|_1 \leq \sum_{k=2}^K\left\|{\pi_k^c}-{\pi_{k-1}^c}\right\|_1= P_K$. The optimal step size is 
+    \[
+        \eta^* = \sqrt{\frac{\log |A|+2 P_K \log K}{K}}. 
+    \]
+    Note that $0\le P_K \le 2K$,  the possible range of the optimal step size is 
+    \[
+        \eta_{\min }=\sqrt{\frac{H \log |A|}{K}} \text {, and } \eta_{\max }=\sqrt{\frac{H \log |A|}{K}+4 \log K} \text {. }
+    \]
+    Due to the construction of $\cH = =\left\{\eta_i=2^{i-1} \sqrt{K^{-1} \log |A|} \mid i \in\right.$
+    $[N]\}$, where $N=\left\lceil\frac{1}{2} \log \left(1+\frac{4 K \log K}{\log (|A| )}\right)\right\rceil+1$, We know 
+    \[
+        \eta_1=\sqrt{\frac{ \log |A|}{K}}=\eta_{\min } \text {, and } \eta_N \geq \sqrt{\frac{ \log |A|}{K}+4 \log K}=\eta_{\max } .
+    \]
+    Thus, there exists a base-learner $i^*$ s.t $\eta_{i^*} \leq \eta^* \leq \eta_{i^*+1}=2 \eta_{i^*}$. Hence, we know 
+    
+        \begin{align}
+            \text { base-regret } & \leq \eta_{i^*} K+\frac{\log | A|+2 \bar{P}_K \log K}{\eta_{i^*}} \notag \\
+            & \leq \eta^* K+\frac{2\left(\log (|A|)+2 P_K \log K\right)}{\eta^*}\notag \\
+            &=3 \sqrt{K\left(\log |A|+2 P_K \log K\right)}, \label{eq: base-regret}
+        \end{align}
+    
+    where the second inequality hold due to $\eta_{i^*} \leq \eta^* \leq \eta_{i^*+1}=2 \eta_i$. 
+    
+    
+    \noindent \textbf{Upper bound of meta-regret.} Since $\pi_k = \sum \pi_{k,i}p_{k,i}$, we have 
+    \[
+        \text { meta-regret }=\sum_{k=1}^K\left\langle \pi_k-\pi_{k, i}, l_k\right\rangle=\sum_{k=1}^K\left\langle\sum_{i=1}^N p_{k, i} \pi_{k, i}-\pi_{k, i}, l_k\right\rangle=\sum_{k=1}^K\left\langle p_k-e_i, h_k\right\rangle,
+    \]
+    where $h_{k,i} = \langle \pi_{k,i}, l_k \rangle$. It is known that the update $p_{k+1, i} \propto \exp \left(-\varepsilon \sum_{s=1}^k h_{s, i}\right), \forall i \in[N]$ is equal to the update $p_{k+1}=\arg \min _{p \in \Delta_N} \varepsilon\left\langle p, h_k\right\rangle+$ $D_\psi\left(p, p_k\right)$, where $\psi(p)=\sum_{i=1}^N p_i \log p_i$ is the standard negative entropy. This can be further reformulated solving the 
+    unconstrained optimization problem $p_{k+1}^{\prime}=\arg \min _p \varepsilon\left\langle p, h_k\right\rangle+D_\psi\left(p, p_k\right)$ at first and then projecting $p_{k+1}^{\prime}$ to the simplex $\Delta_N$ as $p_{k+1}=\arg \min _{p \in \Delta_N} D_\psi\left(p, p_{k+1}^{\prime}\right)$. By standard analysis of OMD, we have
+    $$
+    \begin{aligned}
+    \sum_{k=1}^K\left\langle p_k-e_i, h_k\right\rangle & \leq \sum_{k=1}^K\left\langle p_k-p_{k+1}^{\prime}, h_k\right\rangle+\sum_{k=1}^K\left\langle p_{k+1}^{\prime}-e_i, h_k\right\rangle \\
+    & \leq \sum_{k=1}^K\left\langle p_k-p_{k+1}^{\prime}, h_k\right\rangle+\frac{1}{\varepsilon} \sum_{k=1}^K\left(D_\psi\left(e_i, p_k\right)-D_\psi\left(e_i, p_{k+1}^{\prime}\right)\right) \\
+    & \leq \sum_{k=1}^K\left\langle p_k-p_{k+1}^{\prime}, h_k\right\rangle+\frac{1}{\varepsilon} \sum_{k=1}^K\left(D_\psi\left(e_i, p_k\right)-D_\psi\left(e_i, p_{k+1}\right)\right) \\
+    & \leq \sum_{k=1}^K\left\langle p_k-p_{k+1}^{\prime}, h_k\right\rangle+\frac{1}{\varepsilon} D_\psi\left(e_i, p_1\right),
+    \end{aligned}
+    $$
+    where the second inequality holds due to Lemma~\ref{lem: bound of mirror descent} and the third inequality holds due to Pythagoras theorem. Using the fact that $1-e^{-x} \leq x$ and the definition that $p_{1, i}=1 / N, h_{k, i} \leq 1, \forall k \in[K], i \in[N]$, we have
+    $$
+    \sum_{k=1}^K\left\langle p_k-p_{k+1}^{\prime}, h_k\right\rangle+\frac{1}{\varepsilon} D_\psi\left(e_i, p_1\right) \leq \varepsilon \sum_{k=1}^K \sum_{i=1}^N p_{k, i} h_{k, i}^2+\frac{\ln N}{\varepsilon} \leq \varepsilon K+\frac{\ln N}{\varepsilon} .
+    $$ 
+    
+    In particular, for the best base-learner $i^* \in[N]$, we have
+    \begin{equation}
+        \label{eq: meta-regret}
+        \text { meta-regret }=\sum_{k=1}^K\left\langle \pi_k-\pi_{k, i^*}, \ell_k\right\rangle \leq \varepsilon K+\frac{\log N}{\varepsilon}=\sqrt{K \log N},
+    \end{equation}
+    where the last equality holds due to the setting $\varepsilon=\sqrt{(\log N) /K}$.
+    
+    Combine \eqref{eq: decomposition}, \eqref{eq: base-regret} and \eqref{eq: meta-regret}, we obtain 
+    \[
+        \begin{aligned}
+            \sum_{k=1}^K\left\langle \pi_k-{\pi_k^{c}}, \ell_k\right\rangle & \leq \text { base-regret }+\text { meta-regret } \\
+            & \leq 3 \sqrt{K\left( \log |A|+2 P_K\log K\right)}+\sqrt{K\log N}+2 \\
+            & \leq \mathcal{O}\left(\sqrt{K\left(\log (| A| )+P_K \log K\right)}\right),
+            \end{aligned}
+    \]
+    where we used $N=\left\lceil\frac{1}{2} \log \left(1+\frac{4 K \log K}{\log (|A| )}\right)\right\rceil+1$. 
+    \end{proof}
+    %────────────────────────────────────────
+
+
+\section{Useful Lemmas}
+
+%────────────────────────────────────────
+\begin{lemma}
+\label{lem: bound of mirror descent}
+Define $q^* = \argmin_{q\in \cK} \eta \langle q, l \rangle + D_F (q, \hat q)$ for some compact set $\cK \subset \RR^d$, convex and differentiable function $F$, an arbitrary point $l\in \RR^d$, and a point $\hat q \in \cK$. Then for any $u\in \cK$, 
+\[
+    \langle q^* -u, l \rangle  \le \frac{1}{\eta} \big( D_F (u,\hat q) - D_F (u,q^*) - D_F(q^*, \hat q) \big). 
+\]
+
+\end{lemma}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}
+Since $q^*$ is the minimal point, we know
+\[
+    \langle u-q^*, \eta l + \nabla F(q^*) - \nabla F(\hat q) \rangle \ge 0.  
+\]
+Hence, 
+\begin{align*}
+    \langle q^*-u, l \rangle &\le \frac{1}{\eta} \langle u-q^*,  \nabla F(q^*) - \nabla F(\hat q) \rangle \\ 
+    & =   \frac{1}{\eta} \langle u-q^*,  \nabla F(q^*)  \rangle  - \frac{1}{\eta} \langle u-\hat q + \hat q - q^*,   \nabla F(\hat q) \rangle\\ 
+    & = -\frac{1}{\eta}(F(u) - F(q^*) -  \frac{1}{\eta} \langle u-q^*,  \nabla F(q^*)  \rangle) \\ 
+    &+ \frac{1}{\eta}(F(u) - F(\hat q) -\frac{1}{\eta} \langle u-\hat q ,   \nabla F(\hat q) \rangle) -\frac{1}{\eta}  (F(q^*) - F(\hat q) -\langle q^*-\hat q ,   \nabla F(\hat q) \rangle)\\ 
+    & =  \frac{1}{\eta} \big( D_F (u,\hat q) - D_F (u,q^*) - D_F(q^*, \hat q) \big). 
+\end{align*}
+\end{proof}
+%────────────────────────────────────────
+
+\bibliography{../will}
+\bibliographystyle{abbrvnat}
+\end{document}

@@ -1,0 +1,107 @@
+\chapter{More on the SVD} 
+We continue our discussion of the singular value decomposition, emphasizing its connection with low-rank approximation of matrices in the 2-norm and the Frobenius norm.
+
+\section{SVD vs Eigenvalue Decomposition}
+There are fundamental differences between the SVD and the eigenvalue decomposition. 
+\begin{itemize}
+    \item One is that the SVD uses two different bases (the sets of left and right singular vectors), whereas the eigenvalue decomposition uses just one (the eigenvectors).
+    \item Another is that the SVD uses orthonormal bases, whereas the eigenvalue decomposition uses a basis that generally is not orthogonal.
+    \item A third is that not all matrices (even square ones) have an eigenvalue decomposition, but all matrices (even rectangular ones) have a singular value decomposition, as we established in Theorem ~\ref{thm: Existence and uniqueness of SVD}.
+    \item In applications, eigenvalues tend to be relevant to problems involving the behavior of iterated forms of $A$, such as matrix powers $A^k$ or exponentials $e^{t A}$, whereas singular vectors tend to be relevant to problems involving the behavior of $A$ itself, or its inverse.
+\end{itemize}
+
+\section{Matrix Properties via the SVD}
+The power of the SVD becomes apparent as we begin to catalogue its connections with other fundamental topics of linear algebra. For the following theorems, assume that $A$ has dimensions $m \times n$. Let $p$ be the minimum of $m$ and $n$, let $r \leq p$ denote the number of nonzero singular values of $A$, and let $\langle x, y, \ldots, z\rangle$ denote the space spanned by the vectors $x, y, \ldots, z$.
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm:rank of svd }
+The rank of $A$ is $r$, the number of nonzero singular values.
+\end{theorem}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: range and null of svd}
+$ \range(A) = \langle u_1,\ldots ,u_r  \rangle  $ and $\nul(A) = \langle v_{r+1},\ldots ,v_n \rangle $. 
+\end{theorem}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: 2norm and fnorm }
+$\|A\|_2 = \sigma _1$ and $\|A\|_F = \sqrt{\sigma _1^2 + \sigma _2^2 + \cdots + \sigma _r^2} $. 
+\end{theorem}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: Eig and svd}
+The nonzero singular values of $A$ are the square roots of the nonzero eigenvalues of $A^* A$ or $A A^*$. (These matrices have the same nonzero eigenvalues.)
+\end{theorem}
+%────────────────────────────────────────
+
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: hermitian svd }
+If $A=A^*$, then the singular values of $A$ are the absolute values of the eigenvalues of $A$.
+\end{theorem}
+%────────────────────────────────────────
+
+\section{Low-Rank Approximations}
+But what is the SVD? Another approach to an explanation is to consider how a matrix $A$ might be represented as a sum of rank-one matrices.
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: low-rank approx}
+$A$ is the sum of $r$ rank-one matrices:
+\begin{align}
+    \label{eq: low-rank approx}
+A=\sum_{j=1}^r \sigma_j u_j v_j^*
+\end{align}
+\end{theorem}
+%────────────────────────────────────────
+
+Formula \eqref{eq: low-rank approx}, however, represents a decomposition into rank-one matrices with a deeper property: the $\nu$ th partial sum captures as much of the energy of $A$ as possible. This statement holds with "energy" defined by either the 2-norm or the Frobenius norm. We can make it precise by formulating a problem of best approximation of a matrix $A$ by matrices of lower rank.
+
+
+%────────────────────────────────────────
+\begin{theorem}
+\label{thm: low-rank approx of 2 norm}
+For any $\nu$ with $0 \leq \nu \leq r$, define
+\begin{align}
+    \label{eq: A_nu}
+A_\nu=\sum_{j=1}^\nu \sigma_j u_j v_j^*
+\end{align}
+if $\nu=p=\min \{m, n\}$, define $\sigma_{\nu+1}=0$. Then
+\begin{align*}
+\left\|A-A_\nu\right\|_2=\inf _{\substack{B \in \mathbf{C}^{m \times n} \\ \mathbf{r a n k}(B) \leq \nu}}\|A-B\|_2=\sigma_{\nu+1} .
+\end{align*}
+\end{theorem}
+%────────────────────────────────────────
+Similarly, 
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ \label{thm: Low rank approx under f norm}
+For any $\nu$ with $0 \leq \nu \leq r$, the matrix $A_\nu$ of \eqref{eq: A_nu} also satisfies
+\begin{align*}
+\left\|A-A_\nu\right\|_F=\inf _{\substack{B \in \mathbb{C}^{m \times n} \\ \operatorname{rank}(B) \leq \nu}}\|A-B\|_F=\sqrt{\sigma_{\nu+1}^2+\cdots+\sigma_r^2} .
+\end{align*}
+ \end{theorem}
+ %────────────────────────────────────────
+ %────────────────────────────────────────
+ \begin{proof}
+ Note that for $A= A' + A''$, we have 
+ \[
+    \sigma _i (A')  + \sigma _j (A'') \ge \sigma_{i+j-1} (A). 
+ \]
+ \end{proof}
+ %────────────────────────────────────────
+ 

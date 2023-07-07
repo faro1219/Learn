@@ -1,100 +1,261 @@
 \babel@toc {english}{}
-\contentsline {chapter}{\numberline {1}Matlab}{5}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Exp 1: Discrete Legendre Poly}{5}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Exp 2: Classical vs. Modified Gram-Schmidt}{5}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Exp 3: Numerical Loss of Orthogonality}{6}{section.1.3}%
-\contentsline {chapter}{\numberline {2}Householder Triangularization}{8}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Householder and Gram-Schmidt}{8}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Triangularization by Introducing Zeros}{8}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Householder Reflectors}{9}{section.2.3}%
-\contentsline {section}{\numberline {2.4}The Better of Two Reflectors}{10}{section.2.4}%
-\contentsline {section}{\numberline {2.5}The Algorithm}{10}{section.2.5}%
-\contentsline {section}{\numberline {2.6}Applying or Forming $Q$}{10}{section.2.6}%
-\contentsline {section}{\numberline {2.7}Operation Count}{11}{section.2.7}%
-\contentsline {chapter}{\numberline {3}Least Squares Problems}{13}{chapter.3}%
-\contentsline {section}{\numberline {3.1}The Problem}{13}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Orthogonal Projection and the Normal Equations}{13}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Pseudoinverse}{14}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Normal Equations}{14}{section.3.4}%
-\contentsline {section}{\numberline {3.5}QR factorization}{15}{section.3.5}%
-\contentsline {section}{\numberline {3.6}SVD}{15}{section.3.6}%
-\contentsline {section}{\numberline {3.7}Comparison of Algorithms}{16}{section.3.7}%
-\contentsline {part}{I\hspace {1em}Conditioning and Stability}{17}{part.1}%
-\contentsline {chapter}{\numberline {4}Conditioning and Condition Numbers}{18}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Condition of a Problem}{18}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Absolute Condition Number}{18}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Relative Condition Number}{19}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Condition of Matrix-Vector Multiplication}{20}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Condition Number of a Matrix}{21}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Condition of a System of Equations}{21}{section.4.6}%
-\contentsline {chapter}{\numberline {5}Floating Point Arithmetic}{23}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Limitations of Digital Representations}{23}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Floating Point Numbers}{23}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Machine Epsilon}{24}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Floating Point Arithmetic}{24}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Complex Floating Point Arithmetic}{25}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Stability}{26}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Algorithms}{26}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Accuracy}{26}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Stability}{26}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Backward Stability}{27}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Independence of Norm}{27}{section.6.5}%
-\contentsline {chapter}{\numberline {7}More on Stability}{28}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Stability of Floating Point Arithmetic}{28}{section.7.1}%
-\contentsline {section}{\numberline {7.2}An Unstable Algorithm}{29}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Accuracy of a Backward Stable Algo}{29}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Backward Error Analysis}{30}{section.7.4}%
-\contentsline {chapter}{\numberline {8}Stability of Householder Traingularization}{31}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Experiment}{31}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Theorem}{32}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Analyzing an Algorithm to Solve $Ax=b$}{32}{section.8.3}%
-\contentsline {chapter}{\numberline {9}Stability of Back Substitution}{35}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Triangular System}{35}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Backward Stability Theorem}{36}{section.9.2}%
-\contentsline {section}{\numberline {9.3}$ m=1 $}{36}{section.9.3}%
-\contentsline {section}{\numberline {9.4}$m=2$}{36}{section.9.4}%
-\contentsline {section}{\numberline {9.5}$m=3$}{37}{section.9.5}%
-\contentsline {section}{\numberline {9.6}General $m$}{38}{section.9.6}%
-\contentsline {chapter}{\numberline {10}Conditioning of Least Squares Problems}{39}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Four Conditioning Problems}{39}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Theorem}{39}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Transformation to a Diagonal Matrix}{40}{section.10.3}%
-\contentsline {section}{\numberline {10.4}Sensitivity of $y$ to Perturbations in $b$}{40}{section.10.4}%
-\contentsline {section}{\numberline {10.5}Sensitivity of $x$ to Perturbations in $b$}{40}{section.10.5}%
-\contentsline {section}{\numberline {10.6}Tilting the range of $A$}{41}{section.10.6}%
-\contentsline {section}{\numberline {10.7}Sensitivity of $y$ to Perturbations in $A$}{41}{section.10.7}%
-\contentsline {section}{\numberline {10.8}Sensitivity of $x$ to Perturbations in $A$}{42}{section.10.8}%
-\contentsline {chapter}{\numberline {11}Stability of Least Squares Algorithms}{44}{chapter.11}%
-\contentsline {section}{\numberline {11.1}Example}{44}{section.11.1}%
-\contentsline {section}{\numberline {11.2}Householder Triangularization}{45}{section.11.2}%
-\contentsline {section}{\numberline {11.3}GS Orthogonalization}{45}{section.11.3}%
-\contentsline {section}{\numberline {11.4}Normal Equations}{46}{section.11.4}%
-\contentsline {section}{\numberline {11.5}SVD}{47}{section.11.5}%
-\contentsline {section}{\numberline {11.6}Rank-Deficient LS Problems}{47}{section.11.6}%
-\contentsline {part}{II\hspace {1em}Systems of Equations}{48}{part.2}%
-\contentsline {chapter}{\numberline {12}Gaussian Elimination}{49}{chapter.12}%
-\contentsline {section}{\numberline {12.1}LU Factorization}{49}{section.12.1}%
-\contentsline {section}{\numberline {12.2}Example}{49}{section.12.2}%
-\contentsline {section}{\numberline {12.3}General Formulas and Two Strokes of Luck}{50}{section.12.3}%
-\contentsline {section}{\numberline {12.4}Operation Count}{51}{section.12.4}%
-\contentsline {section}{\numberline {12.5}Solution of $Ax=b$ by LU}{52}{section.12.5}%
-\contentsline {section}{\numberline {12.6}Instability of Gaussian Elimination without Pivoting}{52}{section.12.6}%
-\contentsline {chapter}{\numberline {13}Pivoting}{54}{chapter.13}%
-\contentsline {section}{\numberline {13.1}Pivots}{54}{section.13.1}%
-\contentsline {section}{\numberline {13.2}Partial Pivoting}{55}{section.13.2}%
-\contentsline {section}{\numberline {13.3}Example}{55}{section.13.3}%
-\contentsline {section}{\numberline {13.4}$ PA=LU $ Factorization and a Third Stroke of Luck}{56}{section.13.4}%
-\contentsline {section}{\numberline {13.5}Complete Pivoting}{58}{section.13.5}%
-\contentsline {chapter}{\numberline {14}Stability of Gaussian Elimination}{59}{chapter.14}%
-\contentsline {section}{\numberline {14.1}Stability and the Size of $L$ and $U$}{59}{section.14.1}%
-\contentsline {section}{\numberline {14.2}Growth Factors}{60}{section.14.2}%
-\contentsline {section}{\numberline {14.3}Worst-Case Instability}{60}{section.14.3}%
-\contentsline {section}{\numberline {14.4}Stability in Practice}{61}{section.14.4}%
-\contentsline {section}{\numberline {14.5}Explanation}{63}{section.14.5}%
-\contentsline {chapter}{\numberline {15}Cholesky Factorization}{65}{chapter.15}%
-\contentsline {section}{\numberline {15.1}Symmetric Gaussian Elimination}{65}{section.15.1}%
-\contentsline {section}{\numberline {15.2}Cholesky Factorization}{66}{section.15.2}%
-\contentsline {section}{\numberline {15.3}The Algorithm}{66}{section.15.3}%
-\contentsline {section}{\numberline {15.4}Operation Count}{67}{section.15.4}%
-\contentsline {section}{\numberline {15.5}Stability}{67}{section.15.5}%
-\contentsline {section}{\numberline {15.6}Solution of $Ax=b$}{68}{section.15.6}%
+\contentsline {part}{I\hspace {1em}Fundamentals}{8}{part.1}%
+\contentsline {chapter}{\numberline {1}Matrix-Vector Multiplication}{9}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Norms}{10}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Vector Norms}{10}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Induced Matrix Norms}{10}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Cauchy-Schwarz and H\"older Inequalities}{11}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Bounding $\|AB\|$ in an Induced Matrix Norm}{11}{section.2.4}%
+\contentsline {section}{\numberline {2.5}General Matrix Norms}{11}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Invariance under Unitary Multiplication}{12}{section.2.6}%
+\contentsline {chapter}{\numberline {3}The Singular Value Decomposition}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}A Geometric Observation}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Reduced SVD}{14}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Full SVD}{14}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Formal Definition}{14}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Existence and Uniqueness}{15}{section.3.5}%
+\contentsline {chapter}{\numberline {4}More on the SVD}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}SVD vs Eigenvalue Decomposition}{16}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Matrix Properties via the SVD}{16}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Low-Rank Approximations}{17}{section.4.3}%
+\contentsline {part}{II\hspace {1em}QR factorization and Least Squares}{18}{part.2}%
+\contentsline {chapter}{\numberline {5}Projectors}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Projectors}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Complementary Projectors}{19}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Orthogonal Projectors}{20}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Projection with an Orthonormal Basis}{20}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Projection with an Arbitrary Basis}{21}{section.5.5}%
+\contentsline {chapter}{\numberline {6}QR Factorization}{22}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Reduced QR Factorization}{22}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Full QR Factorization}{23}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Gram-Schmidt Orthogonalization}{23}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Existence and Uniqueness}{24}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Solution of $Ax=b$ by QR Factorization}{24}{section.6.5}%
+\contentsline {chapter}{\numberline {7}Gram-Schmidt Orthogonalization}{25}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Gram-Schmidt Projections}{25}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Modified Gram-Schmidt Algorithm}{25}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Operation Count}{26}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Counting Operations Geometrically}{26}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Gram-Schmidt as Triangular Orthogonalization}{27}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Matlab}{29}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Exp 1: Discrete Legendre Poly}{29}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Exp 2: Classical vs. Modified Gram-Schmidt}{29}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Exp 3: Numerical Loss of Orthogonality}{30}{section.8.3}%
+\contentsline {chapter}{\numberline {9}Householder Triangularization}{32}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Householder and Gram-Schmidt}{32}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Triangularization by Introducing Zeros}{32}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Householder Reflectors}{33}{section.9.3}%
+\contentsline {section}{\numberline {9.4}The Better of Two Reflectors}{34}{section.9.4}%
+\contentsline {section}{\numberline {9.5}The Algorithm}{34}{section.9.5}%
+\contentsline {section}{\numberline {9.6}Applying or Forming $Q$}{34}{section.9.6}%
+\contentsline {section}{\numberline {9.7}Operation Count}{35}{section.9.7}%
+\contentsline {chapter}{\numberline {10}Least Squares Problems}{37}{chapter.10}%
+\contentsline {section}{\numberline {10.1}The Problem}{37}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Orthogonal Projection and the Normal Equations}{37}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Pseudoinverse}{38}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Normal Equations}{38}{section.10.4}%
+\contentsline {section}{\numberline {10.5}QR factorization}{39}{section.10.5}%
+\contentsline {section}{\numberline {10.6}SVD}{39}{section.10.6}%
+\contentsline {section}{\numberline {10.7}Comparison of Algorithms}{40}{section.10.7}%
+\contentsline {part}{III\hspace {1em}Conditioning and Stability}{41}{part.3}%
+\contentsline {chapter}{\numberline {11}Conditioning and Condition Numbers}{42}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Condition of a Problem}{42}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Absolute Condition Number}{42}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Relative Condition Number}{43}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Condition of Matrix-Vector Multiplication}{44}{section.11.4}%
+\contentsline {section}{\numberline {11.5}Condition Number of a Matrix}{45}{section.11.5}%
+\contentsline {section}{\numberline {11.6}Condition of a System of Equations}{45}{section.11.6}%
+\contentsline {chapter}{\numberline {12}Floating Point Arithmetic}{47}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Limitations of Digital Representations}{47}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Floating Point Numbers}{47}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Machine Epsilon}{48}{section.12.3}%
+\contentsline {section}{\numberline {12.4}Floating Point Arithmetic}{48}{section.12.4}%
+\contentsline {section}{\numberline {12.5}Complex Floating Point Arithmetic}{49}{section.12.5}%
+\contentsline {chapter}{\numberline {13}Stability}{50}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Algorithms}{50}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Accuracy}{50}{section.13.2}%
+\contentsline {section}{\numberline {13.3}Stability}{50}{section.13.3}%
+\contentsline {section}{\numberline {13.4}Backward Stability}{51}{section.13.4}%
+\contentsline {section}{\numberline {13.5}Independence of Norm}{51}{section.13.5}%
+\contentsline {chapter}{\numberline {14}More on Stability}{52}{chapter.14}%
+\contentsline {section}{\numberline {14.1}Stability of Floating Point Arithmetic}{52}{section.14.1}%
+\contentsline {section}{\numberline {14.2}An Unstable Algorithm}{53}{section.14.2}%
+\contentsline {section}{\numberline {14.3}Accuracy of a Backward Stable Algo}{53}{section.14.3}%
+\contentsline {section}{\numberline {14.4}Backward Error Analysis}{54}{section.14.4}%
+\contentsline {chapter}{\numberline {15}Stability of Householder Traingularization}{55}{chapter.15}%
+\contentsline {section}{\numberline {15.1}Experiment}{55}{section.15.1}%
+\contentsline {section}{\numberline {15.2}Theorem}{56}{section.15.2}%
+\contentsline {section}{\numberline {15.3}Analyzing an Algorithm to Solve $Ax=b$}{56}{section.15.3}%
+\contentsline {chapter}{\numberline {16}Stability of Back Substitution}{59}{chapter.16}%
+\contentsline {section}{\numberline {16.1}Triangular System}{59}{section.16.1}%
+\contentsline {section}{\numberline {16.2}Backward Stability Theorem}{60}{section.16.2}%
+\contentsline {section}{\numberline {16.3}$ m=1 $}{60}{section.16.3}%
+\contentsline {section}{\numberline {16.4}$m=2$}{60}{section.16.4}%
+\contentsline {section}{\numberline {16.5}$m=3$}{61}{section.16.5}%
+\contentsline {section}{\numberline {16.6}General $m$}{62}{section.16.6}%
+\contentsline {chapter}{\numberline {17}Conditioning of Least Squares Problems}{63}{chapter.17}%
+\contentsline {section}{\numberline {17.1}Four Conditioning Problems}{63}{section.17.1}%
+\contentsline {section}{\numberline {17.2}Theorem}{63}{section.17.2}%
+\contentsline {section}{\numberline {17.3}Transformation to a Diagonal Matrix}{64}{section.17.3}%
+\contentsline {section}{\numberline {17.4}Sensitivity of $y$ to Perturbations in $b$}{64}{section.17.4}%
+\contentsline {section}{\numberline {17.5}Sensitivity of $x$ to Perturbations in $b$}{64}{section.17.5}%
+\contentsline {section}{\numberline {17.6}Tilting the range of $A$}{65}{section.17.6}%
+\contentsline {section}{\numberline {17.7}Sensitivity of $y$ to Perturbations in $A$}{65}{section.17.7}%
+\contentsline {section}{\numberline {17.8}Sensitivity of $x$ to Perturbations in $A$}{66}{section.17.8}%
+\contentsline {chapter}{\numberline {18}Stability of Least Squares Algorithms}{68}{chapter.18}%
+\contentsline {section}{\numberline {18.1}Example}{68}{section.18.1}%
+\contentsline {section}{\numberline {18.2}Householder Triangularization}{69}{section.18.2}%
+\contentsline {section}{\numberline {18.3}GS Orthogonalization}{69}{section.18.3}%
+\contentsline {section}{\numberline {18.4}Normal Equations}{70}{section.18.4}%
+\contentsline {section}{\numberline {18.5}SVD}{71}{section.18.5}%
+\contentsline {section}{\numberline {18.6}Rank-Deficient LS Problems}{71}{section.18.6}%
+\contentsline {part}{IV\hspace {1em}Systems of Equations}{72}{part.4}%
+\contentsline {chapter}{\numberline {19}Gaussian Elimination}{73}{chapter.19}%
+\contentsline {section}{\numberline {19.1}LU Factorization}{73}{section.19.1}%
+\contentsline {section}{\numberline {19.2}Example}{73}{section.19.2}%
+\contentsline {section}{\numberline {19.3}General Formulas and Two Strokes of Luck}{74}{section.19.3}%
+\contentsline {section}{\numberline {19.4}Operation Count}{75}{section.19.4}%
+\contentsline {section}{\numberline {19.5}Solution of $Ax=b$ by LU}{76}{section.19.5}%
+\contentsline {section}{\numberline {19.6}Instability of Gaussian Elimination without Pivoting}{76}{section.19.6}%
+\contentsline {chapter}{\numberline {20}Pivoting}{78}{chapter.20}%
+\contentsline {section}{\numberline {20.1}Pivots}{78}{section.20.1}%
+\contentsline {section}{\numberline {20.2}Partial Pivoting}{79}{section.20.2}%
+\contentsline {section}{\numberline {20.3}Example}{79}{section.20.3}%
+\contentsline {section}{\numberline {20.4}$ PA=LU $ Factorization and a Third Stroke of Luck}{80}{section.20.4}%
+\contentsline {section}{\numberline {20.5}Complete Pivoting}{82}{section.20.5}%
+\contentsline {chapter}{\numberline {21}Stability of Gaussian Elimination}{83}{chapter.21}%
+\contentsline {section}{\numberline {21.1}Stability and the Size of $L$ and $U$}{83}{section.21.1}%
+\contentsline {section}{\numberline {21.2}Growth Factors}{84}{section.21.2}%
+\contentsline {section}{\numberline {21.3}Worst-Case Instability}{84}{section.21.3}%
+\contentsline {section}{\numberline {21.4}Stability in Practice}{85}{section.21.4}%
+\contentsline {section}{\numberline {21.5}Explanation}{87}{section.21.5}%
+\contentsline {chapter}{\numberline {22}Cholesky Factorization}{89}{chapter.22}%
+\contentsline {section}{\numberline {22.1}Symmetric Gaussian Elimination}{89}{section.22.1}%
+\contentsline {section}{\numberline {22.2}Cholesky Factorization}{90}{section.22.2}%
+\contentsline {section}{\numberline {22.3}The Algorithm}{90}{section.22.3}%
+\contentsline {section}{\numberline {22.4}Operation Count}{91}{section.22.4}%
+\contentsline {section}{\numberline {22.5}Stability}{91}{section.22.5}%
+\contentsline {section}{\numberline {22.6}Solution of $Ax=b$}{92}{section.22.6}%
+\contentsline {part}{V\hspace {1em}Eigenvalues}{93}{part.5}%
+\contentsline {chapter}{\numberline {23}Eigenvalue Problems}{94}{chapter.23}%
+\contentsline {section}{\numberline {23.1}Eigenvalues and Eigenvectors}{94}{section.23.1}%
+\contentsline {section}{\numberline {23.2}Eigenvalue Decomposition}{94}{section.23.2}%
+\contentsline {section}{\numberline {23.3}Geometric Multiplicity}{94}{section.23.3}%
+\contentsline {section}{\numberline {23.4}Characteristic Polynomial}{95}{section.23.4}%
+\contentsline {section}{\numberline {23.5}Algebraic Multiplicity}{95}{section.23.5}%
+\contentsline {section}{\numberline {23.6}Similarity Transformation}{95}{section.23.6}%
+\contentsline {section}{\numberline {23.7}Defective Eigenvalues and Matrices}{96}{section.23.7}%
+\contentsline {section}{\numberline {23.8}Diagonalizability}{96}{section.23.8}%
+\contentsline {section}{\numberline {23.9}Determinant and Trace}{96}{section.23.9}%
+\contentsline {section}{\numberline {23.10}Unitary Diagonalization}{97}{section.23.10}%
+\contentsline {section}{\numberline {23.11}Schur Factorization}{97}{section.23.11}%
+\contentsline {section}{\numberline {23.12}Eigenvalue-Revealing factorizations}{97}{section.23.12}%
+\contentsline {chapter}{\numberline {24}Overview of Eigenvalue Algorithms}{98}{chapter.24}%
+\contentsline {section}{\numberline {24.1}Shortcomings of Obvious Algorithms}{98}{section.24.1}%
+\contentsline {section}{\numberline {24.2}A Fundamental Difficulty}{98}{section.24.2}%
+\contentsline {section}{\numberline {24.3}Schur Factorization and Diagonalization}{99}{section.24.3}%
+\contentsline {section}{\numberline {24.4}Two Phases of Eigenvalue Computations}{100}{section.24.4}%
+\contentsline {chapter}{\numberline {25}Reduction to Hessenberg or Tridiagonal Form}{101}{chapter.25}%
+\contentsline {section}{\numberline {25.1}A Bad Idea}{101}{section.25.1}%
+\contentsline {section}{\numberline {25.2}A Good Idea}{102}{section.25.2}%
+\contentsline {section}{\numberline {25.3}Operation Count}{103}{section.25.3}%
+\contentsline {section}{\numberline {25.4}The Hermitian Case}{103}{section.25.4}%
+\contentsline {section}{\numberline {25.5}Stability}{104}{section.25.5}%
+\contentsline {chapter}{\numberline {26}Rayleigh Quotient, Inverse Iteration}{105}{chapter.26}%
+\contentsline {section}{\numberline {26.1}Restriction ot Real Symmetric Matrices}{105}{section.26.1}%
+\contentsline {section}{\numberline {26.2}Rayleigh Quotient}{105}{section.26.2}%
+\contentsline {section}{\numberline {26.3}Power Iteration}{106}{section.26.3}%
+\contentsline {section}{\numberline {26.4}Inverse Iteration}{107}{section.26.4}%
+\contentsline {section}{\numberline {26.5}Rayleigh Quotient Iteration}{108}{section.26.5}%
+\contentsline {section}{\numberline {26.6}Operation Counts}{109}{section.26.6}%
+\contentsline {chapter}{\numberline {27}QR Algorithm without Shifts}{110}{chapter.27}%
+\contentsline {section}{\numberline {27.1}The QR Algorithm}{110}{section.27.1}%
+\contentsline {section}{\numberline {27.2}Unnormalized Simultaneous Iteration}{111}{section.27.2}%
+\contentsline {section}{\numberline {27.3}Simultaneous Iteration}{112}{section.27.3}%
+\contentsline {section}{\numberline {27.4}Simultaneous Iteration $ \DOTSB \Leftarrow \joinrel \Rightarrow $ QR Algorithm}{112}{section.27.4}%
+\contentsline {section}{\numberline {27.5}Convergence of the QR Algorithm}{113}{section.27.5}%
+\contentsline {chapter}{\numberline {28}QR Algorithm with Shifts}{115}{chapter.28}%
+\contentsline {section}{\numberline {28.1}Connection with Inverse Iteration}{115}{section.28.1}%
+\contentsline {section}{\numberline {28.2}Connection with Shifted Inverse Iteration}{116}{section.28.2}%
+\contentsline {section}{\numberline {28.3}Connection with Rayleigh Quotient Iteration}{116}{section.28.3}%
+\contentsline {section}{\numberline {28.4}Wilkinson Shift}{116}{section.28.4}%
+\contentsline {section}{\numberline {28.5}Stability and Accuracy}{117}{section.28.5}%
+\contentsline {chapter}{\numberline {29}Other Eigenvalue Algorithms}{118}{chapter.29}%
+\contentsline {section}{\numberline {29.1}Jacobi}{118}{section.29.1}%
+\contentsline {section}{\numberline {29.2}Bisection}{119}{section.29.2}%
+\contentsline {section}{\numberline {29.3}Divide-and-Conquer}{121}{section.29.3}%
+\contentsline {chapter}{\numberline {30}Computing the SVD}{124}{chapter.30}%
+\contentsline {section}{\numberline {30.1}SVD of $ A $ and Eigenvalues of $ A^*A $}{124}{section.30.1}%
+\contentsline {section}{\numberline {30.2}A Different Reduction}{125}{section.30.2}%
+\contentsline {section}{\numberline {30.3}Two Phases}{125}{section.30.3}%
+\contentsline {section}{\numberline {30.4}Golub-Kahan Bidiagonalization}{125}{section.30.4}%
+\contentsline {section}{\numberline {30.5}Faster Methods for Phase 1}{126}{section.30.5}%
+\contentsline {section}{\numberline {30.6}Phase 2}{128}{section.30.6}%
+\contentsline {part}{VI\hspace {1em}Iterative Methods}{129}{part.6}%
+\contentsline {chapter}{\numberline {31}Overview of Iterative Methods}{130}{chapter.31}%
+\contentsline {section}{\numberline {31.1}Why iterate?}{130}{section.31.1}%
+\contentsline {section}{\numberline {31.2}Structure, Sparsity, and Black Boxes}{130}{section.31.2}%
+\contentsline {section}{\numberline {31.3}Projection into Krylov Subspaces}{130}{section.31.3}%
+\contentsline {section}{\numberline {31.4}Works and Preconditioning}{131}{section.31.4}%
+\contentsline {section}{\numberline {31.5}Direct Methods that Beat $ O(m^{3}) $}{131}{section.31.5}%
+\contentsline {chapter}{\numberline {32}Classical Methods}{132}{chapter.32}%
+\contentsline {section}{\numberline {32.1}Jacobi Method}{132}{section.32.1}%
+\contentsline {section}{\numberline {32.2}Gauss-Seidel Method}{133}{section.32.2}%
+\contentsline {section}{\numberline {32.3}SOR Method}{133}{section.32.3}%
+\contentsline {chapter}{\numberline {33}The Arnoldi Iteration}{134}{chapter.33}%
+\contentsline {section}{\numberline {33.1}The Arhnoli/Gram-Shmidt Analogy}{134}{section.33.1}%
+\contentsline {section}{\numberline {33.2}Mechanics of the Arnoldi Iteration}{134}{section.33.2}%
+\contentsline {section}{\numberline {33.3}QR Factorization of a Krylov Matrix}{135}{section.33.3}%
+\contentsline {section}{\numberline {33.4}Projection onto Krylov Subspaces}{135}{section.33.4}%
+\contentsline {chapter}{\numberline {34}How Arnoldi Locates Eigenvalues}{137}{chapter.34}%
+\contentsline {section}{\numberline {34.1}Computing Eigenvalues by the Arnoldi Iteration}{137}{section.34.1}%
+\contentsline {section}{\numberline {34.2} A note of Caution: Nonnormality}{137}{section.34.2}%
+\contentsline {section}{\numberline {34.3} Arnoldi and Polynomial Approximation}{137}{section.34.3}%
+\contentsline {section}{\numberline {34.4}Invariance Properties}{138}{section.34.4}%
+\contentsline {section}{\numberline {34.5}How Arnoldi Locates Eigenvalues}{138}{section.34.5}%
+\contentsline {section}{\numberline {34.6}Arnoldi Lemniscates}{139}{section.34.6}%
+\contentsline {section}{\numberline {34.7}Geometric Convergence}{140}{section.34.7}%
+\contentsline {chapter}{\numberline {35}GMRES}{141}{chapter.35}%
+\contentsline {section}{\numberline {35.1}Residual Minimization in $ \mathcal {K}_n $}{141}{section.35.1}%
+\contentsline {section}{\numberline {35.2}Mechanics of GMRES}{141}{section.35.2}%
+\contentsline {section}{\numberline {35.3}GMRES and Polynomial Approximation}{142}{section.35.3}%
+\contentsline {section}{\numberline {35.4}Convergence of GMRES}{142}{section.35.4}%
+\contentsline {section}{\numberline {35.5}Polynomials Small on the Spectrum}{142}{section.35.5}%
+\contentsline {chapter}{\numberline {36}The Lanczos Iteration}{145}{chapter.36}%
+\contentsline {section}{\numberline {36.1}Three-Term Recurrence}{145}{section.36.1}%
+\contentsline {section}{\numberline {36.2} The Lanczos Iteration}{146}{section.36.2}%
+\contentsline {section}{\numberline {36.3}Lanczos and Electric Charge Distributions}{146}{section.36.3}%
+\contentsline {section}{\numberline {36.4}Example}{147}{section.36.4}%
+\contentsline {section}{\numberline {36.5}Rounding Errors and ``Ghost'' Eigenvalues}{149}{section.36.5}%
+\contentsline {chapter}{\numberline {37}From Lanczos to Gauss Quadrature}{151}{chapter.37}%
+\contentsline {section}{\numberline {37.1}Orthogonal Polynomials}{151}{section.37.1}%
+\contentsline {section}{\numberline {37.2}Jacobi Matrices}{152}{section.37.2}%
+\contentsline {section}{\numberline {37.3}The Characteristic Polynomial}{152}{section.37.3}%
+\contentsline {section}{\numberline {37.4}Quadrature Formulas}{153}{section.37.4}%
+\contentsline {section}{\numberline {37.5}Gauss Quadrature}{153}{section.37.5}%
+\contentsline {section}{\numberline {37.6}Gauss Quadrature via Jacobi Matrices}{154}{section.37.6}%
+\contentsline {section}{\numberline {37.7}Example}{154}{section.37.7}%
+\contentsline {chapter}{\numberline {38}Conjugate Gradients}{155}{chapter.38}%
+\contentsline {section}{\numberline {38.1}Minimizing the 2-Norm of the Residual}{155}{section.38.1}%
+\contentsline {section}{\numberline {38.2}Minimizing the $ A $-Norm of the Error}{155}{section.38.2}%
+\contentsline {section}{\numberline {38.3}The Conjugate Gradient Iteration}{155}{section.38.3}%
+\contentsline {section}{\numberline {38.4}Optimality of CG}{156}{section.38.4}%
+\contentsline {section}{\numberline {38.5}CG as an Optimization Algorithm}{157}{section.38.5}%
+\contentsline {section}{\numberline {38.6}CG and Polynomial Approximation}{157}{section.38.6}%
+\contentsline {section}{\numberline {38.7}Rate of Convergence}{158}{section.38.7}%
+\contentsline {section}{\numberline {38.8}Example}{159}{section.38.8}%
+\contentsline {chapter}{\numberline {39}Biorthogonalization Methods}{160}{chapter.39}%
+\contentsline {section}{\numberline {39.1}Where We Stand}{160}{section.39.1}%
+\contentsline {section}{\numberline {39.2}CGN = CG Applied to the Normal Equations}{160}{section.39.2}%
+\contentsline {section}{\numberline {39.3}Tridiagonal Biorthogonalization}{161}{section.39.3}%
+\contentsline {section}{\numberline {39.4}BCG=Biconjugate Gradients}{163}{section.39.4}%
+\contentsline {section}{\numberline {39.5}Example}{163}{section.39.5}%
+\contentsline {section}{\numberline {39.6}QMR and Other Variants}{164}{section.39.6}%
+\contentsline {chapter}{\numberline {40}Preconditioning}{166}{chapter.40}%
+\contentsline {section}{\numberline {40.1}Preconditioners for $ Ax=b $}{166}{section.40.1}%
+\contentsline {section}{\numberline {40.2}Left, Right, Hermitian Preconditioners}{166}{section.40.2}%
+\contentsline {section}{\numberline {40.3}Examples}{167}{section.40.3}%
+\contentsline {section}{\numberline {40.4}Survey of Preconditioners for $ Ax=b $}{167}{section.40.4}%
+\contentsline {section}{\numberline {40.5}Preconditioners for Eigenvalue Problems}{169}{section.40.5}%
+\contentsline {section}{\numberline {40.6}A Closing Note}{169}{section.40.6}%
+\contentsline {chapter}{\numberline {A}The Definition Of Numerical Analysis}{171}{chapter.1}%
