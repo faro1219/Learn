@@ -262,21 +262,24 @@ urlcolor=[RGB]{65,105,225}
 
 %% Colors
 \definecolor{lbrown}{HTML}{FEFCFB}
-\definecolor{mbrown}{HTML}{F8F1EA}
-\definecolor{mdbrown}{HTML}{f2e6d9}
+\definecolor{mbrown}{HTML}{8b0000}
+\definecolor{mdbrown}{HTML}{b58260}
 \definecolor{dbrown}{HTML}{964007}
-\definecolor{lgreen}{HTML}{F0F7F3}
+\definecolor{lgreen}{HTML}{f9fffc}
 \definecolor{dgreen}{HTML}{009956}
-\definecolor{llblue}{HTML}{FDFDFE}
-\definecolor{lblue}{HTML}{F0F4FA}
-\definecolor{dblue}{HTML}{006EB8}
+\definecolor{ddgreen}{HTML}{00ff00}
+\definecolor{llblue}{HTML}{f9ffff}
+\definecolor{lblue}{HTML}{f9ffff}
+\definecolor{dblue}{HTML}{1e90ff}
 \definecolor{violet}{HTML}{7F00FF}
-\definecolor{lviolet}{HTML}{fcf9ff}
+\definecolor{lvlet}{HTML}{f5ebff}
 % \definecolor{yellow}{HTML}{F4C430}
-\definecolor{yellow}{HTML}{DA9100}
-\definecolor{lyellow}{HTML}{FFF8DC}
+\definecolor{yellow}{HTML}{ffd700}
+\definecolor{lyellow}{HTML}{fffff9}
+\definecolor{dred}{HTML}{c60000}
 \definecolor{red}{HTML}{ff3e3e}
-\definecolor{lred}{HTML}{ffe2e2}
+\definecolor{lred}{HTML}{ffeded}
+\definecolor{llred}{HTML}{fff9f9}
 
 %% Theorem styles
 %% Theorem styles
@@ -290,12 +293,12 @@ postheadspace = \newline,
     linewidth=2pt,
     innerbottommargin = 0.2cm,
     rightline=false, topline=false, bottomline=false,
-    linecolor=dbrown, backgroundcolor=mdbrown,
+    linecolor=dbrown, backgroundcolor=lbrown,
   }
 ]{coloredthm1}
 
 \declaretheoremstyle[
-  headfont=\color{dbrown}\sffamily\bfseries,
+  headfont=\color{mdbrown}\sffamily\bfseries,
   bodyfont=\color{black}\normalfont,
   % headindent = \parindent,
 %postheadhook = {\hspace*{\parindent}},
@@ -304,9 +307,23 @@ postheadspace = \newline,
     linewidth=2pt,
     innerbottommargin = 0.2cm,
     rightline=false, topline=false, bottomline=false,
-    linecolor=dbrown, backgroundcolor=mbrown,
+    linecolor=mdbrown, backgroundcolor=lbrown,
   }
 ]{coloredthm}
+
+\declaretheoremstyle[
+  headfont=\color{red}\sffamily\bfseries,
+  bodyfont=\color{black}\normalfont,
+  % headindent = \parindent,
+%postheadhook = {\hspace*{\parindent}},
+postheadspace = \newline, 
+  mdframed={
+    linewidth=2pt,
+    innerbottommargin = 0.2cm,
+    rightline=false, topline=false, bottomline=false,
+    linecolor=red, backgroundcolor=llred,
+  }
+]{coloredpb}
 
 \declaretheoremstyle[
   headfont=\color{dbrown}\sffamily\bfseries,
@@ -423,7 +440,7 @@ postheadspace = \newline,
 ]{definition}
 
 \declaretheorem[
-  style=coloreddef,
+  style=coloredremark,
   name=Notation,
   sibling=theorem,
 ]{notation}
@@ -455,6 +472,12 @@ postheadspace = \newline,
   name=Conjecture,
   sibling=theorem,
 ]{conjecture}
+
+\declaretheorem[
+  style=coloredpb,
+  name=Problem,
+  sibling=theorem,
+]{problem}
 
 % \tcbuselibrary{breakable}
 % \newenvironment{verbetering}{\begin{tcolorbox}[
@@ -685,9 +708,10 @@ postheadspace = \newline,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% /MARGINS
 
 
-\definecolor{nirlightred}{RGB}{250, 220, 220}
-\definecolor{nirdarkred}{HTML}{f40000}
+\definecolor{nirlightred}{HTML}{faf6ff}
+\definecolor{nirdarkred}{HTML}{5d00bb}
 \declaretheoremstyle[
+  postheadspace = \newline, 
 	mdframed={
 		backgroundcolor=nirlightred,
 		linecolor=nirdarkred,
@@ -702,7 +726,7 @@ postheadspace = \newline,
 		skipbelow=2pt,
 		nobreak
 	},
-	headfont=\normalfont\bfseries\color{nirdarkred}
+  headfont=\color{nirdarkred}\sffamily\bfseries,
 ]{nirredbox}
 
 

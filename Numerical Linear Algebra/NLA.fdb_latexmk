@@ -1,11 +1,11 @@
 # Fdb version 3
-["pdflatex"] 1688621978 "d:/Github/Learn/Numerical Linear Algebra/NLA.tex" "d:/Github/Learn/Numerical Linear Algebra/NLA.pdf" "NLA" 1688621988
-  "../note1.sty" 1688343352 19692 24cb26cefb4a2cde7df6dac9c099457c ""
-  "NLA.aux" 1688621986 224457 ca1f4a351d7fc97529787df1743b6de8 "pdflatex"
-  "NLA.pre" 1688621981 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+["pdflatex"] 1689120427 "d:/Github/Learn/Numerical Linear Algebra/NLA.tex" "d:/Github/Learn/Numerical Linear Algebra/NLA.pdf" "NLA" 1689120437
+  "../note1.sty" 1689047836 20301 84081650c1d33427b479e68b6deda3a3 ""
+  "NLA.aux" 1689120436 224457 ca1f4a351d7fc97529787df1743b6de8 "pdflatex"
+  "NLA.pre" 1689120429 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   "NLA.tex" 1688618230 1477 99d2b68be7a3a86a2a74dafd6a09afe9 ""
-  "NLA.toc" 1688621986 22462 01650833396b84a7d552beda5669d971 "pdflatex"
-  "d:/Github/Learn/Numerical Linear Algebra/NLA.aux" 1688621986 224457 ca1f4a351d7fc97529787df1743b6de8 ""
+  "NLA.toc" 1689120436 22462 01650833396b84a7d552beda5669d971 "pdflatex"
+  "d:/Github/Learn/Numerical Linear Algebra/NLA.aux" 1689120436 224457 ca1f4a351d7fc97529787df1743b6de8 ""
   "d:/Github/Learn/Numerical Linear Algebra/NLA.tex" 1688618230 1477 99d2b68be7a3a86a2a74dafd6a09afe9 ""
   "e:/texlive/2021/texmf-dist/fonts/enc/dvips/cabin/cbn_jjp77t.enc" 1637184957 2737 5d9c52664620663c61c5bed977d9c93e ""
   "e:/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1637185026 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -468,10 +468,10 @@
   "sections/chp9.tex" 1683840093 5804 f84175e1ba08b5fb91ecbb7d534c0db0 ""
   "sections/chpci.tex" 1688621974 4401 d28cc1b3186ebd0d0f6a25d517494ea5 ""
   (generated)
-  "NLA.pdf"
   "NLA.pre"
+  "d:/Github/Learn/Numerical Linear Algebra/NLA.log"
+  "NLA.aux"
   "d:/Github/Learn/Numerical Linear Algebra/NLA.pdf"
   "NLA.toc"
   "NLA.log"
-  "d:/Github/Learn/Numerical Linear Algebra/NLA.log"
-  "NLA.aux"
+  "NLA.pdf"

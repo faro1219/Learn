@@ -1,3 +1,43 @@
 \babel@toc {english}{}
-\contentsline {part}{I\hspace {1em}The Initial Value Problem}{3}{part.1}%
-\contentsline {chapter}{\numberline {1}IVP for ODE}{4}{chapter.1}%
+\contentsline {part}{I\hspace {1em}The Initial Value Problem}{4}{part.1}%
+\contentsline {chapter}{\numberline {1}IVP for ODE}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Reduction to autonomous case}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Reduction to first-order case}{6}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Linear ODEs}{6}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Existence and uniqueness}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Banach fixed point theorem}{8}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Picard-Lindel\"of theorem}{8}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Significance of Lipschitz constant}{9}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Euler's Method}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Discretization}{12}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Explicit Euler method}{12}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Implicit Euler method}{14}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Taylor series method and errors}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Taylor series methods}{16}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Error estimation with Richardson extrapolation}{18}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Local truncation error and one-step error}{19}{section.4.3}%
+\contentsline {part}{II\hspace {1em}Linear Multistep Methods}{21}{part.2}%
+\contentsline {chapter}{\numberline {5}Linear Multistep Methods}{22}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Local truncation error}{22}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Consistency}{23}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Starting values}{24}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Families of LMMs}{25}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Integral-based methods}{25}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Adams-Bashforth methods}{25}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Adams-Moulton methods}{26}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Nystr\"om methods}{27}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Milne-Simpson methods}{27}{subsection.6.1.4}%
+\contentsline {section}{\numberline {6.2}Backward differentiation formulas}{28}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Solving implicit methods}{30}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Picard iteration}{31}{section.7.1}%
+\contentsline {part}{III\hspace {1em}Advection Equations and Hyperbolic Systems}{32}{part.3}%
+\contentsline {chapter}{\numberline {8}Advection equations and method of lines}{33}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Wave equation and advection}{33}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Method of lines discretization}{35}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}Forward Euler time discretizaion}{36}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}Leapfrog}{36}{subsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.2.3}Lax-Friedrichs}{37}{subsection.8.2.3}%
+\contentsline {chapter}{\numberline {9}Lax-Wendroff method and upwind methods}{39}{chapter.9}%
+\contentsline {section}{\numberline {9.1}The Lax-Wendroff method}{39}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Upwind methods}{40}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}The Beam-Warming method}{42}{subsection.9.2.1}%

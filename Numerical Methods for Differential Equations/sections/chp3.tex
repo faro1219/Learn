@@ -1,94 +1,188 @@
-\chapter{Norms}
-The essential notions of size and distance in a vector space are captured by norms. These are the yardsticks with which we measure approximations and convergence throughout numerical linear algebra.
+\chapter{Euler's Method}
+Unfortunately, \eqref{eq: IVP} can rarely be solved in closed form. (But when closed-form solutions exist, they're as good as gold!) The main point of numerical methods is to obtain approximate solutions in the generic unfortunate case. 
 
-\section{Vector Norms}
+\section{Discretization} 
+ 
+An approximate solution is represented via discretization. We will consider a step size $h=T / N$ and discrete times $0, h, 2 h, \ldots, N h$. We will represent the solution $x:[0, T] \rightarrow \mathbb{R}^d$ by its values $x_n$ as these discrete times $t_n:=n h$ for $n=0, \ldots, N$. When $N$ is not fixed, we use the notations $x_n^{(N)}$ and $t_n^{(N)}$ to disambiguate if the meaning is not clear from context. 
+
+A numerical scheme is a tractable computational recipe furnishing a collection of states $x_{0: N}^{(N)}=(x_0^{(N)}, \ldots, x_N^{(N)})$ that approximate the true solution states $(x(0), \ldots, x(N h))$ at our discrete times, i.e., achieving $x_n^{(N)} \approx x(n h)$. Ideally we can control the approximation error, and to have much regard for a scheme at all, it must be the case that the error can be made arbitrarily small by advancing to the limit $N \rightarrow \infty$, in the sense that
+$$
+\lim _{N \rightarrow \infty} \max _{n=0, \ldots, N}\left|x_n^{(N)}-x(n h)\right|=0. 
+$$
+
+\section{Explicit Euler method}
+Here we reproduce the IVP problem 
+\begin{equation}
+\label{eq: IVP euler}
+    \begin{cases}
+        x^\prime (t) = f(x(t),t) \\
+        x(0) = x_0 .
+    \end{cases}
+\end{equation}
+
+Note that we have 
+\[
+    f(x(t_n),t_n) = x^\prime (t_n) \approx \frac{x(t_{n+1}) - x(t_n)}{h}\Rightarrow x(t_{n+1}) \approx x(t_{n}) + h f(x(t_n), t_n). 
+\]
+
+
 
 %────────────────────────────────────────
 \begin{definition}
-[Norm]
-\label{def: Norm}
-A norm is a function $\|\cdot\|: \mathbb{C}^m \rightarrow \mathbb{R}$ that assigns a real-valued length to each vector. In order to conform to a reasonable notion of length, a norm must satisfy the following three conditions. For all vectors $x$ and $y$ and for all scalars $\alpha \in \mathbb{C}$,
-\begin{itemize}
-    \item $\|x\| \geq 0$, and $\|x\|=0$ only if $x=0$,
-    \item $\|x+y\| \leq\|x\|+\|y\|$,
-    \item $\|\alpha x\|=|\alpha|\|x\|$.
-\end{itemize}
+[Explicit Euler]
+\label{def: Explicit Euler}
+The discrete approximation for \eqref{eq: IVP} 
+\begin{equation}
+\label{eq: Explicit Euler}
+x_{n+1} = x_n + h f(x_n, t_n),\quad n=0,\ldots ,N-1
+\end{equation}
+is the explicit Euler method. 
 \end{definition}
 %────────────────────────────────────────
 
-The most important class of vector norms, the $p$-norms, are defined below. The closed unit ball $\left\{x \in \mathbb{C}^m:\|x\| \leq 1\right\}$ corresponding to each norm is illustrated to the right for the case $m=2$.
 
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{figures/3-1.png}
-\end{figure}
-%────────────────────────────────────────
-
-\section{Induced Matrix Norms} 
-An $m \times n$ matrix can be viewed as a vector in an $m n$-dimensional space: each of the $m n$ entries of the matrix is an independent coordinate. Any $m n$ dimensional norm can therefore be used for measuring the ``size'' of such a matrix. However, in dealing with a space of matrices, certain special norms are more useful than the vector norms already discussed. These are the induced matrix norms, defined in terms of the behavior of a matrix as an operator between its normed domain and range spaces. 
-
-Given vector norms $\|\cdot\|_{(n)}$ and $\|\cdot\|_{(m)}$ on the domain and the range of $A \in \mathbb{C}^{m \times n}$, respectively, the induced matrix norm $\|A\|_{(m, n)}$ is
-\[
-    \|A\|_{(m, n)}=\sup _{\substack{x \in \mathbb{C}^n \\ x \neq 0}} \frac{\|A x\|_{(m)}}{\|x\|_{(n)}}=\sup _{\substack{x \in \mathbb{C}^n \\\|x\|_{(n)}=1}}\|A x\|_{(m)}. 
-\]
-
-\section{Cauchy-Schwarz and H\"older Inequalities} 
-Computing matrix $p$-norms with $p \neq 1, \infty$ is more difficult, and to approach this problem, we note that inner products can be bounded using $p$-norms. Let $p$ and $q$ satisfy $1 / p+1 / q=1$, with $1 \leq p, q \leq \infty$. Then the Hölder inequality states that, for any vectors $x$ and $y$,
-\begin{align}
-    \label{eq: Holder}
-\left|x^* y\right| \leq\|x\|_p\|y\|_q
-\end{align}
-The Cauchy-Schwarz inequality is the special case $p=q=2$ :
-\begin{align}
-    \label{eq: cauchy}
-\left|x^* y\right| \leq\|x\|_2\|y\|_2
-\end{align}
-Derivations of these results can be found in linear algebra texts. Both bounds are tight in the sense that for certain choices of $x$ and $y$, the inequalities become equalities.
-
-\section{Bounding $\|AB\|$ in an Induced Matrix Norm} 
-Computing matrix $p$-norms with $p \neq 1, \infty$ is more difficult, and to approach this problem, we note that inner products can be bounded using $p$-norms. Let $p$ and $q$ satisfy $1 / p+1 / q=1$, with $1 \leq p, q \leq \infty$. Then the Hölder inequality states that, for any vectors $x$ and $y$,
-\begin{align*}
-\left|x^* y\right| \leq\|x\|_p\|y\|_q
-\end{align*}
-The Cauchy-Schwarz inequality is the special case $p=q=2$ :
-\begin{align*}
-\left|x^* y\right| \leq\|x\|_2\|y\|_2
-\end{align*}
-Derivations of these results can be found in linear algebra texts. Both bounds are tight in the sense that for certain choices of $x$ and $y$, the inequalities become equalities.
-
-\section{General Matrix Norms}
-As noted above, matrix norms do not have to be induced by vector norms. In general, a matrix norm must merely satisfy the three vector norm conditions applied in the $m n$-dimensional vector space of matrices:
-\begin{itemize}
-    \item $\|A\| \geq 0$, and $\|A\|=0$ only if $A=0$,
-    \item $\|A+B\| \leq\|A\|+\|B\|$,
-    \item $\|\alpha A\|=|\alpha|\|A\|$.
-\end{itemize}
-The most important matrix norm which is not induced by a vector norm is the \textbf{Hilbert-Schmidt} or \textbf{Frobenius norm}, defined by
-\begin{align*}
-\|A\|_F=\left(\sum_{i=1}^m \sum_{j=1}^n\left|a_{i j}\right|^2\right)^{1 / 2} .
-\end{align*}
-Observe that this is the same as the 2-norm of the matrix when viewed as an $m n$-dimensional vector. The formula for the Frobenius norm can also be written in terms of individual rows or columns. For example, if $a_j$ is the $j$ th column of $A$, we have
-\begin{align*}
-\|A\|_F=\left(\sum_{j=1}^n\left\|a_j\right\|_2^2\right)^{1 / 2}
-\end{align*}
-This identity, as well as the analogous result based on rows instead of columns, can be expressed compactly by the equation
-\begin{align*}
-\|A\|_F=\sqrt{\operatorname{tr}\left(A^* A\right)}=\sqrt{\operatorname{tr}\left(A A^*\right)}. 
-\end{align*}
-Note that 
-\[
-    \|AB\|_F^2 \le \|A\|_F^2 \|B\|_F^2. 
-\]
-
-\section{Invariance under Unitary Multiplication} 
 
 %────────────────────────────────────────
 \begin{theorem}
-\label{thm: invar under unitary multiplication}
- For any $A \in \mathbb{C}^{m \times n}$ and unitary $Q \in \mathbb{C}^{m \times m}$, we have
-\begin{align*}
-\|Q A\|_2=\|A\|_2, \quad\|Q A\|_F=\|A\|_F. 
-\end{align*}
+[First order convergence of Euler]
+\label{thm: First order convergence of Euler}
+Let $f$ be Lipschitz continuous. Then Euler's method is convergent, and moreover $$\max _{n=0, \ldots, N}\left|x_n^{(N)}-x(n h)\right|=O(h)=O\left(N^{-1}\right).$$
 \end{theorem}
 %────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}
+Let $ E_n \coloneqq |x_n - x(t_n)|. $ Note that 
+\begin{align*}
+    x\left(t_{n+1}\right)&=x\left(t_n\right)+\int_{t_n}^{t_{n+1}} f(x(t), t) d t,\\  
+    x_{n+1} &= x_n + h f(x_n,t_n). 
+\end{align*}
+Subtract them, we have 
+\[
+    \begin{aligned}
+        x_{n+1}-x\left(t_{n+1}\right) & =\left[x_n-x\left(t_n\right)\right]+\left[h f\left(x_n, t_n\right)-\int_{t_n}^{t_{n+1}} f(x(t), t) d t\right] \\
+        & =\left[x_n-x\left(t_n\right)\right]+\int_{t_n}^{t_{n+1}}\left[f\left(x_n, t_n\right)-f(x(t), t)\right] d t .
+        \end{aligned} 
+\]
+Hence, 
+\[
+    E_{n+1} \leq E_n+\int_{t_n}^{t_{n+1}}\left|f\left(x_n, t_n\right)-f(x(t), t)\right| d t .
+\]
+Note that 
+\[
+    \begin{aligned}
+        \left|f\left(x_n, t_n\right)-f(x(t), t)\right| & =\left|f\left(x_n, t_n\right)-f\left(x_n, t\right)+f\left(x_n, t\right)-f(x(t), t)\right| \\
+        & \leq\left|f\left(x_n, t_n\right)-f\left(x_n, t\right)\right|+\left|f\left(x_n, t\right)-f(x(t), t)\right| \\
+        & \leq L\left|t-t_n\right|+L\left|x_n-x(t)\right| \\
+        & \leq L h+L\left|x_n-x\left(t_n\right)+x\left(t_n\right)-x(t)\right| \\
+        & \leq L h+L\left|x_n-x\left(t_n\right)\right|+L\left|x\left(t_n\right)-x(t)\right| \\
+        & =L h+L E_n+L\left|x\left(t_n\right)-x(t)\right| .
+        \end{aligned} 
+\]
+Besides, 
+\[
+    x(t)=x\left(t_n\right)+\int_{t_n}^t f(x(s), s) d s,
+\]
+so after subtracting $x\left(t_n\right)$ from both sides and taking norms, we may derive that
+$$
+\left|x\left(t_n\right)-x(t)\right| \leq B h,
+$$
+where $B:=\max _{t \in[0, T]}|f(x(t), t)| .$ Hence, 
+\[
+    \left|f\left(x_n, t_n\right)-f(x(t), t)\right| \leq L E_n+\tilde{B} h,
+\]
+where $ \tilde B \coloneqq L(B+1) $.  Plug in this into the integral we obtain 
+\[
+    E_{n+1} \leq(1+L h) E_n+\tilde{B} h^2\Rightarrow E_{n+1} + \frac{\tilde Bh}{L} \le (1+Lh) \left (E_n + \frac{\tilde B h}{L}\right ). 
+\]
+Hence, 
+\[
+    E_{n+1} + \frac{\tilde Bh}{L} \le (1+Lh)^n \left (E_0 + \frac{\tilde B h}{L}\right) = (1+Lh)^n \frac{\tilde B h}{L} \le e^{Lhn}  \frac{\tilde B h}{L}. 
+\]
+Recall that $ h=T/N$,  and this implies that 
+\[
+    E_{n+1} \le  \frac{e^{Lhn}  -1 }{L} \tilde B h \le (B+1) \frac{T}{N}(e^{LT}-1). 
+\]
+\end{proof}
+%────────────────────────────────────────
+
+
+%────────────────────────────────────────
+\begin{remark}
+ If we assume that a unique solution exists, for convergence we don't really need to additionally assume that $f$ is Lipschitz. In this case it need only be locally Lipschitz (which follows in particular from being $C^1$ ). In the proof, wherever we use the Lipschitz constant for $f$, it is possible to replace with a local Lipschitz constant on a neighborhood of the true solution of the ODE. For simplicity, we just adopt the stronger assumption.
+\end{remark}
+%────────────────────────────────────────
+
+\section{Implicit Euler method}
+Compare to the explicit Euler method, we can alternatively approximate the difference quotient by 
+\[
+    \frac{x\left(t_{n+1}\right)-x\left(t_n\right)}{h} \approx f\left(x\left(t_{n+1}\right), t_{n+1}\right) . 
+\]
+Then we will get the implicit Euler method. 
+
+%────────────────────────────────────────
+\begin{definition}
+[Implicit Euler]
+\label{def: Implicit Euler}
+The approximation scheme 
+\begin{equation}
+\label{eq: Implicit Euler }
+x_{n+1}=x_n+h f\left(x_{n+1}, t_{n+1}\right), \quad n=0, \ldots, N-1
+\end{equation}
+is called the implicit Euler method. 
+\end{definition}
+%────────────────────────────────────────
+
+ The reason it is called implicit is that given $x_0, \ldots, x_n$, in order to determine $x_{n+1}$ we must solve a system of (possibly nonlinear) equations, since the right-hand side depends on $x_{n+1}$.
+
+ Note that it is not even obvious a priori that a solution exists! However, concern about this obstacle vanishes as $h$ goes to zero. The general intuition for why this concern vanishes comes from the implicit function theorem. Indeed, observe that if $h=0$, there exists a (unique) trivial solution $x_{n+1}=x_n$. The implicit function theorem guarantees precisely that if we perturb $h$ by a sufficiently small amount, then we can perturb our solution accordingly to maintain satisfaction of \eqref{eq: Implicit Euler }. 
+
+ More concretely, let $ F(u,x) = x - uf(x,t_n+u) -x_n $. We must solve 
+ \begin{equation}
+ \label{eq: implicit function Euler}
+    F(h,x) = 0.
+ \end{equation}
+ Note that $ u $ is a dummy variable for the step size $ h $. Note that $ F(0,x_n)=0 $. We want to say that as we perturb $ u $ away from $ 0 $, we can deform $ x $ to maintain $ F(u,x)=0 $. 
+
+ 
+ %────────────────────────────────────────
+ \begin{theorem}
+ [Implicit function]
+ \label{thm: Implicit function}
+ Let $ f: \RR^{n+m} \to \RR^{m} $ be a continuous differentiable function, and $ (x,y) $ is the coordinate for $ \RR^{n+m} $, where $ x\in \RR^{n} $ and $ y \in \RR^{m} $. Fix $ (a,b) \in\RR^{n+m} $, and $ f(a,b)=0 $. If the Jacobian matrix: 
+ \[
+    D_x f(a,b) = \left[\frac{\partial f_i}{\partial y_j}(a,b)\right]
+ \]
+ is invertible, then there exists an open set $ U \subset \RR^{n} $ containing $ a $ such that there exists a unique continuous differentiable function $ g:U\to \RR^{m} $ such that $ g(a)=b $ and $ f(x,g(x))=0 $ for all $ x\in U $. Moreover, 
+ \[
+    \left[ \frac{\partial g_i}{\partial x_j}(x) \right]_{m\times n} = -\left[  \frac{\partial f_i}{\partial y_j}(x,g(x)) \right]_{m\times m}^{-1}  \left[ \frac{\partial f_i}{\partial x_j}(x, g(x)) \right]_{m\times n}.       
+ \]
+ \end{theorem}
+ %────────────────────────────────────────
+
+ Hence, our Jacobian here is 
+ \[
+    D_ F(u,x) = I - u D_x f(x,t_n+u) \Rightarrow D_F(0,x) = I. 
+ \]
+ Hence, there exists $ (-\delta , \delta  )  $  and a function $ g:(-\delta , \delta ) \to \RR^{d} $ s.t. $ F(u, g(u))=0 $. 
+ 
+ There is a catch, however! We don't know that we can use the same $h$ for every $n$. Moreover, as we take $h$ smaller, there infinitely many equations to solve as $N \rightarrow \infty$. In order to guarantee a uniform choice of $h$, one needs to sort through the innards of the implicit function theorem to determine what the choice of $\delta$ actually depends on. A sufficient (but certainly not necessary condition) that covers most cases of interest is that $f$ is $C^2$.
+
+ If one adopts the simplifying assumption that $f$ is $L$-Lipschitz, then the idea of Picard iteration quite easily guarantees the existence of a unique solution to the implicit Euler method for $h<1 / L$. To see this, observe that solving \eqref{eq: Implicit Euler } for $x \in \mathbb{R}^d$ is equivalent to finding a fixed point of $\phi: \mathbb{R}^d \rightarrow \mathbb{R}^d$ defined by
+$$
+\phi(x):=x_n+h f\left(x, t_n+h\right) .
+$$
+But
+$$
+|\phi(x)-\phi(y)|=h\left|f\left(x, t_n+h\right)-f\left(y, t_n+h\right)\right| \leq L h|x-y|,
+$$
+so $\phi$ is a contraction map for $h<1 / L$, as claimed, and there exists a unique solution. This argument, together with a simple modification of our proof of \autoref{thm: First order convergence of Euler} yields the following.
+
+
+%────────────────────────────────────────
+\begin{theorem}
+[First order convergence of implicit Euler]
+\label{thm: First order convergence of implicit Euler}
+If $f$ is Lipschitz, then for $h$ sufficiently small the implicit Euler method admits a unique solution $x_{0: N}^{(N)}$, which is convergent with $\max _{n=0, \ldots, N}\left|x_n^{(N)}-x(n h)\right|=O(h)=$ $O\left(N^{-1}\right)$.
+\end{theorem}
+%────────────────────────────────────────
+Why consider an implicit method as opposed to an explicit one, given the hassle? A large part of the note seeks to address this question, and we defer it for now. We also remark that for any implicit method, considerations regarding the existence of solutions are quite similar to those made above.

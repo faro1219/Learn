@@ -1,86 +1,204 @@
-\chapter{The Singular Value Decomposition}
-The singular value decomposition (SVD) is a matrix factorization whose computation is a step in many algorithms. Equally important is the use of the SVD for conceptual purposes. Many problems of linear algebra can be better understood if we first ask the question: what if we take the SVD?
+\chapter{Taylor series method and errors} 
+In this chapter, we will introduce Taylor series method, error estimation with Richardson extrapolation, and
+two types of errors: the local truncation error and the one-step
+error. Taylor series method will be the first attempt to systematically
+derive schemes of arbitrary orders of accuracy. 
 
-\section{A Geometric Observation}
-The SVD is motivated by the following geometric fact:
+\section{Taylor series methods}
+With Taylor series we have 
 \[
-    \text{The image of the unit sphere under any $m \times n$ matrix is a hyperellipse.}
+    x\left(t_{n+1}\right)=x\left(t_n\right)+h x^{\prime}\left(t_n\right)+\frac{h^2}{2} x^{\prime \prime}\left(t_n\right)+O\left(h^3\right) .  
 \]
-The SVD is applicable to both real and complex matrices. However, in describing the geometric interpretation, we assume as usual that the matrix is real.
-
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/4-1.png}
-    \caption{SVD of a $2\times 2$ matrix}
-    \label{fig 4.1}
-\end{figure}
-%────────────────────────────────────────
-
-Let $S$ be the unit sphere in $\mathbb{R}^n$, and take any $A \in \mathbb{R}^{m \times n}$ with $m \geq n$. For simplicity, suppose for the moment that $A$ has full rank $n$. The image $A S$ is a hyperellipse in $\mathbb{R}^m$. We now define some properties of $A$ in terms of the shape of $A S$. The key ideas are indicated in Figure~\ref{fig 4.1}.
-
-First, we define the $n$ singular values of $A$. These are the lengths of the $n$ principal semiaxes of $A S$, written $\sigma_1, \sigma_2, \ldots, \sigma_n$. It is conventional to assume that the singular values are numbered in descending order, $\sigma_1 \geq \sigma_2 \geq \cdots \geq$ $\sigma_n>0$
-
-Next, we define the $n$ left singular vectors of $A$. These are the unit vectors $\left\{u_1, u_2, \ldots, u_n\right\}$ oriented in the directions of the principal semiaxes of $A S$, numbered to correspond with the singular values. Thus the vector $\sigma_i u_i$ is the $i$ th largest principal semiaxis of $A S$.
-
-Finally, we define the $n$ right singular vectors of $A$. These are the unit vectors $\left\{v_1, v_2, \ldots, v_n\right\} \in S$ that are the preimages of the principal semiaxes of $A S$, numbered so that $A v_j=\sigma_j u_j$.
-
-\section{Reduced SVD} 
-We have just mentioned that the equations relating right singular vectors $\left\{v_j\right\}$ and left singular vectors $\left\{u_j\right\}$ can be written
+The key point is that we can get $x^\prime (t) $ and $ x^{\prime \prime} (t) $ in terms of $ f, x(t_n) $ and $ t_n $. 
 \begin{align*}
-A v_j=\sigma_j u_j, \quad 1 \leq j \leq n. 
+    x^\prime (t) &= f(x(t),t), \\ 
+        x^{\prime \prime}(t) & =\nabla_x f(x(t), t) \cdot x^{\prime}(t)+\partial_t f(x(t), t) \\
+        & =\nabla_x f(x(t), t) \cdot f(x(t), t)+\partial_t f(x(t), t). 
 \end{align*}
-More compactly, $A V=\hat{U} \hat{\Sigma}$. In this matrix equation, $\hat{\Sigma}$ is an $n \times n$ diagonal matrix with positive real entries (since $A$ was assumed to have full rank $n$ ), $\hat{U}$ is an $m \times n$ matrix with orthonormal columns, and $V$ is an $n \times n$ matrix with orthonormal columns. Thus $V$ is unitary, and we can multiply on the right by its inverse $V^*$ to obtain
-\begin{align*}
-A=\hat{U} \hat{\Sigma} V^*
-\end{align*}
-This factorization of $A$ is called a reduced singular value decomposition, or reduced $S V D$, of $A$. Schematically, it looks like this:
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/4-2.png}
-\end{figure}
-%────────────────────────────────────────
+Given an analytic expression for $f$, assuming it is differentiable, we may typically derive analytic expressions for $\nabla_x f$ and $\partial_t f$. Then we can write the Taylor series method of order 2, or $\mathbf{T S}(2)$ for short, as
+$$
+x_{n+1}=x_n+h f\left(x_n, t_n\right)+\frac{h^2}{2}\left[D_x f\left(x_n, t_n\right) \cdot f\left(x_n, t_n\right)+\partial_t f\left(x_n, t_n\right)\right],
+$$
+where $D_x$ denotes the Jacobian matrix (with respect to the $x$ variables) and the dot indicates matrix-vector multiplication. Note that this is an explicit method.Similarly, we can extend this to order $ p $. 
 
-\section{Full SVD}
-If we extend $U$ to a unitary matrix with extra orthonormal column vectors, we will get the full SVD. 
-\begin{align*}
-    A=U \Sigma V^*
-\end{align*}
-Here $U$ is $m \times m$ and unitary, $V$ is $n \times n$ and unitary, and $\Sigma$ is $m \times n$ and diagonal with positive real entries. Schematically:
+
 %────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/4-3.png}
-\end{figure}
+\begin{definition}
+[Taylor series method]
+\label{def: Taylor series method}
+The $ \mathbf{TS}(p) $ scheme can be written as: 
+\begin{equation}
+\label{eq: Taylor series method}
+    x_{n+1} = x_n + \sum_{k=1}^{p} \frac{h^{k}}{k!}f^{(k)}(x_n,t_n), 
+\end{equation}
+where $ f^{(k+1)}(x(t),t) \coloneqq  \frac{d^{k}}{dt^{k}} [f(x(t),t)] $.  
+\end{definition}
 %────────────────────────────────────────
 
-\section{Formal Definition} 
-Let $m$ and $n$ be arbitrary; we do not require $m \geq n$. Given $A \in \mathbb{C}^{m \times n}$, not necessarily of full rank, a singular value decomposition (SVD) of $A$ is a factorization
-\begin{align}
-    \label{eq: SVD}
-A=U \Sigma V^*
-\end{align}
-where
-$U \in \mathbb{C}^{m \times m}$ is unitary,
-$V \in \mathbb{C}^{n \times n}$ is unitary,
-$\Sigma \in \mathbb{R}^{m \times n}$ is diagonal.
-In addition, it is assumed that the diagonal entries $\sigma_j$ of $\Sigma$ are nonnegative and in nonincreasing order; that is, $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_p \geq 0$, where $p=\min (m, n)$.
-
-\section{Existence and Uniqueness} 
-
+We have the following convergence theorem. 
+\newpage 
 %────────────────────────────────────────
 \begin{theorem}
-[Existence and uniqueness of SVD]
-\label{thm: Existence and uniqueness of SVD}
-Every matrix $A \in \mathbb{C}^{m \times n}$ has a singular value decomposition \eqref{eq:SVD}. Furthermore, the singular values $\left\{\sigma_j\right\}$ are uniquely determined, and, if $A$ is square and the $\sigma_j$ are distinct, the left and right singular vectors $\left\{u_j\right\}$ and $\left\{v_j\right\}$ are uniquely determined up to complex signs (i.e., complex scalar factors of absolute value 1).
+[Convergence of Taylor series method]
+\label{thm: Convergence of Taylor series method}
+Suppose that $f$ is $C^p$ and $f^{(k)}$ is Lipschitz for $k=1, \ldots, p$. Then $\operatorname{TS}(p)$ is convergent, and moreover 
+\[
+    \left\|\mathrm{x}^{(N)}-\mathbf{x}_{\mathrm{true}}^{(N)}\right\|_{\infty}=O\left(h^p\right).
+\]
 \end{theorem}
 %────────────────────────────────────────
 %────────────────────────────────────────
 \begin{proof}
-\begin{itemize}
-    \item Existence: Consider $\|A\|_2$ and the corresponding vector. 
-    \item Uniqueness: The same. 
-\end{itemize}
+Firstly, 
+\begin{equation}
+\label{eq: conv taylor key equa}
+x_{n+1}-x\left(t_{n+1}\right)=\left[x_n-x\left(t_n\right)\right]+\left[\sum_{k=1}^p \frac{h^k}{k !} f^{(k)}\left(x_n, t_n\right)-\int_{t_n}^{t_{n+1}} f(x(t), t) d t\right],
+\end{equation}
+and we want to bound the second term by $ (1+B_1h) E_n + B_2 h^{p+1} $. We expand $ f(x(t),t) $, 
+\[
+    f(x(t), t)=\left.\sum_{k=0}^{p-1} \frac{\left(t-t_n\right)^k}{k !} \frac{d^k}{d t^k}[f(x(t), t)]\right|_{t=t_n}+O\left(h^p\right) = \sum_{k=0}^{p-1} \frac{\left(t-t_n\right)^k}{k !} f^{(k+1)}\left(x\left(t_n\right), t_n\right)+O\left(h^p\right), 
+\]
+where we additionally define $f^{(1)}:=f$. After performing the exact integration
+$$
+\int_{t_n}^{t_{n+1}}\left(t-t_n\right)^k d t=\frac{\left(t_{n+1}-t_n\right)^{k+1}}{(k+1)}=\frac{h^{k+1}}{k+1}
+$$
+and shifting the summation index we have
+$$
+\int_{t_n}^{t_{n+1}} f(x(t), t) d t=\sum_{k=1}^p \frac{h^k}{k !} f^{(k)}\left(x\left(t_n\right), t_n\right)+O\left(h^{p+1}\right) .
+$$
+Then \eqref{eq: conv taylor key equa} can be rewritten as
+$$
+x_{n+1}-x\left(t_{n+1}\right)=\left[x_n-x\left(t_n\right)\right]+\sum_{k=1}^p \frac{h^k}{k !}\left[f^{(k)}\left(x_n, t_n\right)-f^{(k)}\left(x\left(t_n\right), t_n\right)\right]+O\left(h^{p+1}\right) .
+$$
+Taking norms of both sides, using the triangle inequality and the Lipschitz property for each of the $f^{(k)}$, we obtain
+$$
+\begin{aligned}
+E_{n+1} & \leq E_n+\sum_{k=1}^p \frac{h^k}{k !} L E_n+O\left(h^{p+1}\right) \\
+& =\left(1+L \sum_{k=1}^p \frac{h^k}{k !}\right) E_n+O\left(h^{p+1}\right) .
+\end{aligned}
+$$
+Note that for small $h$ (say concretely for $h \leq 1$ ), there exists some universal $B_1 \geq 0$ such that
+$$
+L \sum_{k=1}^p \frac{h^k}{k !} \leq B_1 h,
+$$
+and there exists also some $B_2 \geq 0$ such that then
+$$
+E_{n+1} \leq\left(1+B_1 h\right) E_n+B_2 h^{p+1}
+$$
+for all $h$ sufficiently small. Similar to the proof of \autoref{thm: First order convergence of Euler}, we have 
+$$
+E_n \leq \frac{\left(1+B_1 h\right)^{n+1}-1}{B_1 h} \cdot B_2 h^{p+1} \leq C h^p
+$$
+for an appropriate constant $C$ independent of $n$ and $N$. This completes the proof.
 \end{proof}
 %────────────────────────────────────────
+
+%────────────────────────────────────────
+\begin{remark}
+We don't really need to additionally assume that the $f^{(k)}$ are (globally) Lipschitz. Assuming that a unique solution exists, it suffices for them all to be merely locally Lipschitz, which is in particular guaranteed by the assumption that $f$ is $C^p$. In the proof, wherever we use Lipschitz constants, it is possible to replace them with local Lipschitz constants on a neighborhood of the true solution of the ODE. For simplicity we just adopt the stronger assumption.
+\end{remark}
+%────────────────────────────────────────
+Taylor series methods have a drawback that is often fatal: they require us to compute all the $p$-th order partial derivatives of $f$, which, depending on the practical context may not be readily available or may be very expensive to evaluate. Still they serve as a useful starting point and inspiration for thinking about higher-order schemes.
+
+\section{Error estimation with Richardson extrapolation} 
+
+Note that the proof of \autoref{thm: First order convergence of Euler} and \autoref{thm: Convergence of Taylor series method} furnishes an explicit error bound on the approximate solution $x_{0: N}^{(N)}$. \textit{In practice this error bound can be extremely pessimistic, although though the order of convergence is sharp!} By order of convergence, we mean the largest exponent $p$ such that the error is $O\left(h^p\right)=O\left(1 / N^p\right)$, and we say for $p$ so defined that a scheme is $p$-th order accurate. In the case of Euler's method, $p=1$.
+
+Unfortunately, the optimal preconstant $C$ such that the error at some time $t$ is bounded asymptotically by $C h^p$ may be very hard to estimate a priori. In order to save as much computation as possible, we want to take $h$ only as small as necessary to achieve a desired error tolerance, so getting a sharper estimate, even if a posteriori, is quite desirable.
+
+In the sequel we will want to compare our discrete solutions $\mathrm{x}^{(N)}$ solutions for different values of $N$. Note that the $N$-th discrete solution is only defined at grid points $(0, h, 2 h, \ldots, T)$, where $h=T / N$, so in general for $N^{\prime} \neq N, x_{0: N}^{(N)}$ and $x_{0: N^{\prime}}^{\left(N^{\prime}\right)}$ may not be directly comparable. They can be compared after suitable interpolation to the entire interval $[0, T]$. However, such interpolation is rarely performed in practice, and moreover, care must be taken so that the interpolation preserves the order of accuracy of the scheme! In the simple case of Euler's method, linear interpolation is sufficient to preserve first-order accuracy.
+
+For the purposes of this discussion it is more elegant/convenient to assume that such an interpolation exists (though as we shall see, we will not need to construct it in practice), so for a general $p$-th order accurate scheme, we assume that we have an interpolant $x^{(N)}$ : $[0, T] \rightarrow \mathbb{R}^d$ such that
+$$
+\left\|x^{(N)}-x\right\|_{\infty}=O\left(1 / N^p\right)
+$$
+where $x(\cdot)$ is here the true solution. (In this section, the superscript does not indicate repeated differentiation!) In particular, we have for every time $t \in[0, T]$,
+$$
+x^{(N)}(t)=x(t)+O\left(1 / N^p\right) .
+$$
+We postulate the more detailed error expansion, consistent with $p$-th order accuracy:
+$$
+x^{(N)}(t)=x(t)+\frac{C(t)}{N^p}+O\left(1 / N^{p+1}\right) .
+$$
+Plugging in $2 N$ in the place of $N$ (in practice, solving the scheme on a grid that is twice as fine), we have
+$$
+x^{(2 N)}(t)=x(t)+\frac{C(t)}{2^p N^p}+O\left(1 / N^{p+1}\right) .
+$$
+Then observe that be taking the linear combination
+$$
+\tilde{x}^{(N)}(t):=\frac{2^p x^{(2 N)}(t)-x^{(N)}(t)}{2^p-1}=x(t)+O\left(1 / N^{p+1}\right)
+$$
+we cancel the leading-order contribution to the error.
+Then not only is $\tilde{x}^{(N)}$ a more accurate solution, but also we can use it to estimate the error of our original solution $x^{(N)}$. Indeed our error $E^{(N)}$ as a function of time satisfies
+$$
+E^{(N)}(t):=\left|x^{(N)}(t)-x(t)\right|=\left|x^{(N)}(t)-\tilde{x}^{(N)}(t)\right|+O\left(1 / N^{p+1}\right)  ,
+$$
+and in the last expression the first term is only $O\left(1 / N^p\right)$, hence dominates the second term. Therefore the $N$-point scheme error at time $t$ can be estimated as
+$$
+E^{(N)}(t) \approx\left|x^{(N)}(t)-\tilde{x}^{(N)}(t)\right| = \left| \frac{2^{p}(x^{(N)}(t) - x^{(2N)}(t))}{2^{p}-1} \right| .
+$$
+
+
+
+
+
+%────────────────────────────────────────
+\begin{definition}
+[Richardson extrapolation]
+\label{def: Richardson extrapolation}
+In practice, let's fix some $N$ and $h=T / N$ and say we are interested in estimating the accuracy of the solution on the fixed grid $t_n:=t_n^{(N)}, n=0, \ldots, N$, i.e., on $(0, h, 2 h, \ldots, T)$. We can do this by also solving the ODE on the finer grid $t_n^{(2 N)}, n=0, \ldots, 2 N$, which includes the original grid as a subgrid. Then we can simply perform the above procedure at the grid points $t_n$ instead of the entire interval, defining an extrapolated solution
+$$
+\tilde{x}_n^{(N)}:=\frac{2^p x_{2 n}^{(2 N)}-x_n^{(N)}}{2^p-1}
+$$
+which is $(p+1)$-th order accurate. This procedure for determining the extrapolated solution is called Richardson extrapolation.
+\end{definition}
+%────────────────────────────────────────
+
+%────────────────────────────────────────
+\begin{theorem}[Error estimation]
+    \label{thm: Error estimation}
+    Given a $ p $-th order accuracy method and two approximation sequences  $x_{0: N}^{(N)} \text { and } x_{0: 2N}^{\left(2N\right)}$, we can estimate the error of $ x_{N}^{(N)} $ by 
+    \[
+        E^{(N)}(t):=\left|x^{(N)}(t)-x(t)\right|\approx\left|x^{(N)}(t)-\tilde{x}^{(N)}(t)\right|=\left|\frac{2^p\left(x^{(N)}(t)-x^{(2 N)}(t)\right)}{2^p-1}\right|,
+    \]
+    where $ \tilde{x}^{(N)}(t):=\frac{2^p x^{(2 N)}(t)-x^{(N)}(t)}{2^p-1} $ is the Richardson extrapolation. 
+    \end{theorem}
+    %────────────────────────────────────────
+
+\section{Local truncation error and one-step error} 
+The truncation error for all these methods is defined by writing the difference equation in the form that directly models the derivatives and inserting the true solution to the ODE. 
+
+
+%────────────────────────────────────────
+\begin{example}
+[LTE of Explicit Euler]
+\label{eg: LTE of Explicit Euler }
+The local truncation error (LTE) of the explicit Euler method \eqref{eq: Explicit Euler} is defined by 
+\begin{align*}
+    \tau ^{n} &= \frac{x(t_{n+1}) - x(t_{n})}{h} - f(x(t_{n})) \\ 
+              &= \left[ x^\prime (t_n) + \frac{1}{2} h x^{\prime \prime}(t_n) +O(h^{2} )  \right] - f(x(t_{n}))\\ 
+              & = \frac{1}{2}h  x^{\prime \prime}(t_n) +O(h^{2}). 
+\end{align*}
+Hence, the LTE is $ O(k) $ and we say the method is first order consistency. 
+\end{example}
+%────────────────────────────────────────
+
+
+We need some form of stability to guarantee that the global error will exhibit the same rate of convergence as the local truncation error. This will be discussed below.
+
+In much of the literature concerning numerical methods for ODEs, a slightly different definition of the local truncation error. Denoting this value by $\mathcal{L}^n$, we have
+$$
+\begin{aligned}
+\mathcal{L}^n & =x\left(t_{n+1}\right)-x\left(t_{n}\right)-h f\left(x\left(t_n\right)\right) \\
+& =\frac{1}{2}h^2  x^{\prime \prime}(t_n) +O(h^{3}). 
+\end{aligned}
+$$
+
+Since $\mathcal{L}^n=\ h \tau^n$, this local error is $O\left(h^2\right)$ rather than $O\left(h\right)$, but of course the global error remains the same and will be $O\left(h\right)$. Using this alternative definition, many standard results in ODE theory say that a $p$ th order accurate method should have an LTE that is $O\left(h^{p+1}\right)$. With the notation we are using, a $p$th order accurate method has an LTE that is $O\left(h^p\right)$. The notation used here is consistent with the standard practice for PDEs and leads to a more coherent theory, but one should be aware of this possible source of confusion. 
+
+In this note $\mathcal{L}^n$ will be called the \textbf{one-step error}, since this can be viewed as the error that would be introduced in one time step if the past values $x_n, x_{n-1}, \ldots$ were all taken to be the exact values from $x(t)$. In the explicit Euler method, in one step the error introduced is $ O(h^{2} ) $. This is consistent with first order accuracy in the global error if we think of trying to compute an approximation to the true solution $x(T)$ at some fixed time $T>0$. To compute from time $t=0$ up to time $T$, we need to take $T / h$ time steps of length $h$. A rough estimate of the error at time $T$ might be obtained by assuming that a new error of size $\mathcal{L}^n$ is introduced in the $n$th time step and is then simply carried along in later time steps without affecting the size of future local errors and without growing or diminishing itself. Then we would expect the resulting global error at time $T$ to be simply the sum of all these local errors. Since each local error is $O\left(h^{2} \right)$ and we are adding up $T / h$ of them, we end up with a global error that is $O\left(h\right)$. 
+
+This viewpoint is in fact exactly right for the simplest ODE, in which $f(x, t)=g(t)$ is independent of $x$ and the solution is simply the integral of $g$, but it is a bit too simplistic for more interesting equations since the error at each time feeds back into the computation at the next step in the case where $f(x, t)$ depends on $x$. Nonetheless, it is essentially right in terms of the expected order of accuracy, provided the method is stable. In fact, it is useful to think of stability as exactly what is needed to make this naive analysis correct, by ensuring that the old errors from previous time steps do not grow too rapidly in future time steps. This will be investigated in detail in the following chapters.
+
+ 
+ 

@@ -1,2 +1,141 @@
 \part{The Initial Value Problem}
 \chapter{IVP for ODE}
+In this chapter we begin a study of time-dependent differential equations, beginning with the initial value problem (IVP) for a time-dependent ordinary differential equation (ODE).
+
+%────────────────────────────────────────
+\begin{problem}
+[Initial value problem for ODE]
+\label{prob: Initial value problem}
+The IVP takes the form 
+\begin{equation}
+\label{eq: IVP}
+    \begin{cases}
+        u'(t) = f(u(t),t) & \forall t>t_0 \\
+        u(t_0) = \eta  & 
+    \end{cases}
+\end{equation}
+For convenience, we often assume $ t_0=0 $. Here we call $ \eta  $ the initial condition and $ u(t) $ the state. 
+\end{problem}
+%────────────────────────────────────────
+Note that here $ u:[0,T]\to \RR^d $ is a vector function. We will use the following notations: 
+\begin{notation}
+    \begin{itemize}
+        \item []
+        \item Newton dot notation: $ \frac{dx}{dt} (t) = \dot x (t) $,
+        \item $ p $-th order derivative: $ \frac{d^{p}x}{dt^{p}}(t) = x^{(p)}(t) $. 
+    \end{itemize}
+\end{notation}
+ 
+
+\section{Reduction to autonomous case} 
+
+%────────────────────────────────────────
+\begin{definition}
+[Autonomous]
+\label{def: Autonomous}
+An first order ODE is autonomous if 
+\[
+    u'(t) = f(u(t)).
+\]
+In other words, $ f $ doesn't depend directly on $ t $. Otherwise, we call the ODE non-autonomous.  
+\end{definition}
+%────────────────────────────────────────
+ 
+We have the following proposition:
+
+%────────────────────────────────────────
+\begin{proposition}
+\label{prop: Reduction to autonomous}
+Any IVP problem \eqref{eq: IVP} can be reduced to the autonomous case.
+\end{proposition}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof Sketch]
+We can do this by adding one dimension to the state variable. We let $ v(t) = (u(t)^\top , t)^\top  $. Then we have 
+\[
+    \begin{cases}
+        v'(t)  = \begin{pmatrix}[] 
+             g(v(t)) \\
+             1 \\
+        \end{pmatrix}  \quad \forall t>t_0 \\
+        v(t_0) = \begin{pmatrix}[] 
+             \eta  \\
+             t_0 \\
+        \end{pmatrix}  
+    \end{cases}
+\]
+where $ g(v(t)) = f(u(t), t) $. This ODE is autonomous. 
+\end{proof}
+%────────────────────────────────────────
+
+\section{Reduction to first-order case} 
+A more general ODE is of the form: 
+\[
+    u^{(p)}(t) = F(u(t), u^\prime (t), u^{\prime \prime}(t), \ldots ,u^{(p-1)}(t), t).  
+\] 
+
+
+%────────────────────────────────────────
+\begin{proposition}
+\label{prop: Reudction to first-order case}
+A more general ODE can be reduced to \eqref{eq: IVP}. 
+\end{proposition}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}[Proof sketch]
+Just consider  
+\[
+    v(t) = \begin{bmatrix}[] 
+         u(t) \\
+         u^\prime (t) \\
+         \vdots \\
+         u^{(p-1)}(t) \\
+    \end{bmatrix}.  
+\]
+\end{proof}
+%────────────────────────────────────────
+
+\section{Linear ODEs} 
+
+%────────────────────────────────────────
+\begin{definition}
+[Linear ODEs]
+\label{def: Linear ODEs}
+The system \eqref{eq: IVP} is linear if 
+\begin{equation}
+\label{eq: linear ODE}
+    f(u,t) = A(t)u + g(t),
+\end{equation}
+where $ A(t) \in \RR^{d\times d}, g(t) \in \RR^{d} $. A special case is the constant coefficient linear system
+\begin{equation}
+\label{eq: constant linear ODE}
+    f(u,t) = Au(t) + g(t), 
+\end{equation}
+where $ A $ is a constant matrix. If $ g(t)\equiv 0 $, the equation is homogeneous. 
+\end{definition}
+%────────────────────────────────────────
+ 
+The solution to a homogeneous system $ u' = Au $ is 
+\[
+    u(t) = e^{A(t-t_0)}\eta . 
+\]
+
+We have the Duhamel's principle for linear ODEs. 
+
+%────────────────────────────────────────
+\begin{theorem}
+[Duhamel's principle]
+\label{thm: Duhamel's principle}
+The solution to \eqref{eq: constant linear ODE} can be written as 
+\begin{equation}
+\label{eq: Duhamel's principle}
+    u(t) = e^{A(t-t_0)}\eta  + \int_{t_0}^{t} e^{A(t-\tau )}g(\tau)\, d\tau. 
+\end{equation}
+Especially, if $ g(t)\equiv g$, then this can be reduced to 
+\begin{equation}
+\label{eq: Duhamel's principle g constant}
+    u(t) = e^{A(t-t_0)}\eta  + A^{-1}  (e^{A(t-t_0)}-I) g. 
+\end{equation}
+
+\end{theorem}
+%────────────────────────────────────────

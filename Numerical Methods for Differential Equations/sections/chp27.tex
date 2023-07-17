@@ -1,217 +1,110 @@
-\chapter{Rayleigh Quotient, Inverse Iteration}
-In this chapter, we present some classical eigenvalue algorithms. Individually, these tools are useful in certain circumstances--especially inverse iteration, which is the standard method for determining an eigenvector when the corresponding eigenvalue is known. Combined, they are ingredients of the celebrated QR algorithm. 
+\chapter{Lax-Wendroff method and upwind methods}
+One way to achieve second order accuracy on the advection equation is to use a second order temporal discretization of the system of ODEs \eqref{eq: MOL for advect equation LS} since this system is based on a second order spatial discretization. This can be done with the midpoint method, for example, which gives rise to the leapfrog scheme already discussed. However, this is a three-level method and for various reasons it is often much more convenient to use two-level methods for PDEs whenever possible-in more than one dimension the need to store several levels of data may be restrictive, boundary conditions can be harder to impose, and combining methods using fractional step procedures may require two-level methods for each step, to name a few reasons. Moreover, the leapfrog method is nondissipative, leading to potential stability problems if the method is extended to variable coefficient or nonlinear problems.
 
-\section{Restriction ot Real Symmetric Matrices}
-Throughout numerical linear algebra, most algorithmic ideas are applicable either to general matrices or, with certain simplifications, to hermitian matrices. For the topics discussed in this and the next three chapters, this continues to be at least partly true, but some of the differences between the general and the hermitian cases are rather sizable. Therefore, in these four chapter, we simplify matters by considering only matrices that are real and symmetric. We also assume throughout that $\|\cdot \| = \|\cdot\|_2$.  
+Another way to achieve second order accuracy in time would be to use the trapezoidal method to discretize the system, as was done to derive the Crank-Nicolson method for the heat equation. But this is an implicit method and for hyperbolic equations there is generally no need to introduce this complication and expense.
 
-Thus, for these four chapters: $A= A^\top \in \RR^{m\times m}, x\in \RR^m, x^*  = x^\top , \|x\| =\sqrt{x^\top x} $. In particular, this means that $A$ has real eigenvalues and a complete set of orthogonal eigenvectors. We use the following notation: 
-\begin{itemize}
-    \item Real eigenvalues: $ \lambda _1, \ldots , \lambda _m $, 
-    \item Orthonormal eigenvectors: $ q_1, \ldots ,q_m $.  
-\end{itemize}
-Most of the ideas to be described in the next few lectures pertain to Phase 2 of the two phases described in Chapter 24. This means $A$ will be tridiagonal. This tridiagonal structure is occasionally of mathematical importance, for example in choosing shifts for the QR algorithm, and it's always of algorithmic importance, reducing many steps from $O(m^3)$ to $O(m)$ flops. 
+Another possibility is to use a two-stage Runge-Kutta method. This can be done, although some care must be exercised near boundaries, and the use of a multistage method again typically requires additional storage.
 
-\section{Rayleigh Quotient}
-
-%────────────────────────────────────────
-\begin{definition}
-[Rayleigh quotient]
-\label{def: Rayleigh quotient}
-The Rayleigh quotient of a vector $x\in \RR^m$ is the scalar 
-\[
-r(x)  = \frac{x^\top Ax}{x^\top x}.  
-\] 
-\end{definition}
-%────────────────────────────────────────
-Notice that if $x$ is an eigenvector, then $r(x) = \lambda $ is the corresponding eigenvalue. Besides, given $x$,if we want to find a scalar $\alpha $ that ``acts most like an eigenvalue'' in the sense of minimizing $\|Ax- \alpha x\|_2$, the answer should be $\alpha = r(x)$. Thus $r(x)$ is a natural eigenvalue estimate to consider if $x$ is close to, but not necessarily equal to, an eigenvector. 
-
-Furthermore, we can compute the derivative of $r$, we have 
-\[
-    \frac{\partial r(x)}{\partial x_j} = \frac{\frac{\partial}{\partial x_j}(x^\top Ax)}{x^\top x} - \frac{(x^\top Ax) \frac{\partial}{\partial x_j}(x^\top x)}{(x^\top x)^2} = \frac{2(Ax)_j}{x^\top x} - \frac{(x^\top A x) 2x_j}{(x^\top x)^2} = \frac{2}{x^\top x}(Ax - r(x) x)_j.  
-\]
-Combine this, we get 
-\[
-    \nabla r(x) = \frac{2}{x^\top x}(Ax - r(x) x). 
-\]
-Geometrically speaking, the eigenvectors of $A$ are the stationary points of the function $r(x)$. Besides, since $r(x)$ is independent of the scale of $x$, these stationary points lie along lines through the origin in $\RR^m$. We can restrict our attention to the unit sphere $\|x\|=1$.  
-
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/27-1.png}
-    \caption{The Rayleigh quotient $r(x)$ is a continuous function on the unit sphere $\|x\|=1$ in $\RR^m$, and the stationary points of $r(x)$ are the normalized eigenvectors of $A$. In this example with $m=3$, there are three orthogonal stationary points. }
-\end{figure}
-%────────────────────────────────────────
-
-Let $q_J$ be one of the eigenvectors of $A$. From the fact that $\nabla r(q_J) = 0$, together with the smoothness of the function $r(x)$, we derive an important consequence:
-\begin{equation}
-\label{eq: quadratic accurate}
-r(x) - r(q_J) = O(\|x- q_J\|^2), \quad \text{ as } x \to q_J. 
-\end{equation}
-
-Thus the Rayleigh quotient is a \textbf{quadratically accurate estimate of an eigenvalue}. Herein lies its power.  
-
-\section{Power Iteration} 
- Now we switch tacks. Suppose $v^{(0)}$ is a vector with $ \|v^{(0)}\|=1 $. The following process, \textbf{power iteration}, was cited as a not especially good idea at the beginning of Chapter 24. It may be expected to produce a sequence $ v^{s(i)} $ that converges to an eigenvector corresponding to the largest eigenvalue of $A$> 
-
- \begin{algorithm}[H]
-     \caption{Power Iteration}
-     \label{Algo 27.1}
-$ v^{(0)}= $ some vector with $ \|v^{(0)}\|=1 $\; 
-     \For{$ k=1,2,\ldots  $}{
-        $ w = Av^{(k-1)} $\;
-        $ v^{(k)}=\frac{w}{\|w\|} $\; 
-        $ \lambda ^{(k)} = (v^{(k)})^\top  Av^{(k)} $\; 
-     }
- \end{algorithm}
- In this and the algorithms to follow, we give no attention to termination conditions, describing the loop only by the suggestive expression. Of course, in practice, termination conditions are very important, and this is one of this points where top-quality software such as can be found in LAPACK or Matlab is likely to be superior to a program an individual might write.  
-
- We can analyze power iteration easily. Write $v^{(0)}$ as a linear combination of these orthonormal eigenvectors $q_i$: 
- \[
-    v^{(0)} = a_1q_1 + a_2 q_2 + \cdots +a_mq_m. 
- \]
-Hence, $v^{(k)}$ is: 
+\section{The Lax-Wendroff method}
+ 
+One simple way to achieve a two-level explicit method with higher accuracy is to use the idea of Taylor series methods. Applying this directly to the linear system of ODEs $U^{\prime}(t)=A U(t)$ (and using $U^{\prime \prime}=A U^{\prime}=A^2 U$ ) gives the second order method
 \begin{align*}
-    v^{(k)} 
-    &= c_k A^k v^{(0)}\\ 
-    &= c_k (a_1 \lambda _1^k q_1 + a_2 \lambda _2^k q_2 + \cdots + a_m \lambda _m^k q_m) \\ 
-    &= c_k \lambda _1^k ( a_1 q_1 + a_2 (\lambda _2 /\lambda _1)^k q_2 + \cdots + a_m (\lambda _m / \lambda _1)^k q_m),
+U^{n+1}=U^n+k A U^n+\frac{1}{2} k^2 A^2 U^n .
 \end{align*}
-for some constants $c_k$. 
 
+Here $A$ is the matrix\eqref{eq: A of MOL advect eq LS} and computing $A^2$ and writing the method at the typical grid point then gives
+\begin{align*}
+U_j^{n+1}=U_j^n-\frac{a k}{2 h}\left(U_{j+1}^n-U_{j-1}^n\right)+\frac{a^2 k^2}{8 h^2}\left(U_{j-2}^n-2 U_j^n+U_{j+2}^n\right) .
+\end{align*}
+This method is second order accurate and explicit but has a 5-point stencil involving the points $U_{j-2}^n$ and $U_{j+2}^n$. With periodic boundary conditions this is not a problem, but with other boundary conditions this method needs more numerical boundary conditions than a 3-point method. This makes it less convenient to use and potentially more prone to numerical instability.
 
-%────────────────────────────────────────
-\begin{theorem}
-\label{thm: convergence power iteration}
-Suppose $ |\lambda _1| > |\lambda _2| \ge \cdots \ge |\lambda _m| \ge 0 $ and $q_1^\top  v^{(0)} \neq 0$. Then the iterates of Algo~\ref{Algo 27.1} satisfy 
-\begin{equation}
-\label{eq: convergence power iteration}
-    \|v^{(k)} - (\pm q_1) \| = O\left( \left| \frac{\lambda _2}{\lambda _1} \right| ^k \right), \quad |\lambda ^{(k)} - \lambda _1| = O \left( \left| \frac{\lambda _2}{\lambda _1} \right| ^{2k} \right)   
-\end{equation}
-as $k\to \infty$. The $\pm$ sign, means at each step $k$, one or the other choice of sign is to be taken, and then the indicated bound holds.  
-\end{theorem}
-%────────────────────────────────────────
-On its own, power iteration is of limited use, for several reasons. 
-\begin{itemize}
-    \item First, it can find only the eigenvector corresponding to the largest eigenvalue. 
-    \item Second, the convergence is linear, reducing the error only by a constant factor $ \approx |\lambda _2 / \lambda _1| $ at each iteration. 
-    \item Finally, the quality of this factor depends on having a largest eigenvalue that is significantly larger than the others.  
-\end{itemize}
-Fortunately, there is a way to amplify the differences between eigenvalues.  
+Note that the last term is an approximation to $\frac{1}{2} a^2 k^2 u_{x x}$ using a centered difference based on step size $2 h$. A simple way to achieve a second order accurate 3-point method is to replace this term by the more standard 3-point formula. We then obtain the standard \textbf{Lax-Wendroff method}:
+\begin{align}
+    \label{eq: Lax-Wendroff method}
+U_j^{n+1}=U_j^n-\frac{a k}{2 h}\left(U_{j+1}^n-U_{j-1}^n\right)+\frac{a^2 k^2}{2 h^2}\left(U_{j-1}^n-2 U_j^n+U_{j+1}^n\right) .
+\end{align}
 
+A cleaner way to derive this method is to use Taylor series expansions directly on the $\operatorname{PDE} u_t+a u_x=0$, to obtain
+\begin{align*}
+u(x, t+k)=u(x, t)+k u_t(x, t)+\frac{1}{2} k^2 u_{t t}(x, t)+\cdots .
+\end{align*}
+Replacing $u_t$ by $-a u_x$ and $u_{t t}$ by $a^2 u_{x x}$ gives
+\begin{align*}
+u(x, t+k)=u(x, t)-k a u_x(x, t)+\frac{1}{2} k^2 a^2 u_{x x}(x, t)+\cdots .
+\end{align*}
+If we now use the standard centered approximations to $u_x$ and $u_{x x}$ and drop the higher order terms, we obtain the Lax-Wendroff method. It is also clear how we could obtain higher order accurate explicit two-level methods by this same approach, by retaining more terms in the series and approximating the spatial derivatives (including the higher order spatial derivatives that will then arise) by suitably high order accurate finite difference approximations. The same approach can also be used with other PDEs. The key is to replace the time derivatives arising in the Taylor series expansion with spatial derivatives, using expressions obtained by differentiating the original PDE.
 
-\section{Inverse Iteration} 
-For any $\mu\in \RR$ s.t. $\mu \notin \spec A$, we must have $E_{(\lambda-mu)^{-1} } ( (A-\mu I)^{-1})  = E_\lambda (A)$ and 
-\[
-    \spec (A - \mu I )^{-1}  = \{(\lambda _j -\mu)^{-1} | \lambda _j \in \spec A\}.  
-\]
-Suppose $\mu$ is close to an eigenvalue $\lambda _J$ of $A$. Then $(\lambda _J - \mu)^{-1} $ may be much larger than $ (\lambda _j - mu)^{-1}  $ for all $ j\neq J $. Thus, it will converge rapidly to $q_J$. This idea is called \textbf{inverse iteration}. 
+We can analyze the stability of Lax-Wendroff following the same approach used for LaxFriedrichs. Note that with periodic boundary conditions, the Lax-Wendroff method can be viewed as Euler's method applied to the linear system of ODEs $U^{\prime}(t)=A_\epsilon U(t)$, where $A_\epsilon$ is given by \eqref{eq: A of MOL advect eq LS} with $\epsilon=a^2 k / 2$ (instead of the value $\epsilon=h^2 / 2 k$ used in Lax-Friedrichs). The eigenvalues of $A_\epsilon$ are
+\begin{align*}
+k \mu_p=-i\left(\frac{a k}{h}\right) \sin (p \pi h)+\left(\frac{a k}{h}\right)^2(\cos (p \pi h)-1) .
+\end{align*}
 
-\begin{algorithm}[H]
-    \caption{Inverse Iteration}
-    \label{Algo 27.2}
-$ v^{(0)}= $ some vector with $ \|v^{(0)}\|=1 $\; 
-     \For{$ k=1,2,\ldots  $}{
-        Solve $(A-\mu I) w = v^{(k-1)}$ for $w$\;
-        $ v^{(k)}=\frac{w}{\|w\|} $\; 
-        $ \lambda ^{(k)} = (v^{(k)})^\top  Av^{(k)} $\; }
-\end{algorithm}
+These values all lie on an ellipse centered at $-(a k / h)^2$ with semi-axes of length $(a k / h)^2$ and $|a k / h|$. If $|a k / h| \leq 1$, then all of these values lie inside the stability region of Euler's method. Figure~\ref{fig 10.1} shows an example in the case $a k / h=0.8$. The Lax-Wendroff method is stable with exactly the same time step restriction as required for LaxFriedrichs. Later we will see that this is a very natural stability condition to expect for the advection equation and is the best we could hope for when a 3-point method is used.
 
-What if $\mu$ is an eigenvalue of $A$, so that $A- \mu I$ is singular? What if it's nearly an eigenvalue, so that $ A-\mu I $ is so ill-conditioned that an accurate solution of $(A-\mu I) w = v^{(k-1)}$ cannot be expected? These cannot cause real problems. 
+A close look at Figure~\ref{fig 10.1} shows that the values $k \mu_p$ near the origin lie much closer to the boundary of the stability region for the Lax-Wendroff method (Figure~\ref{fig 10.1}) than for the other methods illustrated in this figure. This is a reflection of the fact that LaxWendroff is second order accurate, while the others are only first order accurate. Note that a value $k \mu_p$ lying inside the stability region indicates that this eigenmode will be damped as the wave propagates, which is unphysical behavior since the true solution advects with no dissipation. For small values of $\mu_p$ (low wave numbers, smooth components) the LaxWendroff method has relatively little damping and the method is more accurate. Higher wave numbers are still damped with Lax-Wendroff (unless $|a k / h|=1$, in which case all the $k \mu_p$ lie on the boundary of $\mathcal{S}$ ) and resolving the behavior of these modes properly would require a finer grid.
 
-Like power iteration, inverse iteration exhibits only linear convergence. Unlike power iteration, however, we can choose the eigenvector that will be found by supplying an estimate $\mu$ of the corresponding eigenvalue. Furthermore, the rate of linear convergence can be controlled, for it depends on the quality of $\mu$. We have the following theorem: 
+\section{Upwind methods} 
+So far we have considered methods based on symmetric approximations to derivatives. Alternatively, one might use a nonsymmetric approximation to $u_x$ in the advection equation, e.g.,
+\begin{align*}
+u_x\left(x_j, t\right) \approx \frac{1}{h}\left(U_j-U_{j-1}\right)
+\end{align*}
+or
+\begin{align*}
+u_x\left(x_j, t\right) \approx \frac{1}{h}\left(U_{j+1}-U_j\right)
+\end{align*}
+These are both one-sided approximations, since they use data only to one side or the other of the point $x_j$. Coupling one of these approximations with forward differencing in time gives the following methods for the advection equation:
+\begin{align}
+    \label{eq: upwind}
+U_j^{n+1}=U_j^n-\frac{a k}{h}\left(U_j^n-U_{j-1}^n\right)
+\end{align}
+or
+\begin{align}
+    \label{eq: downwind}
+U_j^{n+1}=U_j^n-\frac{a k}{h}\left(U_{j+1}^n-U_j^n\right) .
+\end{align}
+These methods are first order accurate in both space and time. One might wonder why we would want to use such approximations, since centered approximations are more accurate. 
 
+For the advection equation, however, there is an asymmetry in the equations because the equation models translation at speed $a$. If $a>0$, then the solution moves to the right, while if $a<0$ it moves to the left. There are situations where it is best to acknowledge this asymmetry and use one-sided differences in the appropriate direction.
 
-%────────────────────────────────────────
-\begin{theorem}
-\label{thm: convergence inverse iteration}
-Suppose $ \lambda _J $ is the closest eigenvalue to $ \mu  $ and $ \lambda _K $ is the second closest, that is, $ |\mu-\lambda _J| < |\mu-\lambda _K|\le |\mu-\lambda _j| $ for each $ j\neq J $. Furthermore, suppose $ q_J^\top  v^{(0)}\neq 0 $. Then the iterates of Algo~\ref{Algo 27.2} satisfy 
-\[
-    \|v^{(k)}- (\pm q_J) \| = O \left( \left| \frac{\mu - \lambda _J}{\mu - \lambda _K} \right| ^k \right) , \quad |\lambda ^{(k)} - \lambda _J| = O\left( \left| \frac{\mu - \lambda _J}{\mu-\lambda _K} \right| ^{2k} \right) 
-\]
-as $k\to \infty$, where the $\pm$ sign has the same meaning as in Thm~\ref{thm: convergence power iteration}. 
-\end{theorem}
-%────────────────────────────────────────
+The choice between the two methods \eqref{eq: upwind} and \eqref{eq: downwind} should be dictated by the sign of $a$. Note that the true solution over one time step can be written as
+\begin{align*}
+u\left(x_j, t+k\right)=u\left(x_j-a k, t\right)
+\end{align*}
+so that the solution at the point $x_j$ at the next time level is given by data to the left of $x_j$ if $a>0$, whereas it is determined by data to the right of $x_j$ if $a<0$. This suggests that \eqref{eq: upwind} might be a better choice for $a>0$ and \eqref{eq: downwind} for $a<0$.
+In fact the stability analysis below shows that \eqref{eq: upwind} is stable only if
+\begin{align*}
+0 \leq \frac{a k}{h} \leq 1
+\end{align*}
+Since $k$ and $h$ are positive, we see that this method can be used only if $a>0$. This method is called the \textbf{upwind} method when used on the advection equation with $a>0$. If we view the equation as modeling the concentration of some tracer in air blowing past us at speed $a$, then we are looking in the correct upwind direction to judge how the concentration will change with time. (This is also referred to as an upstream differencing method in some literature.)
+Conversely, \eqref{eq: downwind} is stable only if
+\begin{align*}
+-1 \leq \frac{a k}{h} \leq 0
+\end{align*}
+and can be used only if $a<0$. In this case \eqref{eq: downwind} is the proper upwind method to use.
 
-Inverse iteration is one of the most valuable tools of NLA, for it's the standard method of calculating one or more eigenvectors of a matrix if the eigenvalues are already known.  
+The method \eqref{eq: upwind} can be written as
+\begin{align*}
+U_j^{n+1}=U_j^n-\frac{a k}{2 h}\left(U_{j+1}^n-U_{j-1}^n\right)+\frac{a k}{2 h}\left(U_{j+1}^n-2 U_j^n+U_{j-1}^n\right),
+\end{align*}
+which puts it in the form \eqref{eq: Aeps LF advect eq} with $\epsilon=a h / 2$. We have seen previously that methods of this form are stable provided $|a k / h| \leq 1$ and also $-2<-2 \epsilon k / h^2<0$. Since $k, h>0$, this requires in particular that $\epsilon>0$. For Lax-Friedrichs and Lax-Wendroff, this condition was always satisfied, but for upwind the value of $\epsilon$ depends on $a$ and we see that $\epsilon>0$ only if $a>0$. If $a<0$, then the eigenvalues of the MOL matrix lie on a circle that lies entirely in the right half-plane, and the method will certainly be unstable. If $a>0$, then the above requirements lead to the stability restriction.
 
-\section{Rayleigh Quotient Iteration} 
-In this chapter, we presented two methods: one for estimating eigenvector and one for obtaining an eigenvector estimate from an eigenvalue estimate. We can combine them. 
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/27-2.png}
-\end{figure}
-%────────────────────────────────────────
+The three methods, Lax-Wendroff, upwind, and Lax-Friedrichs, can all be written in the same form \eqref{eq: Aeps LF advect eq} with different values of $\epsilon$. If we call these values $\epsilon_{L W}, \epsilon_{u p}$, and $\epsilon_{L F}$, respectively, then we have
+\begin{align*}
+\epsilon_{L W}=\frac{a^2 k}{2}=\frac{a h v}{2}, \quad \epsilon_{u p}=\frac{a h}{2}, \quad \epsilon_{L F}=\frac{h^2}{2 k}=\frac{a h}{2 v},
+\end{align*}
+where $v=a k / h$. Note that
+\begin{align*}
+\epsilon_{L W}=v \epsilon_{u p} \quad \text { and } \quad \epsilon_{u p}=v \epsilon_{L F}
+\end{align*}
+If $0<v<1$, then $\epsilon_{L W}<\epsilon_{u p}<\epsilon_{L F}$ and the method is stable for any value of $\epsilon$ between $\epsilon_{L W}$ and $\epsilon_{L F}$. 
 
-This algorithm is called \textbf{Rayleigh quotient iteration}. 
-
-\begin{algorithm}[H]
-    \caption{Rayleigh Quotient Iteration}
-    \label{Algo 27.3}
-    $ v^{(0)}= $ some vector with $ \|v^{(0)}\|=1 $\; 
-    $ \lambda ^{(0)} = (v^{(0)})^\top  A v^{(0)} $\;
-     \For{$ k=1,2,\ldots  $}{
-        Solve $(A-\lambda ^{(k-1)} I) w = v^{(k-1)}$ for $w$\;
-        $ v^{(k)}=\frac{w}{\|w\|} $\; 
-        $ \lambda ^{(k)} = (v^{(k)})^\top  Av^{(k)} $\; }
-\end{algorithm}
-
-The convergence of this algorithm is spectacular: each iteration triples the number of digits of accuracy. 
-
-
-%────────────────────────────────────────
-\begin{theorem}
-\label{thm: convergence rayleigh quotient}
-Raleigh quotient iteration converges to an eigenvalue/eigenvector pair for all except a set of measure zero of starting vectors $v^{(0)}$. When it converges, the convergence is ultimately cubic in the sense that if $\lambda _J$ is an eigenvalue of $A$ and $v^{(0)}$ is sufficiently close to the eigenvector $q_J$, then 
-\begin{equation}
-\label{eq: RQ iter vector rate}
-    \|v ^{(k+1)} - (\pm q_J)\| = O(\|v^{(k)} - (\pm q_J)\|^3) 
-\end{equation}
-and 
-\begin{equation}
-\label{eq: RQ iter value rate}
-    |\lambda ^{(k+1)}-\lambda _J| = O(|\lambda ^{(k)}- \lambda _J|^3)
-\end{equation}
-as $k\to \infty$. The $ \pm $ signs are not necessarily the same on the two sides of \eqref{eq: RQ iter vector rate}. 
-\end{theorem}
-%────────────────────────────────────────
-
-%────────────────────────────────────────
-\begin{proof}[Proof sketch]
-Firstly, we have \eqref{eq: quadratic accurate}, 
-\[
-    |\lambda ^{(k)} - \lambda _J|  = C \|v^{(k)} - q_J\|^2. 
-\]
-Then following the proof of Thm~\ref{thm: convergence inverse iteration}, 
-\[
-    \|v^{(k+1)}-q_J\| = O(|\lambda ^{(k)}-\lambda _J| \| v^{(k)}-q_J\|) = C \|v^{(k)}-q_J\|^3. 
-\]
-Similar rate can be achieved for $|\lambda ^{(k)}-\lambda _J|$. 
-\end{proof}
-%────────────────────────────────────────
-
-
-%────────────────────────────────────────
-\begin{example}
-\label{eg: convergence rate eg}
-Cubic convergence is so fast. Consider the symmetric matrix 
-\[
-    A = \begin{bmatrix}[] 
-        2 & 1 &  1 \\
-        1 & 3 &  1 \\
-        1 & 1 &  4 \\
-    \end{bmatrix},  
-\]
-and let $v^{(0)}=(1,1,1)^\top /\sqrt{3} $ be the initial eigenvector estimate. When Rayleigh quotient iteration is applied to $A$, the following values $ \lambda ^{(k)} $ are computed by the first three iterations: 
-\[
-    \lambda^{(0)}=5, \quad \lambda^{(1)}=5.2131 \ldots, \quad \lambda^{(2)}=5.214319743184 \ldots
-\]
-The actual value of the eigenvalue corresponding to the eigenvector closet to $v^{(0)}$ is $\lambda  = 5.414319743377$. After only three iterations, Rayleigh quotient iteration has produced a result accurate to ten digits. 
-\end{example}
-%────────────────────────────────────────
-
-\section{Operation Counts}
-First, suppose $A\in \RR^{m\times m}$ is a full matrix. Then each step of power iteration involves a matrix-vector multiplication, requiring $O(m^2)$ flops. Each step of inverse iteration involves the solution of a linear system, which might seem to require $O(m^3)$ flops, but this figure reduces to $O(m^2)$ if the matrix is processed in advance by LU or QR factorization or another method. In the case of Rayleigh quotient iteration, the matrix to be inverted changes at each step, and beating $O(m^3)$ flops per step is not so straightforward.  
-
-These figures improve greatly if $A$ is tridiagonal. Now, all three iterations require just $O(m)$ flops per step. For the analogous iterations involving nonsymmetric matrices, incidentally, we must deal with Hessenberg instead of tridiagonal structure, and this figure increases to $O(m^2)$. 
+\subsection{The Beam-Warming method}
+The upwind method is only first order accurate. A second order accurate method with the same one-sided character can be derived by following the derivation of the Lax-Wendroff method, but using one-sided approximations to the spatial derivatives. This results in the \textbf{Beam-Warming} method, which for $a>0$ takes the form
+\begin{align*}
+U_j^{n+1}=U_j^n-\frac{a k}{2 h}\left(3 U_j^n-4 U_{j-1}^n+U_{j-2}^n\right)+\frac{a^2 k^2}{2 h^2}\left(U_j^n-2 U_{j-1}^n+U_{j-2}^n\right) .
+\end{align*}
+For $a<0$ the Beam-Warming method is one-sided in the other direction:
+\begin{align*}
+U_j^{n+1}=U_j^n-\frac{a k}{2 h}\left(-3 U_j^n+4 U_{j+1}^n-U_{j+2}^n\right)+\frac{a^2 k^2}{2 h^2}\left(U_j^n-2 U_{j+1}^n+U_{j+2}^n\right) .
+\end{align*}
+These methods are stable for $0 \leq v \leq 2$ and $-2 \leq v \leq 0$, respectively.

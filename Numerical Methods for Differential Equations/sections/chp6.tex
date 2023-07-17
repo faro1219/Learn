@@ -1,105 +1,242 @@
-\part{QR factorization and Least Squares}
-\chapter{Projectors}
-We now enter the second part of the book, whose theme is orthogonality. We begin with the fundamental tool of projection matrices, or projectors, both orthogonal and nonorthogonal.
-\section{Projectors}
+\chapter{Families of LMMs}
 
-%────────────────────────────────────────
-\begin{definition}
-[Projectors]
-\label{def: Projectors}
-A projector is a square matrix $P$ that satisfies
-\begin{align*}
-P^2=P .
-\end{align*}
-\end{definition}
-%────────────────────────────────────────
-This definition includes both orthogonal projectors, to be discussed in a moment, and nonorthogonal ones. To avoid confusion one may use the term oblique projector in the nonorthogonal case. 
+At this point we introduce several important families of LMMs that go beyond $r=1$ to achieve higher orders of accuracy. Later on we will discuss the stability and convergence of these methods, but for now we focus only on the local truncation error.
 
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/6-1.png}
-\end{figure}
-%────────────────────────────────────────
+\section{Integral-based methods} 
+Recall we are essentially trying to predict $x\left(t_{n+r}\right)$ based on the values $x\left(t_{n+j}\right)$ for $j= 0, \ldots, r-1$. Also recall that the solution of \eqref{eq: IVP} satisfies
+\begin{equation}
+\label{eq: Solu to IVP}
+    x\left(t_{n+r}\right)=x\left(t_{n+r-1}\right)+\int_{t_{n+r-1}}^{t_{n+r}} f(x(t), t) d t .
+\end{equation}
 
-\section{Complementary Projectors} 
+Can we use the preceding values $x\left(t_{n+j}\right)$ to approximate the integral term more accurately? Note that explicit Euler, implicit Euler, and the trapezoidal rule follow, respectively, from applying the left endpoint, right endpoint, and trapezoidal rules for approximating the integral.
 
-%────────────────────────────────────────
-\begin{definition}
-[Complementary Projectors]
-\label{def: Complementary Projectors}
-If $P$ is a projector, $I-P$ is also a projector, for it is also idempotent:
-\begin{align*}
-(I-P)^2=I-2 P+P^2=I-P .
-\end{align*}
-\end{definition}
-%────────────────────────────────────────
+In particular, the trapezoidal rule can be interpreted as replacing $f(x(t), t)$ ) with a linear interpolation over the interval of integration. But to begin with, we will focus on developing a higher-order explicit approachg. As such we will first generalize the left endpoint rule. This can be seen as replacing $f(x(t), t)$ with the `trivial polynomial interpolation' which matches the value at the left endpoint with a constant polynomial.
 
-We have the following corollary:
+\subsection{Adams-Bashforth methods} 
+More generally, we can use all $r$ of the values $f_{n+j}=f\left(x\left(t_{n+j}\right), t_{n+j}\right), j=0, \ldots, r-1$, to construct a more accurate polynomial interpolation over the interval $\left[t_{n+r-1}, t_{n+r}\right]$. We expect our interpolation to then achieve $O\left(h^r\right)$ accuracy pointwise, so our LTE will be $O\left(h^{r}\right)$, and we will have a method that is order- $p$ consistent. In fact as we shall see the resulting $r$-step \textbf{Adams-Bashforth method} will be a LMM, since the interpolation depends linearly on the $f_{n+j}$.
 
-%────────────────────────────────────────
-\begin{corollary}
-\label{cor: P and I-P}
-We have the following results: 
-\begin{itemize}
-    \item $\range(I-P) = \nul (P)$, 
-    \item $\nul (I-P) = \range(P)$, 
-    \item $\range(P) \cap \nul(P) = \{0\} . $
-\end{itemize}
-\end{corollary}
-%────────────────────────────────────────
-These computations show that a projector separates $\mathbb{C}^m$ into two spaces. Conversely, let $S_1$ and $S_2$ be two subspaces of $\mathbb{C}^m$ such that $S_1 \cap S_2=\{0\}$ and $S_1+S_2=\mathbb{C}^m$, where $S_1+S_2$ denotes the span of $S_1$ and $S_2$, that is, the set of vectors $s_1+s_2$ with $s_1 \in S_1$ and $s_2 \in S_2$. (Such a pair are said to be complementary subspaces.) Then there is a projector $P$ such that $\operatorname{range}(P)=$ $S_1$ and $\operatorname{null}(P)=S_2$. We say that $P$ is the projector onto $S_1$ along $S_2$.
+We will use the Lagrange basis to construct the polynomial interpolation. Since we already know $ \alpha _r=1, \alpha _{r-1}=-1 $, we only need to determine the coefficients $ \beta _j $ for the method. Let's focus on the first r nodes: 
+\[
+    \mathbf{t}=\left(t_0, t_1, \ldots, t_{r-1}\right)=(0, h, \ldots,(r-1) h)
+\]
+and let $\ell_j(t ; \mathbf{t})$ be the Lagrange basis polynomials as in Appendix A:
+$$
+\ell_j(t ; \mathbf{t})=\prod_{i \in\{0, \ldots, r-1\} \backslash\{j\}} \frac{t-i h}{(j-i) h}, \quad j=0, \ldots, r-1. 
+$$
+And our approximation for $ f $ is: 
+\[
+    f(x(t), t) \approx \sum_{j=0}^{r-1} \ell_j(t ; \mathbf{t}) f_j. 
+\]
+Hence, after the integration, the coefficient 
+\[
+    \begin{aligned}
+        \beta_j & =\frac{1}{h} \int_{(r-1) h}^{r h} \ell_j(t ; \mathbf{t}) d t  =\int_{r-1}^r \ell_j(h t ; \mathbf{t}) d t \\
+        & =\frac{(-1)^{r-1-j}}{j !(r-1-j) !} \int_{r-1}^r \prod_{i \in\{0, \ldots, r-1\} \backslash\{j\}}(t-i) d t \\
+        & =\frac{(-1)^{r-1-j}}{j !(r-1-j) !} \int_{r-1}^r \prod_{i \in\{0, \ldots, r-1\} \backslash\{r-1-j\}}(t-(r-1-i)) d t \\
+        & =\frac{(-1)^{r-1-j}}{j !(r-1-j) !} \int_0^1(t+i) d t,
+        \end{aligned}
+\]
 
-\section{Orthogonal Projectors}
-An orthogonal projector is one that projects onto a subspace $S_1$ along a space $S_2$, where $S_1$ and $S_2$ are orthogonal. (Warning: orthogonal projectors are not orthogonal matrices!)
-
-%────────────────────────────────────────
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/6-2.png}
-\end{figure}
-%────────────────────────────────────────
+or equivalently:
+\begin{equation}
+\label{eq: coeff of Adams-Bashforth}
+    \beta_{r-1-j}=\frac{(-1)^j}{j !(r-1-j) !} \int_0^1 \prod_{i \in\{0, \ldots, r-1\} \backslash j\}}(t+i) d t, \quad j=0, \ldots, r-1. 
+\end{equation}
+The integrals in \eqref{eq: coeff of Adams-Bashforth} can be evaluated analytically, but there does not seem to be a neat formula. Of course, once they are worked out a single time, they never need be computed again!
 
 
 %────────────────────────────────────────
 \begin{theorem}
-\label{thm: orthogonal projector}
-A projector $P$ is orthogonal if and only if $P=P^*$. 
+[Consistency of Adams-Bashforth]
+\label{thm: consistency of Adams-Bashforth}
+Given $ \alpha = (1,-1,0,\ldots ,0) $ and $ \beta _j $ satisfying \eqref{eq: coeff of Adams-Bashforth}, the Adams-Bashforth is of order $ r $ consistency. 
 \end{theorem}
 %────────────────────────────────────────
 
-\section{Projection with an Orthonormal Basis}
- Let $\left\{q_1, \ldots, q_n\right\}$ be any set of $n$ orthonormal vectors in $\mathbb{C}^m$, and let $\hat{Q}$ be the corresponding $m \times n$ matrix. Thus the map
- \begin{align}
-    \label{eq: project with orthonormal basis}
- v \mapsto \sum_{i=1}^n\left(q_i q_i^*\right) v
- \end{align}
- is an orthogonal projector onto range $(\hat{Q})$, and in matrix form, it may be written $y=\hat{Q} \hat{Q}^* v$. 
+Here are some examples. 
 
- An important special case of orthogonal projectors is the rank-one orthogonal projector that isolates the component in a single direction $q$, which can be written
-\begin{align*}
-P_q=q q^* .
-\end{align*}
-These are the pieces from which higher-rank projectors can be made, as in (6.7). Their complements are the rank $m-1$ orthogonal projectors that eliminate the component in the direction of $q$ :
-\begin{align*}
-P_{\perp q}=I-q q^* .
-\end{align*}
-Equations (6.8) and (6.9) assume that $q$ is a unit vector. For arbitrary nonzero vectors $a$, the analogous formulas are
-\begin{align*}
-\begin{gathered}
-P_a=\frac{a a^*}{a^* a}, \\
-P_{\perp a}=I-\frac{a a^*}{a^* a} .
-\end{gathered}
-\end{align*}
+%────────────────────────────────────────
+\begin{example}
+[Explicit Adams-Bashforth methods]
+\label{eg: Explicit Adams-Bashforth methods}
+\begin{itemize}
+    \item []
+    \item 1-step: $x^{n+1}=x^n+k f\left(x^n\right) \quad$ (forward Euler)
+    \item 2-step: $x^{n+2}=x^{n+1}+\frac{k}{2}\left(-f\left(x^n\right)+3 f\left(x^{n+1}\right)\right)$
+    \item 3-step: $x^{n+3}=x^{n+2}+\frac{k}{12}\left(5 f\left(x^n\right)-16 f\left(x^{n+1}\right)+23 f\left(x^{n+2}\right)\right)$
+    \item 4-step: $ x^{n+4}=x^{n+3}+\frac{k}{24}\left(-9 f\left(x^n\right)+37 f\left(x^{n+1}\right)-59 f\left(x^{n+2}\right)+55 f\left(x^{n+3}\right)\right)$
+\end{itemize}
+\end{example}
+%────────────────────────────────────────
 
-\section{Projection with an Arbitrary Basis} 
-An orthogonal projector onto a subspace of $\mathbb{C}^m$ can also be constructed beginning with an arbitrary basis, not necessarily orthogonal. Suppose that the subspace is spanned by the linearly independent vectors $\left\{a_1, \ldots, a_n\right\}$, and let $A$ be the $m \times n$ matrix whose $j$ th column is $a_j$.
+\subsection{Adams-Moulton methods}
+If we allow ourselves to additionally use the right endpoint of our interval of integration (as in the trapezoidal rule), then we can get a polynomial interpolation with one additional order of accuracy. Specifically, the LTE is $O\left(h^{r+2}\right)$, and the method is now of order $r+1$. However, beware that this so-called Adams-Moulton method is now implicit!
 
-In passing from $v$ to its orthogonal projection $y \in \operatorname{range}(A)$, the difference $y-v$ must be orthogonal to range $(A)$. This is equivalent to the statement that $y$ must satisfy $a_j^*(y-v)=0$ for every $j$. Since $y \in \operatorname{range}(A)$, we can set $y=A x$ and write this condition as $a_j^*(A x-v)=0$ for each $j$, or equivalently, $A^*(A x-v)=0$ or $A^* A x=A^* v$. It is easily shown that since $A$ has full rank, $A^* A$ is nonsingular (Exercise 6.3). Therefore
-\begin{align*}
-x=\left(A^* A\right)^{-1} A^* v
-\end{align*}
-Finally, the projection of $v, y=A x$, is $y=A\left(A^* A\right)^{-1} A^* v$. Thus the orthogonal projector onto range $(A)$ can be expressed by the formula
-\begin{align*}
-    P=A\left(A^* A\right)^{-1} A^*.
-\end{align*}
+Now we have: 
+\begin{equation}
+\label{eq: coeff of Adams-Moulton methods}
+\beta_{r-j}=\frac{(-1)^j}{j !(r-j) !} \int_0^1 \prod_{i \in\{0, \ldots, r\} \backslash j\}}(t+i-1) d t, \quad j=0, \ldots, r. 
+\end{equation}
+
+
+ %────────────────────────────────────────
+\begin{theorem}
+    [Consistency of Adams-Moulton]
+    \label{thm: consistency of Adams-Bashforth}
+    Given $ \alpha = (1,-1,0,\ldots ,0) $ and $ \beta _j $ satisfying \eqref{eq: coeff of Adams-Bashforth}, the Adams-Moulton is of order $ r+1 $ consistency. 
+    \end{theorem}
+    %────────────────────────────────────────
+
+\begin{example}
+[Implicit Adams-Moulton methods]
+\label{eg: Implicit Adams-Moulton methods}
+\begin{itemize}
+    \item []
+    \item 1-step: $ x^{n+1}=x^n+\frac{k}{2}\left(f\left(x^n\right)+f\left(x^{n+1}\right)\right) \quad$ (trapezoidal method)
+    \item 2-step: $x^{n+2}=x^{n+1}+\frac{k}{12}\left(-f\left(x^n\right)+8 f\left(x^{n+1}\right)+5 f\left(x^{n+2}\right)\right)$
+    \item 3-step: $x^{n+3}=x^{n+2}+\frac{k}{24}\left(f\left(x^n\right)-5 f\left(x^{n+1}\right)+19 f\left(x^{n+2}\right)+9 f\left(x^{n+3}\right)\right)$
+    \item 4-step: $ x^{n+4}=x^{n+3}+\frac{k}{720}\left(-19 f\left(x^n\right)+106 f\left(x^{n+1}\right)-264 f\left(x^{n+2}\right)\right.$ $\left.+646 f\left(x^{n+3}\right)+251 f\left(x^{n+4}\right)\right)$
+\end{itemize}
+\end{example}
+%────────────────────────────────────────
+
+
+\subsection{Nystr\"om methods}
+The \textbf{(explicit) Nyström methods} are based on the identity
+\begin{equation}
+\label{eq: Nystrom methods}
+    x\left(t_{n+r}\right)=x\left(t_{n+r-2}\right)+\int_{t_{n+r-2}}^{t_{n+r}} f(x(t), t) d t .
+\end{equation}
+
+The data $\left(t_n, f_n\right), \ldots,\left(t_{n+r-1}, f_{n+r-1}\right)$ can be used to construct a Lagrange interpolating polynomial which may then be substituted for $f(x(t), t)$ in the preceding expression to derive the $r$-step Nystr\"om method. The order of accuracy is $r$, same as that of the $r$-step Adams-Bashforth method. For such methods we always have
+$$
+\alpha_r=1, \alpha_{r-1}=0, \alpha_{r-2}=-1, \alpha_{r-3}=\cdots=\alpha_0=0 .
+$$
+Further general details are left as an exercise.
+Let us illustrate the special case of the 2-step explicit Nystr\"om method. In this case we insert into \eqref{eq: Nystrom methods} the linear interpolation
+\[
+    f(x(t), t) \approx f_n\left(1-\frac{t-t_n}{h}\right)+f_{n+1} \frac{t-t_n}{h},
+\]
+yielding 
+\[
+    f(x(t), t) \approx f_n\left(1-\frac{t-t_n}{h}\right)+f_{n+1} \frac{t-t_n}{h}, \quad \beta_1=\int_0^2 t d t=2 .
+\]
+Hence, the 2-step explicit Nystr\"om method is given by 
+\[
+    x_{n+2}-x_n=2 h f_{n+1}. 
+\]
+This is called the midpoint method or leapfrog method. It can of course be derived more simply by substituting the second-order accurate difference quotient approximation
+$$
+x^{\prime}(t)=\frac{x(t+h)-x(t-h)}{2 h}+O\left(h^2\right). 
+$$
+
+\subsection{Milne-Simpson methods}
+The Milne-Simpson methods are to the Nystr\"om methods as the Adams-Moulton methods are to the Adams-Bashforth methods, using the full data $\left(t_n, f_n\right), \ldots,\left(t_{n+r}, f_{n+r}\right)$ for polynomial interpolation. Sometimes these are called (implicit) Nystr\"om methods, and the order of accuracy is $r+1$ in general. Again
+$$
+\alpha_r=1, \alpha_{r-1}=0, \alpha_{r-2}=-1, \alpha_{r-3}=\cdots=\alpha_0=0,
+$$
+and further details are left as an exercise. We illustrate the special case of the 2-step Milne-Simpson method. Here the substitution of the interpolating polynomial is equivalent to approxmating the integral in \eqref{eq: Nystrom methods} by Simpson's rule,
+$$
+\int_a^b g(t) d t \approx \frac{g(a)+4 g\left(\frac{a+b}{2}\right)+g(b)}{6}(b-a),
+$$
+which yields the method that we also call Simpson's rule:
+$$
+x_{n+2}-x_n=\frac{2 h}{6}\left(f_n+4 f_{n+1}+f_{n+2}\right) .
+$$
+In fact, Simpson's rule (due to it's high symmetry about the $(n+1)$-th time step) enjoys one higher order of accuracy than is guaranteed a priori by its status as the 2-step Milne Simpson method, i.e., it is order- 4 consistent. The verification of this is left as an exercise.
+
+\section{Backward differentiation formulas}
+The LMMs of Adams and Nyström type considered above adopt the approach of taking only a few of the $\alpha_j$ nonzero and then guaranteeing higher orders of accuracy by integral approximation within an integral formulation of the ODE \eqref{eq: IVP} as in \eqref{eq: Solu to IVP}. 
+
+An alternative approach is to take the differential formulation
+\begin{equation}
+\label{eq: differetial formula}
+    x^{\prime}(t)=f(x(t), t)
+\end{equation}
+
+and simply plug higher-order accurate finite difference approximations into the left-hand side. In the resulting scheme, only one of the $\beta_j$ will be nonzero, but perhaps many of the $\alpha_j$ will be nonzero, depending on the order of the method. 
+
+We already have some examples that can be interpreted this way: explicit Euler, implicit/backward Euler, and the midpoint method are based on substitution of the backward, forward, and central finite difference formulas
+$$
+\frac{x(t)-x(t-h)}{h}, \quad \frac{x(t+h)-x(t)}{h}, \quad \frac{x(t+h)-x(t-h)}{2 h}
+$$
+into \eqref{eq: differetial formula} at time $ t $.  
+
+At the same time, we can also think of backward Euler as the result of substituting a backward finite difference formula into \eqref{eq: differetial formula} at time $t+h$. This perspective is generalized by the backward differentiation formulas (BDFs), which are of interest for their stability properties to be considered later.
+
+Concretely, we seek coefficients $c_j$ such that
+\begin{equation}
+\label{eq: expand cj}
+z^{\prime}(t) \approx \frac{1}{h} \sum_{j=0}^r c_j z(t-j h)
+\end{equation}
+
+for smooth $z$. In fact it will be possible for the approximation  to hold with $O\left(h^r\right)$ error.
+
+Then the resulting BDF is derived by substituting the approximation \eqref{eq: expand cj} into \eqref{eq: differetial formula} at time $t+r h$, resulting in a LMM with coefficients $\alpha_j=c_{r-j}$ for $j=0, \ldots, r$ and $\beta_r=$ $1, \beta_0=\cdots=\beta_{r-1}=0$.
+Note that by considering $\tilde{z}(t)=z(-t)$, it is equivalent to find $v_j$ such that
+\begin{equation}
+\label{eq: forward cj expand}
+    z^{\prime}(t)=\frac{1}{h} \sum_{j=0}^r v_j z(t+j h)+O\left(h^r\right)
+\end{equation}
+for all smooth $z$, i.e., to determine a higher-order forward differentiation formula, and then set $c_j=-v_j$ for $j=0, \ldots, r$.
+Simply expand 
+$$
+\begin{aligned}
+\sum_{j=0}^r v_j z(t+j h) & =\sum_{j=0}^r v_j\left(\sum_{k=0}^r z^{(k)}(t) \frac{j^k h^k}{k !}+O\left(h^{r+1}\right)\right) \\
+& =\sum_{k=0}^r\left(\sum_{j=0}^r j^k v_j\right) z^{(k)}(t) \frac{h^k}{k !}+O\left(h^{r+1}\right),
+\end{aligned}
+$$
+where we interpret $0^0=1$ for notational compactness. Note that to guarantee \eqref{eq: forward cj expand} we need
+$$
+\sum_{j=0}^r j^k v_j= \begin{cases}0, & k=0, \\ 1, & k=1, \\ 0, & k=2, \ldots, r .\end{cases}
+$$
+
+We can view this is a linear system of equations for the $v_j$. Define the $(r+1) \times(r+1)$ matrix $A=\left(A_{i j}\right)=\left(j^i\right)$, where we have adopted a zero-indexing convention for the indices $i, j=0, \ldots, r$. We can also write out
+$$
+A=\left(\begin{array}{cccccc}
+1 & 1 & 1 & 1 & \cdots & 1 \\
+0 & 1 & 2 & 3 & \cdots & r \\
+0^2 & 1^2 & 2^2 & 3^2 & \cdots & r^2 \\
+\vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+0^r & 1^r & 2^r & 3^r & \cdots & r^r
+\end{array}\right)
+$$
+If we let $\mathbf{v}=\left(v_0, \ldots, v_r\right)^{\top} \in \mathbb{R}^{r+1}$ be the vector of unknown coefficients, then we are seeking to solve the linear system
+$$
+A \mathbf{v}=e_1
+$$
+
+where $e_1=(0,1,0, \ldots, 0)^{\top}$.
+In fact $V:=A^{\top}$ is a Vandermonde matrix, i.e., a matrix of the form
+$$
+V=\left(a_i^j\right)=\left(\begin{array}{cccccc}
+1 & a_0 & a_0^2 & a_0^3 & \cdots & a_0^r \\
+1 & a_1 & a_1^2 & a_1^3 & \cdots & a_1^r \\
+1 & a_2 & a_2^2 & a_2^3 & \cdots & a_2^r \\
+\vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & a_r & a_r^2 & a_r & \cdots & a_r^r
+\end{array}\right) .
+$$
+The classical formula
+$$
+\operatorname{det}(V)=\operatorname{det}(A)=\prod_{0 \leq i<j \leq r}\left(a_j-a_i\right)
+$$
+guarantees in particular that $A$ is invertible if and only if the $a_i$ are all distinct. In our case $a_i=i$ for $i=0, \ldots, r$, so $A$ is invertible and $ Av=e_1 $ has a unique solution $\mathbf{v}$, which uniquely specifies a unique BDF scheme of order $r$ via $\alpha_j=-v_{r-j}$ for $j=0, \ldots, r$.
+
+
+%────────────────────────────────────────
+\begin{example}
+[BDFs]
+\label{eg: BDFs}
+\begin{itemize}
+    \item []
+    \item BDF1: $ x_{n+1} - x_n = hf_{n+1} $,
+    \item BDF2: $ x_{n+2} - \frac{4}{3}x_{n+1} + \frac{1}{3}x_{n} = \frac{2}{3}h f_{n+2} $, 
+    \item BDF3: $ x_{n+3} -\frac{18}{11}x_{n+2}+ \frac{9}{11}x_{n+1} - \frac{2}{11}x_n = \frac{12}{25}h f_{n+3} $. 
+\end{itemize}
+\end{example}
+%────────────────────────────────────────
+
+ 
+ 

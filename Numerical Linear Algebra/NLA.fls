@@ -1681,6 +1681,8 @@ INPUT e:/texlive/2021/texmf-dist/tex/latex/mdframed/mdframed.sty
 INPUT e:/texlive/2021/texmf-dist/tex/latex/thmtools/thm-patch.sty
 INPUT e:/texlive/2021/texmf-dist/tex/latex/mdframed/mdframed.sty
 INPUT e:/texlive/2021/texmf-dist/tex/latex/thmtools/thm-patch.sty
+INPUT e:/texlive/2021/texmf-dist/tex/latex/mdframed/mdframed.sty
+INPUT e:/texlive/2021/texmf-dist/tex/latex/thmtools/thm-patch.sty
 INPUT e:/texlive/2021/texmf-dist/tex/latex/base/fix-cm.sty
 INPUT e:/texlive/2021/texmf-dist/tex/latex/base/fix-cm.sty
 INPUT e:/texlive/2021/texmf-dist/tex/latex/base/fix-cm.sty
