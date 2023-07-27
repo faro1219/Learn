@@ -1,0 +1,177 @@
+\newpage
+\section{Schr\"odinger Equation, the Uncertainty Principle, and Oscillatory Integrals}
+
+\subsection{Fundamental solution of the Schr\"odinger equation}
+Recall the heat equation
+$$
+\left(\partial_{t}-\Delta\right) u=f \quad \text { in } \mathbb{R}_{t} \times \mathbb{R}_{x}^{n}
+$$
+This has fundamental solution
+$$
+K(t, x)=\frac{1}{(4 \pi t)^{n / 2}} e^{-x^{2} /(4 t)} \mathbb{1}_{\{t \geq 0\}}
+$$
+This is the unique temperate distribution for the heat equation.
+We also have the Schrödinger equation
+$$
+\left(i \partial_{t}+\Delta\right) u=f \quad \text { in } \mathbb{R} \times \mathbb{R}^{n}
+$$
+
+Unlike the heat equation, this equation fundamentally has complex-valued solutions. This is the fundamental PDE in quantum mechanics, where $u(t)$ is interpreted as the state of a particle at time $t$ in a probabilistic sense as follows: $\|u\|_{L^{2}}=1$, and $|u|^{2}$ is viewed as a probability distribution. In particular,
+$$
+\mathbb{P}(p \in E)=\int_{E}|u|^{2} d x
+$$
+where $p$ can be the position of a particle. In this picture, the Fourier transform also plays a role. Here, $|\widehat{u}|^{2}$ is the probability density of the velocity of the particle. Plancherel's theorem tells us that $\|\widehat{u}\|_{L^{2}}=1$, as well.
+
+Let $P(\tau, \xi)=\tau-\xi^{2}$. Then the fundamental solution to the Schrödinger equation should be $K=\mathcal{F}^{-1}\left(\frac{1}{\tau-\xi^{2}}\right) .$ The issue is that $\tau-\xi^{2}$ has an entire parabola worth of zeroes. How do we think of $\frac{1}{\tau-\xi^{2}}$ as a distribution? If we just view this as a distribution in the variable $\tau$, this is like the distribution $\frac{1}{x}$, which gives a few different ways to think of it:
+$$
+\frac{1}{\tau-\xi^2-i 0}, \quad \frac{1}{\tau-\xi^{2}+i 0}, \quad \mathrm{PV} \frac{1}{\tau-\xi^{2}}
+$$
+Note that these first two solutions indicate that the Schrödinger equation, unlike the heat equation, can be run backwards in time. How do we pick one of these options? We might want to look for a solution that looks like it's moving forward in time: $\operatorname{supp} K \subseteq\{t \geq 0\}$. This implies that $\widehat{K}$ should have a holomorphic extension in the lower half-plane. Then our forward fundamental solution is 
+$$
+K(t, x)=\mathcal{F}^{-1}\left(\frac{1}{\tau-\xi^{2}-i 0}\right)
+$$
+First, we will take the Fourier transform with respect to $\tau$. That $\xi=0$, this gives $H(t)$. Recall that $\mathcal{F}^{-1} \delta_{0}=1$, and $\mathcal{F}^{-1} \delta_{\xi_{0}}=e^{i x \xi_{0}}$. This is a general rule for the Fourier transform of the translation of a distirbution, so when $\xi \neq 0$, we get $K(t, \xi)=H(t) e^{-i \xi^{2} t}$.
+
+Alternatively, take only a spatial Fourier transform of the Schrödinger equation
+$$
+\left\{\begin{array}{l}
+\left(i \partial_{t}+\Delta\right) u=0 \\
+u(0)=u_{0}=\delta_{0}(u)
+\end{array}\right.
+$$
+to get
+$$
+\left\{\begin{array}{l}
+\left(i \partial_{t}+\xi^{2}\right) \widehat{u}(\xi)=0 \\
+\widehat{u}(0)=1
+\end{array}\right.
+$$
+This gives $\widehat{u}(\xi)=e^{i t \xi^{2}}$, so $u=\mathcal{F}^{-1}\left(e^{-i t \xi^{2}}\right)$. Recall that $\mathcal{F}(e^{-\xi^{2} / 2})=e^{-x^{2} / 2}.$ and more generally that $\mathcal{F} (e^{-\lambda \xi^{2} / 2})=\frac{1}{\lambda^{n / 2}} e^{-x^{2} /(2 \lambda)}$ for $\lambda \in \mathbb{R}^{+}$.
+
+Extend this to complex $\lambda .$ For what complex $\lambda$ is $\frac{1}{\lambda^{n / 2}} e^{-x^{2} /(2 \lambda)}$ a temperate distribution? This is the right half plane $\{\lambda: \operatorname{Re} \lambda \geq 0\} .$ For $\operatorname{Re} \lambda>0$, the function $e^{-\lambda \xi^{2} / 2}$ is analytic with values in $\mathcal{S}$. This tells us that its Fourier transform is analytic for $\operatorname{Re} \lambda>0$ and we can uniquely extend it to an analytic function on $\{\operatorname{Re} \lambda>0\}$. What about when $\operatorname{Re} \lambda=0 ?$ As $\lambda=i t+\varepsilon \rightarrow i t, e^{-(i t+\varepsilon) \xi / 2} \rightarrow e^{-i t \xi^{2} / 2}$ in $\mathcal{S}$, i.e. in the topology of temperate distributions. So the Fourier transforms converge in the same sense. Thus, we get fundamental solution
+$$
+K(t, x)=\frac{1}{(4 \pi i t)^{n / 2}} e^{i x^{2} /(4 t)} 1_{\{t \geq 0\}}
+$$
+
+\begin{remark}
+    Note that $\widehat{u}(t, \xi)=e^{i t \xi} \widehat{u}_{0}(\xi)$, which means that
+$$
+|\widehat{u}(t, \xi)|=\left|u_{0}(\xi)\right| \Longrightarrow\|\widehat{u}(t)\|_{L^{2}}=\left\|u_{0}\right\|_{L^{2}} .
+$$
+So $|\widehat{u}|$ remains a probability distribution for all time $t \geq 0$.
+\end{remark}
+
+\subsection{The uncertainty principle}
+Can we closely predict both position and velocity? Can we have supp $u \subseteq I$ and supp $\widehat{u} \subseteq J$ for compactly supported intervals $I, J ?$ The answer is no. If supp $u$ is compact, then $\widehat{u}$ is analytic. So $u$ must be 0.
+
+Let's try to localize our particle at $x=0, \xi=0$. Let
+$$
+(\delta x)^{2}=\int|u|^{2}(x) \cdot x^{2} d x
+$$
+be the mean square deviation from 0 . We can do the same for velocity to get
+$$
+(\delta \xi)^{2}=\int|\widehat{u}|^{2}(\xi) \cdot \xi^{2} d \xi
+$$
+Is there a function $u \in L^{2}$ with $\|u\|_{L^{2}}=1$ such that $\delta x$ and $\delta \xi$ are simultaneously small? This is not possible. Observe that
+$$
+\delta x=\|x \cdot u\|_{L^{2}}
+$$
+while Plancherel's theorem tells us that
+$$
+\delta \xi=\|\xi \cdot \widehat{u}\|_{L^{2}}=\left\|\partial_{x} u\right\|_{L^{2}}
+$$
+We can compute the inner product
+$$
+\operatorname{Re} \int x u \cdot \overline{\partial_{x} u} d x=\int x \cdot \frac{1}{2} \underbrace{\partial_{x}|u|^{2}}_{u \partial_{x} \bar{u}+\bar{u} \partial_{x} u} d x
+$$
+Now integrate by parts to get
+$$
+\begin{aligned}
+&=-\int_{n} \frac{n}{2}|u|^{2} d x \\
+&=-\frac{n}{2}\|u\|_{L^{2}}^{2}
+\end{aligned}
+$$
+So we conclude that
+$$
+\begin{aligned}
+\|u\|_{L^{2}}^{2} &=-2 n \operatorname{Re}\left\langle x u, \partial_{x} u\right\rangle_{L^{2}} \\
+& \leq 2 n\|x u\|_{L^{2}}\left\|\partial_{x} u\right\|_{L^{2}}
+\end{aligned}
+$$
+So we get the following:
+
+\begin{theorem}
+[Uncertainty principle]
+\[
+    \delta x \cdot \delta \xi \geq \frac{1}{2 n}
+\]
+\end{theorem}
+
+\begin{remark}
+    This says that we cannot know the position of an electron without sacrificing information about its velocity. In physics, people write the Schrödinger equation as $i \partial_{t}u+c \Delta u=f$ where $c$ is a constant involving $\hbar$, Planck's constant. This gives the following physically normalized version of the uncertainty principle:
+    $$
+    \delta x \cdot \delta \xi \geq \frac{\hbar}{2 n}
+    $$
+        
+\end{remark}
+
+\subsection{Oscillatory fintegrals and the KdV equation}
+
+We have seen the integral $\int e^{i t \xi^{2}} e^{i x \cdot \xi}$. Can we compute the more general integral $\int e^{i \lambda \varphi(\xi)} d \xi$ where $\varphi$ is a \textbf{phase function}? How does this integral behave as $\lambda \rightarrow \infty$ ? Let us make the following observation in 1 dimension.
+
+\begin{proposition}
+    If $\varphi^{\prime} \neq 0$, then for any $N$,
+    $$
+    \int e^{i \lambda \varphi(\xi)} a(\xi) d \xi=o\left(\lambda^{-N}\right)
+    $$
+    This is called an oscillatory integral.
+\end{proposition}
+\begin{proof}
+    Suppose $\varphi^{\prime} \neq 0$. Then localize to a compact set with a function $a$ and integrate by parts:
+    $$
+    \begin{aligned}
+    \int e^{i \lambda \varphi(\xi)} a(\xi) d\xi &=\int \varphi^{\prime} e^{i \lambda \varphi} \cdot \frac{a}{\varphi^{\prime}} d \xi \\
+    &=\frac{i}{\lambda} \int e^{i \lambda \varphi(\xi)} \partial_{\xi}\left(\frac{a}{\varphi^{\prime}}\right) d \xi
+    \end{aligned}
+    $$
+    so we have gained a factor of $1 / \lambda$. Now repeat this. 
+
+    \qed
+\end{proof}
+
+The conclusion is that the main contribution comes from the critical points of $\varphi$. The study of oscillatory integrals via their critical points is called the method of \textbf{stationary phase}.  From the perspective of PDEs, we want to use oscillatory integrals to compute asymptotic expansions of fundamental solutions which are not explicit.
+
+
+\begin{example}
+[Korteweg-de Vries equation]
+The KdV equation is
+$$
+\left(\partial_{t}+\partial_{x}^{3}\right) u=0
+$$
+It describes unidirectional waves in a canal.
+
+If you want to make this a linear equation, we can consider the case where this equals $6 u u_{x}$. Let's compute a fundamental solution. We want to compute the inverse Fourier transform of $\frac{1}{\tau-\xi^{3}} .$ For a forward fundamental solution, we want
+$$
+K=\mathcal{F}^{-1}\left(\frac{1}{\tau-\xi^{3}-i 0}\right)
+$$
+We have
+$$
+K(t, \xi)=e^{i t \xi^{3}}
+$$
+If we take the Fourier transform in time, we get $K(t, \xi)=e^{i t \xi^{3}}$. So now we want to take the integral
+$$
+\int e^{i\left(t \xi^{3}+x \xi\right)} d \xi
+$$
+The solution will not be an algebraic function; instead, it will be something we label as a "special function," the Airy function. In particular, $\mathcal{F}^{-1}\left(e^{i \xi^{3}}\right)=\operatorname{Ai}(x)$.
+
+Let's try to compute the asymptotic behavior. The phase is $\varphi(\xi)=t \xi^{3}+x \xi$. The critical points are when
+$$
+3 t \xi^{2}+x=0 \Longrightarrow \xi^{2}=-\frac{x}{3 t}
+$$
+This has roots only when $x<0$, which is why this equation only gives waves in 1 direction. We get two critical points:
+$$
+\xi^{1}=\sqrt{-\frac{x}{3 t}}, \quad \xi^{2}=-\sqrt{-\frac{x}{3 t}}
+$$
+At each critical point, replace the cubic polynomial with a quadratic polynomial which is the Taylor series of the polynomial, and take the Fourier transform like with our analysis of the Schrödinger equation.
+\end{example}
+

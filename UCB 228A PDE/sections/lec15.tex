@@ -1,0 +1,206 @@
+\newpage 
+\section{Introduction to the Fourier Transform}
+\textbf{Date:} Oct 19, 2021
+
+\subsection{Motivation: diagonalization for differential operators}
+
+We would like to have a better way to think about fundamental solutions to PDEs. Here is an analogy for the Fourier transform. Suppose we have a symmetric matrix in $\mathbb{R}^{n}$. Then $A$ is diagonalizable, with orthonormal eigenvectors $u_{1}, \ldots, u_{n} .$ If you want to better represent your matrix, you can change coordinates to this basis, or you can express an arbitrary vector with $u=c_{1} u_{1}+\cdots c_{n} u_{n}$, where $c_{j}=u \cdot u_{j} .$ If you have two (or a family of) commuting matrices, you can find an orthonormal basis of eigenvectors for both (or all) matrices simultaneously.
+
+If we have PDEs with constant coefficients, then the operators $P(\partial), Q(\partial), \ldots$ are all commuting operators. Can we find a common eigenbasis of functions? Here are some candidates for eigenfunctions $e^{i x \cdot \xi}$, where the $i$ is there to make sure that these don't blow up at $\infty .$ Then
+$$
+P(\partial) e^{i x \cdot \xi}=P(i \xi) e^{i x \cdot \xi}
+$$
+so these exponentials naively serve as eigenfunctions for these operators with eigenvalues $P(i \xi)$. Here, we don't always have real eigenvalues, but we have complex eigenvalues.
+
+Here are some issues:
+\begin{itemize}
+    \item Are these functions orthogonal? 
+    
+    Consider the Hilbert space $L^2(\RR^n) = \{u:\RR^n \to \RR| \int_{\RR^n}|u|^2 dx < \infty\}$. If we consider the $L^2(\RR^n)$ inner product, $u\cdot v=\int_{RR^n}u(x)v(x)\,dx$ (with $v$ replaced by $\bar v$ for complex functions), are these orthonormal? In fact, $e^{ix\cdot \xi}\notin L^2$, so we cannot properly analyze 
+    \[
+        \int_{\RR^n}e^{ix\cdot \xi_1} e^{-ix \cdot \xi_2}\,dx.
+    \]
+    \item For our diagonalization, we have uncountable many eigenvectors. $L^{2}\left(\mathbb{R}^{n}\right)$ is a separable Hilbert space with a countable orthonormal basis. So we have too many functions.
+\end{itemize}
+
+However, we can think of $e^{i x \cdot \xi}$ as generalized eigenfunctions. We can still ask the question: Given $f \in L^{2}\left(\mathbb{R}^{n}\right)$, can we write it as a superposition as $e^{i x \cdot \xi} ?$ That is, can we write
+$$
+f(x)=\int e^{i x \cdot \xi} c(\xi) d \xi ?
+$$
+If we disregard the above issues, can we still recover an identity like $c_{j}=u \cdot u_{j}$ as before? We may want to try
+$$
+c(\xi)=\int f(x) e^{-i x \xi} d x
+$$
+But since we have trouble normalizing the eigenfunctions, should there be a normalization constant in front?
+If we can achieve such a representation, then we get a lot out of it:
+$$
+P(\partial) f=\int e^{i x \cdot \xi} c(\xi) P(i \xi) d \xi
+$$
+So the map $f \mapsto P(\partial) f$ just acts diagonally on this basis: $c(\xi) \mapsto P(i \xi) \cdot c(\xi)$.
+
+\subsection{Properties of the Fourier transform}
+We will use the notation $D_{j}=\frac{1}{i} \partial_{j}$, so that $D_{j} e^{i x \cdot \xi}=\xi_{j} e^{i x \cdot \xi}$. So we will think of $P(D)$ instead of $P(\partial)$. In this notation, $P(D) e^{i x \cdot \xi}=P(\xi) e^{i x \cdot \xi}$, and we call $P(\xi)$ the \textbf{symbol} of $P$.
+
+\begin{example}
+ If $P(x, D)=\sum_{\alpha} c_{\alpha}(x) D^{\alpha}, $ then the symbol is $ P(x, \xi)=\sum_{\alpha} c_{\alpha}(x) \xi^{\alpha}$.
+\end{example}
+
+\begin{definition}
+[Fourier transform] The Fourier transform of a function $f$ is 
+\[
+    (\mathcal{F} f)(\xi)=\widehat{f}(\xi)=\frac{1}{(2 \pi)^{n / 2}} \int_{\mathbb{R}^{n}} e^{-i x \cdot \xi} f(x) \, d x
+\]
+\end{definition}
+Our goal is to show that
+$$
+f(x)=\frac{1}{(2 \pi)^{n / 2}} \int_{\mathbb{R}^{n}} e^{i x \cdot \xi} \widehat{f}(\xi) d \xi
+$$
+For what $f$ is $\widehat{f}$ well-defined? The integral is absolutely convergent if $f \in L^{1}$, i.e. $\int|f|<\infty .$ We will not use $L^{1}$ functions much in our context. If we have $f \in L^{1}$, then
+$$
+|\widehat{f}(\xi)| \leq \frac{1}{(2 \pi)^{n / 2}}\|f\|_{L^{1}}
+$$
+which we can write as
+$$
+\|\widehat{f}\|_{L^{\infty}} \leq \frac{1}{(2 \pi)^{n / 2}}\|f\|_{L^{1}}
+$$
+
+The problem is that we want to be able to undo the Fourier transform, and for $L^{\infty}$ functions, the Fourier transform is not well-defined.
+
+What about the Fourier transform on test functions? If $f \in \mathcal{D}$, then $\widehat{f} \in \mathcal{E}$, so there is no compact support. But if we have $f \in \mathcal{E}$, then $\widehat{f}$ does not exist, since the integral may not converge. It seems that $\mathcal{D}$ is too small, and $\mathcal{E}$ is too large. What should be our intermediate space where $\mathcal{F}$ acts? We will use the Schwartz space $\mathcal{S}$ For $u \in \mathcal{S}$, we want the derivatives to not only be bounded but have decay at infinity.
+
+\begin{definition}
+[Schwartz space] The Schwartz space is the space of $\con^\infty (\RR^n)$ functions which are rapidly decreasing, in the sense that 
+\[
+    \left|x^{\alpha} \partial^{\beta} u\right| \leq c_{\alpha, \beta}
+\]
+for all $\alpha, \beta\in \NN^n$.
+
+The Schwartz space $\cS$ is a locally convex space with seminorms
+\[
+    p_{\alpha, \beta}(u)=\left\|x^{\alpha} \partial^{\beta} u\right\|_{L^{\infty}}.
+\]
+\end{definition}
+
+\begin{theorem}
+The Fourier transfomr is $\cF: \cS \to \cS$, and the inverse $\cF^{-1}:\cS \to \cS$.
+\end{theorem}
+We have not proven that $\left(\mathcal{F}^{-1} f\right)(\xi)=\frac{1}{(2 \pi)^{n / 2}} \int_{\mathbb{R}^{n}} e^{i x \cdot \xi} \widehat{f} d x$ gives the inverse, but we will call it the inverse for now. How do we prove this theorem?
+
+Observe that in the expression $x^{\alpha} \partial^{\beta}$, the order of $x^{\alpha}$ and $\partial^{\beta}$ does not matter. How do $\partial, x$ interact with the Fourier transform?
+
+\begin{proposition}
+For $f\in \cS$, $\partial_j \hat f = -i \widehat{x_jf}.$
+\end{proposition}
+\begin{proof}
+    \[
+        \begin{aligned}
+            \partial_{j} \widehat{f}(\xi) &=\frac{1}{(2 \pi)^{n / 2}} \int e^{-i x \cdot \xi} f(x)\left(-i x_{j}\right) d x \\
+            &=-i \widehat{x_{j} f}
+            \end{aligned}
+    \]
+    \qed 
+\end{proof}
+
+\begin{proposition}
+For $f\in \cS$, $\xi \hat f = -i \widehat{\partial_x f}$.
+\end{proposition}
+\begin{proof}
+    $$
+    \xi_{j} \widehat{f}(\xi)=\frac{1}{(2 \pi)^{n / 2}} \int e^{-i x \cdot \xi} f(x) \xi_{j} d x
+    $$
+    Use integration by parts.
+    $$
+    \begin{aligned}
+    &=\frac{1}{(2 \pi)^{n / 2}} \int i \frac{\partial}{\partial x_{j}}\left(e^{-i x \cdot \xi}\right) f(x) d x \\
+    &=\frac{1}{(2 \pi)^{n / 2}} \int-i\left(e^{-i x \cdot \xi}\right) f(x) d x
+    \end{aligned}
+    $$
+    \qed   
+\end{proof}
+
+Therefore, multiplication by $x$ on the physical side is differentiation on the Fourier side, and multiplication by $\xi$ on the Fourier side is differentiation on the physical side.
+
+Now we can give proof of Thm~15.4.
+\vspace{1em}
+\begin{proof}
+    If $f \in \mathcal{S}$, then (using $\beta=0$ and $|\alpha| \leq N$ for $N>n$ )
+$$
+|f(x)| \leq \frac{c_{N}}{(1+|x|)^{N}} \in L^{1}
+$$
+So $\|\widehat{f}\|_{L^{\infty}} \leq c\|f\|_{L^{1}}$
+Together, our propositions give us
+$$
+\xi^{\alpha} \partial_{\xi}^{\beta} \widehat{f}=(-i)^{|\alpha|+|\beta|} \widehat{\partial_{x}^{\alpha} x^{\beta} f}
+$$
+Here, we have
+$$
+\left\|f^{\alpha} \partial_{\xi}^{\beta} \widehat{f}\right\|_{L^{\infty}} \leq\left\|\partial_{x}^{\alpha} x^{\beta} f\right\|_{L^{1}}
+$$
+If $f \in \mathcal{S}$, then $\partial_{x}^{\alpha} x^{\beta} f \in \mathcal{S} \subseteq L^{1} .$ So the right hand side is finite, controlled by finitely many of our Schwartz seminorms.
+\qed 
+\end{proof}
+
+\begin{example}
+[Fourier transform of a Gaussian] Suppose $f(x) = e^{-x^2/2}$. What is $\hat f$?
+\[
+    \begin{aligned}
+        \widehat{f}(\xi) &=\frac{1}{(2 \pi)^{n / 2}} e^{-x^{2} / 2} e^{-i x \xi} d x \\
+        &=\frac{1}{(2 \pi)^{n / 2}} e^{-\xi^{2} / 2} \int e^{-(x+i \xi)^{2} / 2} d x
+        \end{aligned}
+\]
+How do we deal with this integral? If we write $z=x=i \xi$, we are doing a complex integral on the curve $\Gamma_{\xi}$. So we get 
+\[
+    \begin{aligned}
+        \widehat{f}(\xi) &=\frac{1}{(2 \pi)^{n / 2}} \int_{\Gamma_{\xi}} e^{-z^{2} / 2} d z \\
+        &=e^{-\xi^{2} / 2} \frac{1}{(2 \pi)^{n / 2}} \int_{\Gamma_{0}} e^{-z^{2} / 2} d z \\
+        &=e^{-\xi^{2} / 2} \frac{1}{(2 \pi)^{n / 2}} \int_{\mathbb{R}^{n}} e^{-x^{2} / 2} d x
+        \end{aligned}
+\]
+We can recall $\int e^{-x^{2}} d x=\sqrt{\pi}$, so a change of variables gives
+$$
+=e^{-\xi^{2} / 2}
+$$
+So we have seen that
+$$
+\mathcal{F}\left(e^{-x^{2} / 2}\right)=e^{-\xi^{2} / 2}
+$$
+\end{example}
+
+In general, what is $\mathcal{F}\left(e^{-\lambda x^{2} / 2}\right) ?$ Here is how the Fourier transform behaves under scaling:
+
+\begin{proposition}
+For $f\in \cS$, 
+\[
+    \widehat{f(\mu \cdot)}=\frac{1}{\mu^{n}} \widehat{f}(\cdot / \mu)
+\]
+\end{proposition}
+\begin{proof}
+    $$
+    \mathcal{F} f(\mu x)=\int e^{-i x \cdot \xi} f(\mu x) d x
+    $$
+    Make the change of variables $y=\mu x$.
+    $$
+    \begin{aligned}
+    &=\frac{1}{\mu^{n}} \int e^{-i y \cdot \xi / \mu} f(y) d y \\
+    &=\frac{1}{\mu^{n}} \widehat{f}(\xi / \mu)
+    \end{aligned}
+    $$
+    \qed  
+\end{proof}
+\begin{remark}
+You might call $f(ux)$ an $L^\infty$ scaling, whereas $\frac{1}{u^n}\hat f(\xi/\mu)$ is an $L^1$ scaling.
+\end{remark}
+
+\begin{example}
+    Setting $\mu=\sqrt{\lambda}$,
+$$
+\mathcal{F}\left(e^{-\lambda x^{2} / 2}\right)=\frac{1}{\lambda^{n / 2}} e^{-\xi^{2} /(2 \lambda)}
+$$
+\end{example}
+We will work toward the following Fourier inversion theorem:
+\begin{theorem}
+    $\cF^{-1}\cF = \cF \cF^{-1} = I$ in $\cS$.
+\end{theorem}
+\begin{remark}
+    You can think of $\cF\cF^{-1}$ as the complex conjugate of $\cF^{-1} \cF$.
+\end{remark}

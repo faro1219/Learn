@@ -1,0 +1,224 @@
+\newpage
+\section{Fundamental Solutions for 2-D PDE \& Laplacian}
+\textbf{Date:} Oct 12, 2021
+\subsection{Fundamental solutions in 1 and 2 dimensions}
+
+Last time, we discussed fundamental solutions for partial differential equations. Suppose we have a differential operator in 1 dimension
+$$
+P(\partial) K=\delta_{0}
+$$
+Solve the homogeneous equation and look for the fundamental solution
+$$
+K(x)= \begin{cases}u_{1}^{\text {hom }}(x) & x<0 \\ u_{2}^{\text {hom }}(x) & x>0\end{cases}
+$$
+Plug this in into $P(\partial) K=\delta_{0}$ and get a linear system for the constants. As an exercise, try to solve the equation with the operator $P(\partial)=\partial^{2}-1 $.
+
+What about in 2 dimensions? In complex analysis, one way to specify whether a function is holomorphic is via the Cauchy-Riemann equations. If our coordinates are $(x, y)$, then let $z=x+i y$.
+
+\begin{definition}
+[Holomorphic functions]
+A function $f:\RR^2\ \to \CC$ is \textbf{holomorphic} if 
+\[
+    (\partial_x + i \partial_y)f = 0.
+\]
+If we write $f=u+i v$, we can express this as equations for the real and imaginary parts:
+$$
+\left\{\begin{array}{l}
+\partial_{x} u-\partial_{y} v=0 \\
+\partial_{y} u+\partial_{x} v=0
+\end{array}\right.
+$$
+These are the \textbf{Cauchy-Riemann equations}. From the perspective of PDEs, this is just one equation.
+\end{definition}
+Denote the operator
+$$
+\bar{\partial}=\partial_{x}+i \partial_{y}
+$$
+Sometimes people will use this notation to denote $1 / 2$ this quantity. Complex differentiation is given by the operator
+$$
+\partial=\partial_{x}-i \partial_{y}
+$$
+Our goal is to find the fundamental solution for $\bar{\partial}$.
+Looking at $\bar{\partial} K=\delta_{0}$, notice that $\delta_{0}$ is homogeneous of order $-2$ and $\bar{\partial}$ reduces order of homogeneity by 1 . So we should look for a $K$ which is homogeneous of order $-1$. Away from $z=0, \bar{\partial} K=0$, so $K$ is holomorphic. So we should look for $K$ of the form $K=\frac{c}{z}$, where $c$ is a constant. This is locally integrable, unlike in 1 dimension. So we can define
+$$
+K(\phi)=c \int_{\mathbb{R}^{2}} \frac{\phi(z)}{z} d x d y,
+$$
+where we can use $d z d \bar{z}$ instead of $d x d y .$ If $K$ is a fundamental solution, $\bar{\partial} K=\delta_{0}$, so $\partial K(\phi)=\phi(0)$, which gives $K(-\bar{\partial} \phi)=\phi(0) .$ Here,
+$$
+\begin{aligned}
+K(-\bar{\partial} \phi) &=-c \iint_{\mathbb{R}^{2}} \frac{\left(\partial_{x}+i \partial_{y}\right) \phi(z)}{z} d x d y \\
+&=\lim _{\varepsilon \rightarrow 0}-c \iint_{\mathbb{R}^{2} \backslash B_{\varepsilon}}\left(\partial_{x}+i \partial_{y}\right) \phi \cdot \frac{1}{z} d x d y
+\end{aligned}
+$$
+We want to use integration by parts. Using Divergence theorem,
+$$
+=\lim _{\varepsilon \rightarrow 0} c \iint_{\mathbb{R}^{2} \backslash B_{\varepsilon}} \phi \cdot \underbrace{\left(\partial_{x}+i \partial_{y}\right) \frac{1}{z}}_{=0} d x d y-c \int_{\partial B_{\varepsilon}}\left(\nu_{x}+i \nu_{y}\right) \phi \cdot \frac{1}{z} d s
+$$
+where $\nu$ is the inner normal vector to the boundary of $B_{\varepsilon} .$ In particular, $\nu=-\frac{(x, y)}{|z|}$.
+$$
+\begin{aligned}
+&=\lim _{\varepsilon \rightarrow 0} c \int_{\partial B_{\varepsilon}} \frac{z}{|z|} \phi \cdot \frac{1}{z} d s \\
+&=\lim _{\varepsilon \rightarrow 0} \frac{c}{\varepsilon} \int_{\partial B_{\varepsilon}} \phi(z) d z \\
+&=2 \pi c \phi(0).
+\end{aligned}
+$$
+We want $2 \pi c=1$, so we should pick $c=\frac{1}{2 \pi}$. Thus, our fundamental solution is
+$$
+K(z)=\frac{1}{2 \pi z}.
+$$
+
+\begin{remark}
+We can rewrite this line integral in a complex fashion, as
+\[
+    \int \frac{\phi(z)}{z}\,dz = 2\pi i \phi(0),
+\]
+by the residue theorem. So we have recovered the residue theorem. In essence, the residue theorem is the analogue of the fundamental theorem of calculus for 2 dimensions.
+\end{remark}
+
+\subsection{Fundamental solution for the Laplacian}
+
+Our next exercise is to find the fundamental solution to $P(\partial)=-\Delta$, where
+$$
+\Delta=\partial_{1}^{2}+\cdots+\partial_{n}^{2}
+$$
+Since $\delta_{0}$ is homogeneous of order $-n$, and $P(\partial)$ will decrease the order of homogeneity by $2, K$ should be homogeneous of order $2-n$. To look for a candidate for a solution, we should look at the symmetries of $\Delta$, in particular invariance with respect to rotations.
+
+If $y=A x$ is a linear change of variables, then $\frac{\partial}{\partial x_{i}}=A_{i, j} \frac{\partial}{\partial y_{j}} .$ Then $\Delta=A_{i, j} A_{i, k} \frac{\partial}{\partial y_{j}} \frac{\partial}{\partial y_{k}}$ Here, we are using Einstein summation notation, in which the sum is implicit but unwritten. Do we get back $\Delta$ in $y$ ? The answer is yes, if
+$$
+A_{i, j} A_{i, k}=I_{n} \Longleftrightarrow A^{\top} A=I
+$$
+That is, we want $A$ to be orthogonal. Recall that if $A$ is orthogonal,
+$$
+\begin{aligned}
+\|A x\|^{2} &=\langle A x, A x\rangle \\
+&=\left\langle x, A^{\top} A x\right\rangle \\
+&=\langle x, x\rangle \\
+&=\|x\|^{2}
+\end{aligned}
+$$
+So we can look for $K$ which is invariant with respect to rigid rotations, i.e. $K$ is a spherically symmetric distribution.
+
+\begin{remark}
+We must be careful with this line of reasoning. We are just hoping that there exists some fundamental solution with this property. Not all fundamental solutions will have this property. For example, if we add $x_{1}$ to $K$, we will still have a fundamental solution, but it will not be radial.
+\end{remark}
+
+We will guess
+$$
+K=c_{n} \cdot \frac{1}{|x|^{n-2}}
+$$
+where we will set the case $n=2$ dimensions aside for now. Observe that
+$$
+\begin{aligned}
+    -\Delta K=\delta_{0} &\Longleftrightarrow-\Delta K(\phi)=\phi\\
+&\Longleftrightarrow K(-\Delta \phi)=\phi(0) \\
+&\Longleftrightarrow \int_{\mathbb{R}^{n}}-\Delta \phi \frac{1}{|x|^{n-2}} d x=\phi(0)
+\end{aligned}
+$$
+As before, write this integral as
+$$
+\lim _{\varepsilon \rightarrow 0} \int_{\mathbb{R}^{n} \backslash B_{\varepsilon}}-\Delta \phi \cdot \frac{1}{|x|^{n-2}}
+$$
+We want to integrate by parts. Here is Green's theorem in this setting:
+\begin{theorem}
+[Green's theorem for the Laplacian]
+\[
+    \int_{\Omega} \Delta u \cdot v-u \cdot \Delta v d x=\int_{\partial \Omega} \frac{\partial u}{\partial \nu} v-u \frac{\partial v}{\partial \nu} d \sigma
+\]
+Note that $\nu$ is the normal derivative.
+\end{theorem}
+\begin{proof}
+    $$
+    \begin{aligned}
+    \int_{\Omega} \Delta u \cdot v d x &=\int_{\Omega} \partial_{j} \partial_{j} u \cdot v \\
+    &=-\int_{\Omega} \partial_{j} u \cdot \partial_{j} v d x+\int_{\partial \Omega} \nu_{j} \partial_{j} u \cdot v d \sigma
+    \end{aligned}
+    $$
+    where $\sigma$ is surface measure on $\partial \Omega$. Observe (for the future) that $\partial_{j} u \cdot \partial_{j} v=\nabla u \cdot \nabla v$ in the first term and $\nu_{j} \partial_{j} u=\nu \cdot \nabla u:=\frac{\partial u}{\partial \nu}$ is the normal derivative in the second term.
+    $$
+    =\int_{\Omega} u \cdot \underbrace{\partial_{j} \partial_{j}}_{\Delta} v+\int_{\partial \Omega} \frac{\partial u}{\partial \nu} v-u \frac{\partial v}{\partial \nu} d \sigma
+    $$
+        
+\end{proof}
+Returning to our computation, we want
+$$
+\phi(0)=\lim _{\varepsilon \rightarrow 0} \int_{\mathbb{R}^{n} \backslash B_{\varepsilon}} \phi\left(-\Delta \frac{1}{|x|^{n-2}}\right) d x-\int_{\partial B_{\varepsilon}} \frac{\partial \phi}{\partial \nu} \cdot \frac{1}{|x|^{n-2}}-\phi \frac{\partial}{\partial \nu} \frac{1}{|x|^{n-2}} d \sigma
+$$
+The first integral goes away because $-\Delta \frac{1}{|x|^{n-2}}=0$. We can see this via a formula for the Laplacian on radial functions: $\Delta F(r)=\left(\partial_{r}^{2}+\frac{n-1}{r} \partial_{r}\right) F(r)$. This is the chain rule, switching to polar coordinates in $n$ dimensions.
+The second integral is
+$$
+\int_{\partial B_{\varepsilon}} \frac{\partial \phi}{\partial \nu} \cdot \frac{1}{|x|^{n-2}} d A=O(\varepsilon) \rightarrow 0
+$$
+as $\frac{\partial \phi}{\partial \nu}$ is bounded, $\frac{1}{|x|^{n-2}}=\varepsilon^{2-n}$, and $d A$ has order $\varepsilon^{n-1}$.
+
+The third integral is
+$$
+\begin{aligned}
+\int_{\partial B_{\varepsilon}} \phi \cdot \frac{\partial}{\partial \nu} \frac{1}{|x|^{n-2}} d \nu &=\int_{\partial B_{\varepsilon}} \phi \cdot(n-2) \frac{1}{|x|^{n-1}} d \sigma\\
+& \approx \phi(0)\cdot \frac{n-2}{\varepsilon^{n-1}} \varepsilon^{n-1} a_n,
+\end{aligned}
+$$
+where $a_{n}$ is the area of the unit sphere.
+$$
+=(n-2) a_{n} \phi(0)
+$$
+So we need
+$$
+c=c_{n}=\frac{1}{(n-2) a_{n}}
+$$
+
+\begin{theorem}
+If $n\ge 3$, then the fundamental solution for $-\Delta$ is 
+\[
+    K(x) = \frac{1}{(n-2)a_n} \cdot \frac{1}{|x|^{n-2}},
+\]
+where $a_n$ is the area of the unit sphere. 
+\end{theorem}
+
+Returning to the 2 dimensional case, we want $K= K(r)$, and outside $K=0$, we want 
+\[
+    (\partial_r^2 + \frac 1 r \partial _r ) K = 0.
+\]
+We can write this as
+$$
+\left(\partial_{r}+\frac{1}{r}\right) \underbrace{\left(\partial_{r} K\right)}_{L}=0
+$$
+This tells us that
+$$
+\frac{L^{\prime}}{L}=-\frac{1}{r}
+$$
+so
+$$
+\log L=-\log r+c
+$$
+which we can write as
+$$
+L=c \cdot \frac{1}{r}
+$$
+Substituting back in for $K$, we have $\partial_{r} K=\frac{c}{r}$, which tells us that
+$$
+K=c \ln r+d
+$$
+where $d$ is a constant that we can choose to fit our problem.
+
+What is the constant $c ?$ Instead of a computation, we'll do some carefully selected handwaving. Note that
+$$
+\frac{\partial}{\partial \nu} \log r=-\frac{1}{r}
+$$
+so there is no $n-2$. We get the last line of the higher-dimensional computation, but without the $n-2$ :
+$$
+c=\frac{1}{a_{2}}=\frac{1}{2 \pi}
+$$
+
+So
+$$
+K(x)=\frac{1}{2 \pi} \ln r
+$$
+where we can add a constant if we wish.
+
+\begin{remark}
+    If we think of the Laplacian in 2 dimensions as $\Delta=\partial \bar{\partial}$, then the fundamental solutions follow
+    $$
+    K_{-\Delta}=K_{\partial} * K_{\bar{\partial}}=\frac{1}{z} * \frac{1}{\bar{z}}
+    $$
+    We get a divergent integral, but with a proper renormalization, we can make sense of this.
+\end{remark}

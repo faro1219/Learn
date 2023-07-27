@@ -1,0 +1,83 @@
+\newpage 
+\section{First order nonlinear Scalar PDEs III}
+\textbf{Date:} Sep 7
+Given two ODEs:
+\[
+  \begin{cases}
+      u' = F(t, u)\\
+      u(0) = u_0 
+  \end{cases}  
+  \text{ and } 
+  \begin{cases}
+      v' = F(t,v)\\
+      v(0) = v_0
+  \end{cases}
+\]
+we are going to show that: 
+
+\begin{theorem}
+    Suppose that the solution $u$ exists on $[0,T]$. Then there exists $\varepsilon>0$ such that if $|v_0-u_0|\le \varepsilon$, then $v$ exists on $[0,T]$ and $\|u-v\|_c \le c|u_0-v_0|$. In other words, the map $u_0 \to u_{[0,T]}$ is locally Lipschitz.
+\end{theorem}
+
+\begin{proof}
+    We compute that 
+    \[
+        \frac{d}{dt}|u-v|^2 = 2(u-v) \cdot \frac{d}{dt}(u-v) = 2(u-v) (F(u) - F(v)) \le 2|u-v| \cdot L |u-v| = 2L|u-v|^2.
+    \]  
+    Hence with Gronwall's inequality, 
+    \[
+        f(t) \le f(0) e^{2Lt}.  
+    \]
+    The proof is finished except that we don't know that $V$ exists up to full $[0,T]$. Let 
+    \begin{align*}
+        D_1 = \{v\in \con[0,T], |v-u|\le 1\} \\
+        D_2 = \{v\in \con[0,T], |v-u|\le 2\}      
+    \end{align*}
+    Suppose we know $v\in D_2$, then $v$ is defined on $[0,T]$and satay in a compact set, so the above argument applies.
+
+    Suppose this is not true, we use $T_2$ to denote the time the function exists from $D_2$. Then we can use Gronwall up to $T_2$. 
+    \[
+    |u(t)-v(t)|^2 \le |u_0-v_0|^2 \cdot e^{2LT_2} \le \varepsilon^2 e^{2LT}.  
+    \]
+    When we set $\varepsilon$ small enough, we have $|u(t) -v(t)|\le 1 , \forall t\in [0,T_2]$. Hence $v$ doesn't exist $D_1$. Contradiction.
+\end{proof}
+
+\begin{remark}
+    Here we also use Bootstrap assumption. The key ideal is that we use a weaker assumption to prove a stronger results. Here we use $|u-v|\le 2$ to get $|u-v|\le 1$. 
+\end{remark}
+
+Now we assume $F\in \con^1$ and $u_0^h$ takes a one parameter family of data. When $h$ close to $0$, $u_0^h$ is differentiable in $h$. From data $u_0^0$, we get $u^0$ and from $u_0^h$, we get $u^h$.
+
+\text{Question:} How does $u_h$ depend on $h$? We already know that 
+\[
+    |u_0^h -u_0^0| \le h \Rightarrow |u^h - u^0|\le he^{2Lt}.  
+\]
+But we can give a more formal computation for $v^h = \frac{d}{dh}u^h$. We can get a equation
+\[
+    \dot{v}^h = D F(t,u^h) v^h, \quad v^h(0) = \frac{d}{dh}u^h_0.
+\]
+This equation is called the Linearized equation. This is because: 
+\[
+    \frac{d}{dt}(u^h-u^0) = F(t, u^h(t)) - F(t, u^0(t)) = DF(t, u^0(t))u^h(t) - u^0(t)) + o(u^h(t) - u^0(t))^2.
+\]
+
+\subsection{First order scalar PDE}
+The general form of first order scalar PDE is: 
+\[
+    u:\RR^n \to \RR \quad  F(x,u, \partial u) = 0.    
+\]
+We can classify them by degree of difficulty: linear, semilinear, quasilinear and fully nonlinear PDEs. THe initial data is given on a surface. Besides, it can also be divided into static PDEs and dynamic PDEs. 
+
+\subsection{ Linear problem}
+
+The general form of linear problem is: 
+\[
+    \sum A_j(x) \partial_j u = bu + f.    
+\]
+We need curves which are tangent to $A=(A_1(x),...,A_n(x))$ at each point. Hence we are going to solve two ODEs: 
+\[
+    \begin{cases}
+        \dot{x}(t) = A(x(t))\\ 
+        \frac{d}{dt} u(x(t)) = \nabla u x(t) = A \cdot \nabla(t) = b u (x(t) ) + f.
+    \end{cases}    
+\]

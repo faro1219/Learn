@@ -1,0 +1,254 @@
+\newpage
+\section{Distribution \& Homogeneous Distribution}
+\textbf{Date:} Oct 5, 2021
+\subsection{Operations on distributions}
+
+Last time, we introduced distributions. We had the set $\mathcal{D}=C_{0}^{\infty}$ of test functions and the set $\mathcal{D}^{\prime}$ of distributions, continuous linear maps $\mathcal{F}: \mathcal{D} \rightarrow \mathbb{R} .$ If $u$ is a function, we interpreted it as a distribution via
+$$
+u(\phi)=\int u \phi d x
+$$
+So we can think of distributions as generalized functions. We also saw distributions as a limit of functions, in this weak sense.
+
+Now, we want to see distributions as solutions to PDEs, so we need to think about operations with distributions.
+
+\subsubsection{Differentiation}
+We want to define $u \mapsto \partial_{j} u$ for distributions. First suppose $u$ is a function. Then $\partial_{j} u$ is a function with
+$$
+\begin{aligned}
+\partial_{j} u(\phi) &=\int \partial_{j} u \phi d x \\
+&=-\int u \cdot \partial_{j} \phi d x \\
+&=-u\left(\partial_{j} \phi\right)
+\end{aligned}
+$$
+We can take this as a definition.
+
+\begin{definition}[Weak derivative]
+    If $u\in \cD'$, we define $\partial_j u$ by $\partial_j u (\varphi) = -u (\partial_j \varphi)$.
+\end{definition}
+\begin{remark}
+If $u\in \con^1$, then $u$ is the same classically and as a distribution.
+\end{remark}
+
+\begin{example}
+    Consider the Heaviside function
+    $$
+    H(x)= \begin{cases}0 & x<0 \\ 1 & x>1\end{cases}
+    $$
+    in 1 dimension. Then $\partial_{x} H= \delta _0$ away from 0 , in the classical sense. We can check that
+    $$
+    \begin{aligned}
+    \partial_{x} H(\phi) &=-H\left(\partial_{x} \phi\right) \\
+    &=-\int H(x) \partial_{x} \phi d x \\
+    &=-\int_{0}^{\infty}-\partial_{x} \phi(x) d x \\
+    &=-\left.\phi\right|^{\infty} \\
+    &=\phi(0) \\
+    &=\delta_{0}(\phi)
+    \end{aligned}
+    $$
+    so $\partial_{x} H=\delta_{0}$ as a distribution. The idea is that when we have a jump discontinuity, differentiating gives us a Dirac mass.
+\end{example}
+
+\begin{example}
+    What is the derivative of the Dirac mass?
+    $$
+    \begin{aligned}
+    \partial_{x} \delta_{0}(\phi) &=-\delta_{0}\left(\partial_{x} \phi\right) \\
+    &=-\delta_{x} \phi(0) \\
+    &=\delta_{0}^{\prime}(0)
+    \end{aligned}
+    $$
+    So the derivative of $\delta_{0}$ is what we previously called $\delta_{0}^{\prime}$. Similarly, we can have $\partial^{\alpha} \delta_{0}=\delta_{0}^{(\alpha)}$ for a multi-index $\alpha$.
+\end{example}
+
+\subsubsection{Multiplication by smooth functions}
+Suppose $\psi \in \mathcal{E}$ and $u$ is a function. Then $\psi u$ is a function. What if $u \in \mathcal{D}^{\prime} ?$ If $u$ is a function, then
+$$
+\begin{aligned}
+\psi u(\phi) &=\int \psi u \phi d x \\
+&=\int u \underbrace{\psi \phi}_{\in \mathcal{D}} d x \\
+&=u(\psi \phi)
+\end{aligned}
+$$
+We can again take this as a definition.
+
+\begin{definition}
+If $u\in \cD'$ and $\varphi \in \cE$, we define $\varphi u$ by $\phi u(\phi) = u (\varphi \phi)$.
+\end{definition}
+The Leibniz rule for derivatives says
+$$
+\partial(\psi u)=\partial \psi \cdot u+\psi \cdot \partial u
+$$
+Using these definitions, this rule also holds for $u \in \mathcal{D}^{\prime}$ and $\psi \in \mathcal{E}$.
+If we have the equation $P(x, \partial) u=f$ with $P(x, \partial)=\sum c_{\alpha}(x) \partial^{\alpha}$, then all these operations are well-defined for distributions, so we can think of distribution solutions to PDEs.
+
+\subsection{The support of a distribution}
+Recall that if $u$ is a function, its support is the largest closed set "where $u$ is nonzero." In particular,
+\[
+    x_{0} \notin \operatorname{supp} u \Longleftrightarrow u=0 \text{ in } B\left(X_{0}, r\right) \text{ for some } r>0
+\]
+
+\begin{definition}
+    [Support of distribution]
+    If $u \in \mathcal{D}^{\prime}$, its support is the closed set defined by
+    $$
+    x_{0} \notin \operatorname{supp} u(\phi) \Longleftrightarrow u(\phi)=0 \text { for all } \phi \in \mathcal{D} \text { with supp } \phi \subseteq B\left(x_{0}, r\right)
+    $$
+\end{definition}
+
+\begin{example}
+The support of the Dirac mass is $\Supp \delta_0 = \{0\}$. If $x_0 \neq 0$, there is a ball $B(x_0,r) \cap \{0\} = \emptyset$. Then if we let $\phi\in \cD$ have $\Supp \phi \subseteq B(x_0,r)$, then $\delta_0(\phi) = \phi(0)=0.$
+
+\end{example}
+ Let $ \mathcal{E}^{\prime}$ denote the \textbf{compactly supported distributions}. 
+
+ \begin{proposition}
+ If $f\in \cE'$, then $f$ "naturally" extends to a continuous linear function of $\cE$.
+ \end{proposition}
+ \begin{proof}
+     We know $f(\phi)$ when $\phi \in \mathcal{D}$. Because supp $f \in B(0, R), f(\phi)=0$ if $\phi$ is supported outside $B(0, R)$. We can truncate $\phi$ outside $B$ as follows: Replace $\phi$ by $\chi \phi$, where $\chi$ is a cutoff function with compact support, supp $\chi \subseteq B(0,2 R)$, and $\chi=1$ in $B(0, R)$. Then
+    $$
+    \begin{aligned}
+    f(\phi) &=f(\chi \phi)+f((1-\chi) \phi) \\
+    &=f(\chi \phi)
+    \end{aligned}
+    $$
+    So for $\phi \in \mathcal{E}$, define $f(\phi):=f(\chi \phi)$.
+ \end{proof}
+ We have the following picture: 
+\[
+    \begin{tikzcd}
+        \cD \arrow[r,"dual"]
+        \arrow[d, "\subseteq"] &\cD' \\
+        \cE \arrow[r,"dual"] &\cE' \arrow[u,"\subseteq"] 
+    \end{tikzcd}
+\]
+We will extend this picture later when we learn about the Fourier transform.
+
+\subsection{Homogeneous distributions}
+\begin{example}
+    The polynomial $f(x)=x^{n}$ is a homogeneous polynomial. We can express this homogeneity by
+    $$
+    f(\lambda x)=\lambda^{n} f(x)
+    $$
+    where $n$ is the homogeneity index.
+\end{example}
+
+\begin{example}
+    The homogeneity index does not have to be an integer. If we have $f(x)=$ $|x|^{\alpha}$, then
+    $$
+    f(\lambda x)=\lambda^{\alpha} f(x)
+    $$
+    for $\lambda>0$. If $\alpha$ is not an integer, this is not smooth at $0 .$ Is $|x|^{\alpha}$ a distribution? This is related to the question of whether $|x|^{\alpha}$ is integrable (away from infinity). In 1 dimension, $\int|x|^{\alpha} d x$ exists if $\alpha>-1 .$ In $n$ dimensions, we can use polar coordinates:
+    $$
+    \int|x|^{\alpha} d x=c_{n} \int r^{\alpha} r^{n-1} d r
+    $$
+    where $c_{n}$ is the volume of the unit ball in $n$-dimensions. Here, we need $\alpha+n-1>-1$, i.e. $\alpha>-n$. So $\frac{1}{|x|^{n}}$ is borderline.
+
+\end{example}
+
+\begin{example}
+     The heaviside function is homogeneous of index 0 :
+    $$
+    H(\lambda x)=\lambda^{0} H(x)
+    $$
+    for $\lambda>0$.
+
+\end{example}
+
+\begin{example}
+     In 2 dimensions (expressed in polar coordinates $(r, \theta))$, the function
+    $$
+    f(x)=r^{\alpha} g(\theta)
+    $$
+    is homogeneous of index $\alpha$.
+
+\end{example}
+
+For functions, the homogeneity condition $f(\lambda x)=\lambda^{\alpha} f(x)$ has a distributional interpretation:
+$$
+\int f(\lambda x) \phi(x) d x=\lambda^{\alpha} \int f(x) \phi(x) d x
+$$
+Applying a change of variables on the left,
+$$
+\int f(y) \phi(y / \lambda) \frac{1}{\lambda^{n}} d y=\lambda^{\alpha} \int f(x) \phi(x) d x
+$$
+Denoting $\phi_{\lambda}(x)=\lambda^{-n} \phi(x / \lambda)$, we get the relation
+$$
+f\left(\phi_{\lambda}\right)=\lambda^{\alpha} f(\phi)
+$$
+which is meaningful for distributions.
+
+\begin{definition}
+    [Homogeneous distribution] A distribution $f \in \mathcal{D}^{\prime}$ is homogeneous of order $\alpha$ if
+    $$
+    f\left(\phi_{\lambda}\right)=\lambda^{\alpha} f(\phi)
+    $$
+    for $\phi \in \mathcal{D}$.
+\end{definition}
+
+\begin{example}
+    Can we think of the Dirac mass $\delta_{0}$ as a homogeneous distribution?
+    $$
+    \delta_{0}\left(\phi_{\lambda}\right)=\phi_{\lambda}(0)=\lambda^{-n} \phi(0)=\lambda^{-n} \delta_{0}(\phi)
+    $$
+    so $\delta_{0}$ has homogeneity $-n$.
+
+\end{example}
+In calculus, we have $\partial_{x} x^{n}=n x^{n-1}$. That is, we differentiate something which is homogeneous of order $n$ and get something which is homogeneous of order $n-1$.
+
+\begin{proposition}
+If $f\in \cD'$ is homogeneous of order $\alpha$, then $\partial_x f$ is homogeneous of order $\alpha-1$.
+\end{proposition}
+\begin{proof}
+    The chain rule works for functions, so it also works using the definition for distributions by passing the derivative to the test function.
+\end{proof}
+
+\begin{example}
+    The Heaviside function is homogeneous of order 0 , and $\partial_{x} H=\delta_{0}$ is homogeneous of order $-1$. Similarly, $\partial_{x} \delta_{0}=\delta_{0}^{\prime}$ is homogeneous of order $-1$
+\end{example}
+In 1 dimension, we want to classify homogeneous distributions. Start with functions and $\alpha>-1$. We need to assign $f(-1)$ and $f(1)$, so this is a linear space of dimension 2. Here is a basis:
+$$
+x_{+}^{\alpha}=\left\{\begin{array}{ll}
+0 & x<0 \\
+x^{\alpha} & x>0
+\end{array} \quad x_{-}^ \alpha = \begin{cases}|x|^{\alpha} & x<0 \\
+0 & x>0\end{cases}\right.
+$$
+Then $|x|^{\alpha}=x_{+}^{\alpha}+x_{-}^{\alpha}$, and
+$$
+\partial_{x} x_{+}^{\alpha}=\alpha x_{+}^{\alpha-1}, \quad \partial_{x} x_{-}^{\alpha}=-\alpha x_{-}^{\alpha-1}
+$$
+Now look at when $\alpha \in(-2,-1)$. We can define
+$$
+\partial_{x} x_{+}^{\alpha+1}:=(\alpha+1) x_{+}^{\alpha}
+$$
+If we repeat this, we can get homogeneous distributions to all noninteger negative $\alpha \mathrm{s}$.
+
+What about $\alpha=-1 ?$ We have $\delta_{0} .$ At order 0, we have 2 homogeneous distributions: $H$ and the constant 1 function. But differentiating these gives $\delta_{0}$ and 0, which do not have a 2 dimensional span. Other candidates are $\frac{1}{|x|}$ or $\frac{1}{x}$. We can look at the integrals
+$$
+\int \frac{1}{|x|} \phi(x) d x \quad \int \frac{1}{x} \phi(x) d x
+$$
+On the left, there may be no cancelation at 0, but we may be able to get some cancelation at 0 for the right integral. We may try to define
+$$
+\int_{\mathbb{R}} \frac{1}{x} \phi(x) d x:=\lim _{\varepsilon \rightarrow 0} \int_{R \backslash[-\varepsilon, \varepsilon]} \frac{1}{x} \phi(x) d x
+$$
+Does this limit exist? We can look at
+$$
+\int_{[-1,1] \backslash[-\varepsilon, \varepsilon]} \frac{1}{x} \phi(x) d x=\int_{-1}^{1}+\int_{\varepsilon}^{1}
+$$
+Use the change of variables $y=-x$ on the left integral to get
+$$
+=\int_{\varepsilon}^{1} \frac{\phi(x)-\phi(-x)}{x} d x
+$$
+$\phi(x)-\phi(-x)$ is $o(x)$, so this converges.
+Thus, we can define the principal value PV 
+
+\begin{definition}
+    [Principal value of $\frac 1 x$]
+    The principal value PV of $\frac{1}{x}$ is 
+    $$
+    \mathrm{PV} \frac{1}{x}(\phi)=\lim _{\varepsilon \rightarrow 0} \int_{\mathbb{R} \backslash-\varepsilon, \varepsilon]} \frac{\phi(x)}{x} d x
+    $$
+    which is homogeneous of order $-1$.
+
+\end{definition}

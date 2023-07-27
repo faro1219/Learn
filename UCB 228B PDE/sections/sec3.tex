@@ -1,0 +1,615 @@
+\newpage 
+\chapter{Linear Hyperbolic PDEs}
+In mathematics, a hyperbolic partial differential equation of order $n$ is a partial differential equation (PDE) that, roughly speaking, has a well-posed initial value problem for the first $n-1$ derivatives. More precisely, the Cauchy problem can be locally solved for arbitrary initial data along any non-characteristic hypersurface. Many of the equations of mechanics are hyperbolic, and so the study of hyperbolic equations is of substantial contemporary interest. 
+
+\section{Linear Hyperbolic PDEs}
+Instead of formally defining what a hyperbolic PDE is, which is difficult and not entirely productive. Instead, we will give a ``working definition" of how people think of hyperbolic PDEs.
+\begin{definition}
+[Hyperbolic PDE] A hyperbolic PDE is an evolutionary PDE with two characteristics:
+\begin{itemize}
+    \item \# order of time derivatives = \# order of space derivatives 
+    \item (local) well-posedness of the initial value problem
+    \[
+        \begin{aligned}
+            &P \phi=0 \\
+            &\left.\left(\phi, \partial_{t} \phi, \ldots, \partial_{t}^{N-1} \phi\right)\right|_{t=0}=\left(g_{0}, \ldots, g_{N-1}\right)
+            \end{aligned}
+    \]
+    where $N$ is the order of the time derivatives. 
+\end{itemize}
+\end{definition}
+This second condition is really what people think of when they talk about hyperbolic PDEs. 
+
+\begin{example}
+\begin{itemize}
+    \item []
+    \item The wave equation $\left(-\partial_{t}^{2}+\Delta\right) \phi=0$. 
+    \item $\left(-\partial_{t}+x^{j} \partial_{j}\right) \phi=0$.
+    \item (Non-examples) The heat equation $\left(\partial_{t}-\Delta\right) \phi=0$ and the Schrödinger equation $\left(\partial_{t}-i \Delta\right) \phi=0$ are dispersive but not hyperbolic.
+    \item The Laplace equation $\left(\partial_{t}^{2}+\Delta\right) \phi=0$ is not hyperbolic because it does not have local well-posedness of the initial value problem.
+    
+    Local well-posedness of the initial value problem is related to the energy estimate \footnote{Why this is true?}.
+\end{itemize}
+
+\end{example}
+
+\begin{example}
+[Linear constant coefficient system] Let 
+$$
+\Phi=\left[\begin{array}{c}
+\Phi^{(1)} \\
+\vdots \\
+\Phi^{(n)}
+\end{array}\right]
+$$
+and suppose we have a system of linear, constant coefficient PDEs
+$$
+B \partial_{t} \Phi=A^{j} \partial_{x^{j}} \Phi,
+$$
+where $A$ is an $n \times n$ matrix. Without loss of generality, assume we have
+$$
+\partial_{t} \Phi=A^{j} \partial_{x^{j}} \Phi,
+$$
+What guarantees uniqueness of a solution to the initial value problem? That is, what condition do we need on $A$ to guarantee the validity of the energy estimate? Now we assume a more general PDE with 
+\[
+    \partial_{t} \Phi + A^{j} \partial_{x^{j}} \Phi = F.
+\]
+Then 
+$$
+\int_{\mathbb{R}^{d}} \underbrace{\Phi^{(k)} \partial_{t} \Phi^{(k)}}_{=\frac{1}{2} \partial_{t} \int \Phi^{(k)} \Phi^{(k)}}+\underbrace{\Phi^{(k)}\left(A^{j}\right)_{(\ell)}^{(k)} \partial_{j} \Phi^{(\ell)}}_{\frac{1}{2} \int\left(A^{j}\right)_{(\ell)}^{(k)} \Phi^{(k)} \partial_{j} \Phi^{(\ell)}-\frac{1}{2}\left(A^{j}\right)_{(\ell)}^{(k)} \partial_{j} \Phi^{(k)} \Phi^{(\ell)}} d x=\int \Phi^{(k)} F^{(k)} d x .
+$$
+We get the following identity:
+$$
+\frac{1}{2} \partial_{t} \int|\Phi|^{2} d x+\frac{1}{2} \int\left(\left(A^{j}\right)_{(\ell)}^{(k)}-\left(A^{j}\right)_{(k)}^{(\ell)}\right) \Phi^{(k)} \partial_{j} \Phi^{(\ell)} d x=\int F \cdot \Phi d x
+$$
+where the second term is 0 if $A^{j}$ is symmetric.
+This tells us that if $A^{j}$ is symmetric, then the energy estimate holds:
+$$
+\int|\Phi|^{2}(t) d x=\int|\Phi|^{2}(0) d x+\int_{0}^{t} \int F \cdot \Phi d x\, d t
+$$
+This gives uniqueness.
+
+\begin{theorem}
+    The linear, constant coefficient system
+    $$
+    \partial_{t} \Phi=A^{j} \partial_{x^{j}} \Phi
+    $$
+    is hyperbolic if and only if the $A^{j}$ are symmetric. That is the initial value problem is well-posed in $L^{2}$, meaning for every $\Phi_{0} \in L^{2}\left(\mathbb{R}^{d}\right)$, and $F \in L_{t}^{1}\left((-\infty, \infty) ; L_{x}^{2}\right)$, there exists a unique $\Phi \in C_{t}\left((-\infty, \infty) ; L_{x}^{2}\right)$ solving the system.
+
+\end{theorem}
+\end{example}
+
+We use the notation $\phi \in C_{t}(I ; X)$ to mean that the function $\phi: I \rightarrow X$ sending $t \mapsto \phi(t)$ is continuous, where $C_{t}(I ; X)$ has the norm
+$$
+\|\phi\|_{C_{t}(I ; X)}:=\sup _{t \in I}\|\phi(t, \cdot)\|_{X}=\|\phi\|_{L_{t}^{\infty}(X)}<\infty .
+$$
+
+\begin{example}
+    [1st order formulation of $\square \phi=f$] Let the d'Alembertian be $\square=-\partial_{t}^{2}+\Delta$. Then
+    $$
+    \square \phi=f \Longleftrightarrow \partial_{t} \phi=\psi, \partial_{t} \psi=\Delta \phi-f
+    $$
+    We can write this system as
+    $$
+    \partial_{t}\left[\begin{array}{l}
+    \phi \\
+    \psi
+    \end{array}\right]=\left[\begin{array}{ll}
+    0 & 1 \\
+    \Delta & 0
+    \end{array}\right]\left[\begin{array}{l}
+    \phi \\
+    \psi
+    \end{array}\right]-\left[\begin{array}{l}
+    0 \\
+    f
+    \end{array}\right]
+    $$
+    If we take the Fourier transform of the matrix, we get
+    $$
+    \left[\begin{array}{cc}
+    0 & 1 \\
+    -|\xi|^{2} & 0
+    \end{array}\right]
+    $$
+    and if we diagonalize this, we get
+    $$
+    \left[\begin{array}{cc}
+    +i|\xi| & 0 \\
+    0 & -i|\xi|
+    \end{array}\right],
+    $$
+    which is anti-Hermitian. This means that the energy estimate will hold in the diagonalized variables.\footnote{Why energy estimate will hold?}
+
+\end{example}
+\section*{Goals for Studying Hyperbolic PDEs}
+Here are our goals for studying hyperbolic PDEs:
+\begin{itemize}
+    \item [1.] (Local) well-posedness of the initial value problem for variable-coefficient wave equations,
+    $$
+    P \phi=\partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right)+b^{\mu} \partial_{\mu} \phi+c \phi,
+    $$
+    where $g$ is a \textbf{Lorentzian metric}, a non-degenerate symmetric $(d+1) \times(d+1)$ matrix with signature $(-,+,+\cdots,+)$ (meaning that the eigenvalues of $g$ have signs $-,+,+\ldots,+)$. This condition can also be stated as: for every $(t, x)$, there exists an invertible matrix $M$ such that $M^{-1} g(t, x) M=\operatorname{diag}(-1,+1,+1, \ldots,+1)$.
+    
+    Note that when $g=\operatorname{diag}(-1,+1,+1, \ldots,+1)$ and $b=c=0, P=\square$.
+    \item [2.] Long-time behavior of the solutions: If we look at this in general, it immediately becomes a research topic. \footnote{Scattering theory is devoted to studying these problems.} Instead, we will focus on long-time behavior of solutions to equations where $P$ is a small variant of $\square$.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%% Gronwall's Inequality
+\newpage 
+\section{Gr\"onwall's Inequality}
+Our treatment for the well-posedness of the initial value problem for variable coefficient wave equations will be closer to Ringström's book the Cauchy Problem in General Relativity than it will be to Evans' book.
+Our setting is
+$$
+P \phi=\partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right)+b^{\mu} \partial_{\mu} \phi+c \phi
+$$
+We want to derive energy estimates for
+$$
+\begin{cases}P \phi=f & \text { in } \mathbb{R}_{+} \times \mathbb{R}^{d} \\ \left.\left(\phi, \partial_{t} \phi\right)\right|_{t=0}=(g, h) & \text { on }\{t=0\} \times \mathbb{R}^{d}\end{cases}
+$$
+We need the following preliminary tool, which was discussed in Math $222 \mathrm{~A}$.
+
+\begin{lemma}
+[Gr\"onwall's inequality] 
+Suppose that $E(t) \in C_{t}([0, T])$ and $r(t) \in L_{t}^{1}([0, T])$ with $E, r \geq 0$ satisfy the inequality
+$$
+E(t) \leq E_{0}+\int_{0}^{t} r\left(t^{\prime}\right) E\left(t^{\prime}\right) d t^{\prime} \quad \forall 0 \leq t \leq T
+$$
+Then
+$$
+E(t) \leq E_{0} \exp \left(\int_{0}^{t} r\left(t^{\prime}\right) d t^{\prime}\right) \quad \forall 0 \leq t \leq T
+$$
+\end{lemma}
+
+We give a proof that uses a bootstrap argument, i.e. continuous induction on time. First, here is a motivating computation: Take the inequality we are given, and plug in the answer into the right hand side. We get
+$$
+E(t) \leq E_{0}+E_{0} \int_{0}^{t} r\left(t^{\prime}\right) \exp (\underbrace{\int_{0}^{t^{\prime}} r\left(t^{\prime \prime}\right) d t^{\prime \prime}}_{R\left(t^{\prime}\right)}) d t
+$$
+where $R$ is just an antiderivative of $r$.
+$$
+\begin{aligned}
+&=E_{0}+E_{0}\left(\exp \left(\int_{0}^{t} r\left(t^{\prime}\right) d t^{\prime}\right)-1\right) \\
+&=E_{0} \exp \left(\int_{0}^{t} r\left(t^{\prime}\right) d t^{\prime}\right)
+\end{aligned}
+$$
+This tells us that the solution is what we get if we try to find a fixed point when iterating the use of this bound.
+
+\vspace{1em}
+\begin{proof}
+    We are going to prove 
+    \[
+        E(t) \le E_0(1+\delta) \exp(\int_0^t r(t') dt')
+    \]
+    on $[0,T]$ for any $\delta >0$. Fix $\delta$, assume this inequality holds on $[0,T_0]$ by continuity ( when $E_0=0$, we need more tricks). Now we plan to extend this interval. 
+
+    Assume 
+    $$
+E(t) \leq E_{0}(1+\delta) \exp \left(\int_{0}^{t} r\left(t^{\prime}\right) d t^{\prime}\right)
+$$
+on $[0, T']$. If we plug this bound into the iteration, we get
+$$
+\begin{aligned}
+E(t) & \leq E_{0}+E_{0}(1+\delta) \int_{0}^{t} r\left(t^{\prime}\right) \exp \left(\int_{0}^{t^{\prime}} r\left(t^{\prime \prime}\right) d t^{\prime \prime}\right) d t^{\prime} \\
+&=E_{0}+E_{0}(1+\delta)\left(\exp \left(\int_{0}^{t} r\left(t^{\prime}\right) d t^{\prime}\right)-1\right) \\
+&=E_{0}(1+\delta) \exp \left(\int_{0}^{t} r\left(t^{\prime}\right) d t^{\prime}\right)-\underbrace{\delta E_{0}}_{>0}.
+\end{aligned}
+$$
+Hence we can extend this a little to $[0,T'+\varepsilon]$. It's obvious that this inequality holds on $[0,T]$.  
+
+Because for any $\delta >0$ is true. This must be true for $\delta =0$. 
+\qed 
+\end{proof}
+
+
+%%%%%%%% Variable COefficient Wave equations 
+\newpage 
+\section{Variable Coefficient Wave Equations}
+
+Today, we are interested in a concrete goal. We will be studying \textbf{variable-coefficient wave equations}, PDEs of the form
+$$
+P \phi=\partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right)+b^{\mu} \partial_{\mu} \phi+c \phi,
+$$
+where the key assumption is that $g$ is a symmetric matrix with signature $(-,+,+\ldots,+)$. The example we should keep in mind is $g=\operatorname{diag}(-1,1,1, \ldots, 1), b=0, c=0$; this makes $P=\square$. We are solving the initial value problem
+$$
+\begin{cases}P \phi=f & \text { in }(0, \infty)_{t} \times \mathbb{R}^{d} \\ \left.\left(\phi, \partial_{t} \phi\right)\right|_{t=0}=(g, h) & \text { on }\{t=0\} \times \mathbb{R}^{d}\end{cases}
+$$
+We further assume that $g^{\mu, \nu}, b^{\mu}, c$ are bounded with bounded derivatives of all orders. We also assume a restricted form of $g$ (which we will later show is not much of a restriction): $g^{t t}=-1$ and $g^{t, x^{j}}=0$. This means that if we write $g$ as a matrix,
+$$
+g=\left[\begin{array}{cc}
+-1 & 0_{1 \times d} \\
+0_{d \times 1} & \bar{g}
+\end{array}\right],
+$$
+where $\bar{g}$ is \textbf{uniformly elliptic} $(\bar{g} \succ \lambda I)$.
+Our concrete goal is to prove the following theorem:
+
+\begin{theorem}
+    \label{thm: well posedness of VCWE}
+    The initial value problem is well-posed in $H^{k} \times H^{k-1}$ for all $k \in \mathbb{Z}$. That is,
+    \begin{itemize}
+        \item (Existence) Given $(g, h) \in H^{k} \times H^{k-1}$ and $f \in L_{t}^{1}\left(H^{k-1}\right)$, there exists a solution $\phi$ to the initial value problem in the class $C_{t}\left(\mathcal{H}^{k}\right)$.
+        \item (Uniqueness) The solution $\phi$ in $C_{t}\left(\mathcal{H}^{k}\right)$ to the initial value problem with $(f, g, h)$ as in (i) is unique.
+        \item (Continuous dependence)
+        $$
+        \sup _{t}\left\|\phi \right\| + \sup_t \left \| \partial_{t} \phi \right\| \leq C_{k}\left(\|(g, h)\|_{\mathcal{H}^{k}}+\|f\|_{L_{t}^{1}\left(H^{k-1}\right)}\right) .
+        $$
+    \end{itemize} 
+\end{theorem}
+Here, $\mathcal{H}^{k}=H^{k} \times H^{k-1}$, and by $\phi \in C_{t}\left(I ; \mathcal{H}^{k}\right)$, we mean that $\phi \in C_{t}\left(I ; H^{k}\right)$ and $\partial_{t} \phi \in$ $C_{t}\left(I ; H^{k-1}\right)$.
+
+We will use the convention that $\mathbb{R}^{1+d}=\left\{\left(t=x^{0}, x^{1}, \ldots, x^{d}\right)\right\}$. The Greek indices $\mu, \nu$ will range from $0,1, \ldots, d$, while the indices $j, k, \ell$ will range from $1, \ldots, d$. We will also denote $g^{t, t}=g^{0,0}, g^{t, x^{j}}=g^{0, j}$.
+
+\begin{remark}
+\begin{itemize}
+    \item []
+    \item The problem is time reversible. If we send $t \mapsto-t$, the equation is essentially unchanged.
+    \item The  reference  for  this  topic  is  chapters  6-7  of  Ringstr\"om's  book.
+\end{itemize}
+\end{remark}
+
+\subsection{Energy Inequality for $P$}
+The basic ingredient in this proof is an energy inequality for $P$. Suppose $P \phi=f$. The idea is to multiply the equation by $\partial_{t} \phi$ and "integrate by parts." Why should we multiply by $\partial_{t} \phi$ instead of $\phi$ ? This is a generalization of what we do in the classical wave equation, and we will be able to give a more insightful answer to this once we discuss calculus of variations for problems of this type. The key observation is this integration by parts idea, but in divergence form:
+$$
+\begin{aligned}
+\partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right) \partial_{t} \phi &=-\partial_{t}^{2} \phi \partial_{t} \phi+\partial_{j}\left(\bar{g}^{j, k} \partial_{k} \phi\right) \partial_{t} \phi \\
+&=\partial_{t}\left(-\frac{1}{2}\left(\partial_{t} \phi\right)^{2}\right)+\partial_{j}\left(\bar{g}^{j, k} \partial_{k} \phi \partial_{t} \phi\right)-\bar{g}^{j, k} \partial_{k} \phi \partial_{j} \partial_{t} \phi
+\end{aligned}
+$$
+Since $g$ is symmetric, this last term can be written as $-\frac{1}{2}\bar{g}^{j, k} \partial_{t}\left(\partial_{k} \phi \partial_{j} \phi\right)$ by symmetrizing. Moving the $\partial_{t}$ to the outside, we get
+$$
+=\partial_{t}\left(-\frac{1}{2}\left(\partial_{t} \phi\right)^{2}\right)-\frac{1}{2} \partial_t\left( \bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi \right)+\partial_{j}\left(\bar{g}^{j, k} \partial_{k} \phi \partial_{t} \phi\right)+\frac{1}{2} \partial_{t} \bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi.
+$$
+This form is nice because the terms that have the maximum number of derivatives are all in divergence form, while the terms that don't have the maximum number of derivatives are not in divergence form.
+Integrate this on $\left(t_{0}, t_{1}\right) \times \mathbb{R}^{d}=: R_{t_{0}}^{t_{1}}$ (assuming the boundary term vanishes):
+\begin{align*}
+&\iint_{R_{t_{0}}^{t_{1}}} \partial_{\mu}\left(g^{\mu, \nu} \partial \nu \phi\right) \partial_{t} \phi-\frac{1}{2} \iint_{R_{t_{0}}^{t_{1}}} \partial_{t} \bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi \\ 
+    &=-\int_{\Sigma_{t_{1}}} \frac{1}{2}\left(\left(\partial_{t} \phi\right)^{2}+\bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi\right)+\int_{\Sigma_{t_{0}}} \frac{1}{2}\left(\left(\partial_{t} \phi\right)^{2}+\bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi\right)z`' \\
+    &\quad +\underbrace{\lim _{R \rightarrow \infty} \int_{t_{0}}^{t_{1}} \int_{\partial B_{R}} \nu_{j}\left(\bar{g}^{j, k} \partial_{k} \phi \partial_{t} \phi\right) d A d t}_{=0},
+\end{align*}
+where $\Sigma_{t}=\{t\} \times \mathbb{R}^{d}$.
+Denote $\vec{\phi}=\left(\phi, \partial_{t} \phi\right)$, so $\left(\phi, \partial_{t} \phi\right) \in \mathcal{H}^{k}$ if and only if $\vec{\phi} \in C_{t}\left(\mathcal{H}^{k}\right)$.
+
+\begin{lemma}
+[Energy estimate for variable-coefficient wave equations]
+ For $\phi \in C_{t}\left(\mathcal{H}^{1}\right)$,
+$$
+\sup _{t \in[0, T]}\|\vec{\phi}\|_{\mathcal{H}^{k}} \leq C_{T}\left(\|\vec{\phi}(0)\|_{\mathcal{H}^{1}}+\int_{0}^{T}\|P \phi\|_{L^{2}} d t\right) .
+$$
+
+\end{lemma}
+\begin{proof}
+    We may assume without loss of generality that $\phi \in C^{\infty}\left(R_{0}^{T}\right)$ and $\phi(t, \cdot)$ has compact support for each $t \in[0, T]$. By the computation above, if
+    $$
+    E[\phi](t)=\frac{1}{2} \int_{\Sigma_{t}}\left(\partial_{t} \phi\right)^{2}+\bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi d x
+    $$
+    then
+    $$
+    \mathbb{E}[\phi]\left(t_{1}\right)=\mathbb{E}[\phi](0)-\iint_{R_{0}^{t_{1}}} \partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right)\partial_t \phi+\frac{1}{2} \iint_{R_{0}^{t_{1}}} \partial_{t} \bar{g}^{j, k} \partial_{j} \partial_{k} \phi
+    $$
+    (Note that $\lim _{R \rightarrow \infty} \int_{\partial B_{R}}=0$ thanks to the support assumption). Now
+    $$
+    \partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right)=P \phi-b^{\mu} \partial_{\mu} \phi-c \phi
+    $$
+    which tells us that
+    $$
+    \mathbb{E}[\phi]\left(t_{1}\right)=E[\phi](0)-\iint_{R_{0}^{t}} P \phi \partial_{t} \phi d x d t+\iint_{R_{0}^{t}}\left(b^{\mu} \partial_{\mu} \phi \partial_{t} \phi+c \phi \partial_{t} \phi+\partial_{t} \bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi\right) d x d t
+    $$
+    Call the error
+    $$
+    \mathcal{E}_{0}^{t}=\iint_{R_{0}^{t}}\left|b^{\mu} \partial_{\mu} \phi \partial_{t} \phi+c \phi \partial_{t} \phi+\partial_{t} \bar{g}^{j, k} \partial_{j} \phi \partial_{k} \phi\right| d x d t
+    $$
+    We get an inequality:
+    $$
+    \sup _{t_{1} \in[0, T]} E[\phi]\left(t_{1}\right) \leq E[\phi](0)+\sup _{t \in[0, T}\left|\iint_{R_{0}^{t}} P \phi \partial_{t} \phi d x d t\right|+\mathcal{E}_{0}^{T}
+    $$
+    Note that $E[\phi] \geq \frac{1}{2} \int\left(\partial_{t} \phi\right)^{2}(t) d x + \frac{\lambda}{2} \int\left|D_{t} \phi\right|^{2}(t) d x$. Using the fundamental theorem of calculus,
+    $$
+    \int|\phi|^{2}(t) d x=\int_{0}^{t} \int \partial \phi \phi d x d t^{\prime}+\int|\phi|^{2}(0) d x
+    $$
+    Using Cauchy-Schwartz,
+$$
+\leq 2 \int E\left(t^{\prime}\right)^{1 / 2}\left(\int|\phi|^{2}\left(t^{\prime}\right) d x\right)^{1 / 2} d t^{\prime}+\int|\phi|^{2}(0) d x
+$$
+Skipping a few steps, we get\footnote{How to get this?}
+$$
+\sup _{t \in[0, T]} \int|\phi|^{2}(t) d t \leq \int|\phi|^{2}(0) d x+C_T \sup _{t \in[0, T]} E(t)
+$$
+Note $\|\vec{\phi}(t)\|_{\mathcal{H}^{1}}^2 \simeq \|\phi(t)\|_{L^2}^2 + \|\partial_j \phi(t)\|_{L^2}^2 + \| \partial_t \phi (t)\|_{L^2}^2$.
+The point here is that
+$$
+\sup _{t \in[0, T]}\|\vec{\phi}\|_{\mathcal{H}^{1}}^2\leq C_{T}\left(\|\vec{\phi}(0)\|_{\mathcal{H}^{1}}^{2}+\sup _{t \in[0, T]}\left|\iint_{R_{0}^{T}} P \phi \partial_{t} \phi d x d t\right|+\sup_{t\in [0,T]}E(t) + \mathcal{E}_{0}^{T}\right) .
+$$
+If we use Cauchy-Schwarz, we get
+$$
+\begin{aligned}
+\sup _{t \in[0, T]}\left|\iint_{R_{0}^{t}} P \phi \partial_{t} \phi d x d t\right| & \leq \int_{0}^{T}\|P \phi(t)\|_{L^{2}}\left\|\partial_{t} \phi\right\|_{L^{2}} d t \\
+& \leq C \int_{0}^{T}\|P \phi(t)\|_{L^{2}} E[\phi]^{1 / 2} d t \\
+& \leq \int_{0}^{T}\|P \phi(t)\|_{L^{2}} d t \sup _{[0, T]} E[\phi]^{1 / 2}
+\end{aligned}
+$$
+We can use Cauchy-Schwarz to absorb the energy term to the left hand side, since $E[\phi] \leq$ $C \int\left(\partial_{t} \phi\right)^{2}+\left(D_{x} \phi\right)^{2}$. We get\footnote{How to deal with $\cE_0^T$?}
+$$
+\sup _{t \in\left[0, t_{1}\right]}\|\vec{\phi}\|_{\mathcal{H}^{1}}^{2} \leq C_{T}\left(\|\vec{\phi}(0)\|_{\mathcal{H}^{1}}^{2}+\int_{0}^{T}\|P \phi\|_{L^{2}} d t+\int_{0}^{t_{1}}\|\phi(t)\|_{\mathcal{H}^{1}}^{2} d t\right)
+$$
+\qed 
+\end{proof}
+
+\subsection{Higher Order Regularity Estimates}
+We want to study something like $P: C_{t}\left(\mathcal{H}^{k}\right) \rightarrow L_{t}^{1}\left(H^{k-1}\right)$. This means that we should look at the adjoint $P^{*}: C_{t}\left(H^{-(k-1)}\right) \rightarrow L_{t}^{1}\left(H^{-k}\right)$. The dual problem here includes negative Sobolev spaces.
+
+\begin{lemma}
+    For any $k \in \mathbb{Z}$ and $\phi \in C_{t}\left(\mathcal{H}^{1+k}\right) \cap C_{t, x}^{\infty}$,
+    $$
+    \sup _{t \in[0, T]}\|\vec{\phi}(t)\|_{\mathcal{H}^{1+k}} \leq C_{T, k}\left(\|\vec{\phi}(0)\|_{\mathcal{H}^{1+k}}+\int_{0}^{T}\|P \phi\|_{H^{k}} d t\right) .
+    $$
+    The positive regularities will give us uniqueness for the initial value problem. The negative regularities will give us existence.
+\end{lemma}
+\begin{proof}
+    For $k>0$, we commute the equation with $D^{\alpha}$ for $|\alpha| \leq k$. Then apply the previous lemma and Grönwall's inequality. (This technique is very similar to our previous proof of higher elliptic regularity bounds. However, we don't need to use a difference quotient.)
+    
+    For $k<0$, we work with $\Phi=(1-\Delta)^{-|k|} \phi$. (This means that we want to look at the solution to the elliptic problem $(1-\Delta)^{|k|} \Phi=\phi$ in $\mathbb{R}^{d}$. Another way to write this is $\widehat{\Phi}=\left(1-|\xi|^{2}\right)^{-|k|} \widehat{\phi}$.) We do this so that we don't have to deal with negative Sobolev spaces; we can study an operator that commutes well with $P$ and use positive Sobolev spaces, instead. The key thing to notice is that $(1-\Delta)^{-\ell}: H^{s} \rightarrow H^{s+2 \ell}$. We also use the following:
+    \begin{lemma}
+        For any $s \in \mathbb{R}$, the $H^{s}$ norm has the Fourier characterization
+        $$
+        \begin{aligned}
+        \|v\|_{H^{s}} &=\left\|\left(1+|\xi|^{2}\right)^{s / 2} \widehat{v}\right\|_{L_{\xi}^{2}}^{2} \\
+        &=\left\|(1-\Delta)^{s / 2} v\right\|_{L^{2}}^{2} .
+        \end{aligned}
+        $$
+    \end{lemma}
+
+    \vspace{1em}
+    When $s\in 2\ZZ$, this agrees with our sense of derivatives.
+    We want to compute
+$$
+\begin{aligned}
+\|P \Phi\|_{H^{|k|}}^{2} &=\left\|\left(1+\|\left. x i\right|^{2}\right)^{|k| / 2} \widehat{P \Phi}\right\|_{L^{2}}^{2} \\
+&=\left\langle\left(1+|\xi|^{2}\right)^{|k| / 2} \widehat{P \Phi},\left(1+|\xi|^{2}\right)^{|k| / 2} \widehat{P \Phi}\right\rangle \\
+&=\left\langle\left(1+|\xi|^{2}\right)^{|k| / 2} \widehat{P \Phi}, \widehat{P \Phi}\right\rangle \\
+&=\left\langle(1-\Delta)^{|k|} P \Phi, P \Phi\right\rangle .
+\end{aligned}
+$$
+Now observe that \footnote{Is this Lie bracket?}
+$$
+\begin{aligned}
+(1-\Delta)^{|k|} P \Phi &=P\left((1-\Delta)^{|k|} \Phi\right)+\left[(1-\Delta)^{|k|}, P\right] \Phi \\
+&=P \phi+\underbrace{\left[(1-\Delta)^{|k|}, P\right]}_{\text {order } 2|k|+2-1} \Phi
+\end{aligned}
+$$
+This tells us that \footnote{Why we have this?}
+$$
+\begin{aligned}
+\|\vec{\Phi}(t)\|_{\mathcal{H}^{1+|k|}} &=\|\vec{\phi}(t)\|_{\mathcal{H}^{1+|k|-2|k|}} \\
+&=\|\widehat{\phi}(t)\|_{\mathcal{H}^{1+k}}
+\end{aligned}
+$$
+for $k<0$.
+\qed 
+\end{proof}
+
+ \subsection{Local Well-Posedness}
+
+ We have been looking at linear hyperbolic PDEs $P \phi=f$, where
+$$
+P \phi=\partial_{\mu}\left(g^{\mu, \nu} \partial_{\nu} \phi\right)+b^{\mu} \partial_{\mu} \phi+c \phi .
+$$
+We want to solve the initial value problem
+$$
+\left\{\begin{array}{l}
+P \phi=f \\
+\left.\left(\phi, \partial_{t} \phi\right)\right|_{t=0}=(g, h) .
+\end{array}\right.
+$$
+To discuss existence and uniqueness, we made further assumptions on the coefficients:
+\begin{itemize}
+    \item $g^{\mu,\nu}$ is a symmetric $(1+d)\times (1+d)$ matrix with signature $(-,+,+,\dots, +)$. 
+    \item $g^{0,j}(t,x) = 0$ and $g^{0,0}(t,x)=-1$. 
+    \item For $\xi\in \RR^d, g^{j,k}\xi_j\xi_k \ge \lambda |\xi|^2$. 
+    \item $g^{\mu,\nu},b,c$ are uniformly bounded, with uniformly bounded derivatives.
+\end{itemize}
+
+
+%────────────────────────────────────────
+\begin{example}
+$b=c=0$, and $g = \diag(-1,1,1,\dots, 1)$. Then $P= \square$.
+\end{example}
+%────────────────────────────────────────
+We take the convention that $x^{0}=t$. We also use Greek indices $\mu, \nu \in\{0,1, \ldots, d\}$ and indices $j, k \in\{1, \ldots, d\}$. Last time, we were proving the following theorem. 
+
+%────────────────────────────────────────
+\begin{theorem}
+[Local well-posedness of the initial value problem]
+\label{thm: Local well-posedness of the initial value problem}
+ Let $s \in \mathbb{Z}_{+}$. Given $(g, h) \in H^{s+1} \times H^{s}\left(\mathbb{R}^{d}\right)$ and $f \in L_{t}^{1}\left([0, t] ; H^{s}\left(\mathbb{R}^{d}\right)\right)$, there exists a unique solution $\phi$ to the initial value problem with $\phi \in C_{t}\left([0, T], H^{s+1}\right)$ and $\partial \phi \in C_{t}\left((0, T) ; H^{s}\right)$. Moreover, the unique solution $\phi$ satisfies the estimate
+$$
+\|\phi\|_{C_{t}\left([0, T] ; H^{s+1}\right)}+\left\|\partial_{t} \phi\right\|_{C_{t}\left([0, T] ; H^{s}\right)} \lesssim_{g^{\mu, \nu, b}, c, T, s}\|(g, h)\|_{H^{s+1} \times H^{s}}+\|f\|_{L_{t}^{1}\left([0, T] ; H^{s}\right)}
+$$
+\end{theorem}
+%────────────────────────────────────────
+
+%────────────────────────────────────────
+\begin{remark}
+Local well-posedness entails continuous dependence of $\phi$ on $(f, g, h)$. Because of linearity, this a priori estimate implies continuous dependence (and in fact Lipschitz dependence).
+\end{remark}
+%────────────────────────────────────────
+
+
+We will give a proof if we have a priori estimate. 
+
+%────────────────────────────────────────
+\begin{proposition}
+Let $s \in \mathbb{Z}$. Let $\phi \in C_{t}\left([0, T] ; H^{s+1}\right)$ and $\partial_{t} \phi \in C_{t}\left([0, T] ; H^{s}\right)$. Then
+$$
+\|\phi\|_{C_{t}\left([0, T] ; H^{s+1}\right)}+\left\|\partial_{t} \phi\right\|_{C_{t}\left((0, t): H^{s}\right)} \lesssim\left\|\left.\left(\phi, \partial_{t} \phi\right)\right|_{t=0}\right\|_{H^{s+1} \times H^{s}}+\|P \phi\|_{L_{t}^{1}\left([0, T] ; H^{s}\right)} .
+$$
+\end{proposition}
+%────────────────────────────────────────
+%────────────────────────────────────────
+\begin{proof}
+\begin{itemize}
+    \item []
+    \item 
+    Step 1: $s\ge 0$ 
+    
+    We want to use the energy method. The natural strategy would be to commute $P\phi$ with $D^\alpha$ for $|\alpha|\le s$ and apply the energy estimate (multiply by $\partial_t \phi$ and integrate by parts). Instead, we vary the multiplier: 
+    \[
+        \left\langle P \phi,(1-\Delta)^{s} \partial_{t} \phi\right\rangle:=\int P \phi(1-\Delta)^{s} \partial_{t} \phi d x
+    \]
+    \begin{itemize}
+        \item On the one hand, we know by duality that 
+        \[
+            \int_0^T \langle P\phi, (1-\Delta)^s \partial_t \phi \rangle dt  \lesssim 
+            \| P\phi\|_{L_t^1([0,T]; H^s)} \|\partial_t\phi\|_{C_t([0,T]; H^s)}. 
+        \]
+        This is basically integrating by parts $s$ times and using Cauchy-Schwartz. We can also think of this a as the general bound 
+        \[
+            |\langle f,g \rangle | \lesssim \|f\|_{H^s}\|g\|_{H^{-s}}. 
+        \]
+        In general, if $Q$ is an order $r$ differential operator with that have uniformly bounded derivatives to all order, then (with some Fourier analysis), we can say that 
+        \[
+            \|Qg\|_{H^s}
+            \lesssim 
+            \|g\|_{H^{r+s}}, \quad (s\in \RR).  
+        \]
+        For negative $s$, we get the inequality by duality: 
+        \begin{align*}
+            \|Qf\|_{H^s}
+            &= 
+            \sup_{\|g\|_{H^s} = 1} |\langle Qf, g \rangle | \\ 
+            &= 
+            \sup_{\|g\|_{H^s} = 1} |\langle f, Q^*g \rangle | \\ 
+            &\lesssim 
+            \|f\|_{H^{s+r}} \|Q^*g\|_{H^{s-r}}.     
+        \end{align*}
+        We also have the fact that 
+        \[
+            \|(1-\Delta^s)g \|_{L^2} \simeq \|g\|_{H^{2s}}, \langle  (1-\Delta)^s g,g \rangle \simeq \|g\|_{H^s}^2,      
+        \] 
+        which we get by using the Fourier transform: 
+        \[
+            \langle (1-\Delta)^s g,g \rangle 
+            = 
+            \langle (1+|\xi|^2)^s \hat g, \hat g \rangle  
+            = 
+            \|(1+|\xi|^2)^{s/2} \hat g\|_{L^2}^2. 
+        \]
+        \item 
+        On the other hand, we have 
+        \[
+            P\phi = \underbrace{\partial_\mu (g^{\mu, \nu} \partial_\nu \phi)}_{-\partial_t^2 \phi + \partial_j (g^{j,k}\partial_k \phi)} + b^\mu \partial_\mu \phi + c\phi . 
+        \]
+        Now, we can observe that 
+        \[
+            -\langle \partial_t^2 \phi, (1-\Delta)^s \partial_t \phi \rangle 
+            = 
+            -\partial_t \langle \partial_t \phi, (1-\Delta)^s \partial_t \phi    \rangle + \langle \partial_t \phi, (1-\Delta)^s \partial_t^2 \phi  \rangle . 
+        \]
+        Since $\langle \partial_t \phi, (1-\Delta)^s \partial_t^2 \phi \rangle = \langle (1-\Delta)^s \partial_t \phi, \partial_t^2 \phi \rangle$ we get 
+        \[
+            = -\frac{1}{2}\partial_t \langle \partial_t \phi, (1-\Delta)^s \partial_t \phi \rangle 
+        \]  
+        For the other term, we have 
+        \begin{align*}
+            \langle \partial_j(g^{j,k}\partial_k\phi), (1-\Delta)^s \partial_t \phi \rangle
+            &= 
+            - \langle g^{j,k}\partial_k \phi, (1-\Delta)^s \partial_t \partial_j \phi \rangle\\ 
+            &= - \partial_t \langle g^{j,k}\partial_k \phi, (1-\Delta)^s \partial_j \phi \rangle  \\ 
+            &\quad + \langle \partial_tg^{j,k}\partial_k \phi, (1-\Delta)^s \partial_j \phi \rangle   \\ 
+            &\quad + \langle g^{j,k}\partial_k \partial_t \phi, (1-\Delta)^s \partial_j \phi \rangle. 
+        \end{align*}
+        Write the last term as 
+        \[
+            - \langle \partial_t \phi, \partial_k (g^{j,k}(1-\Delta)^s \partial_j \phi) \rangle  
+            = 
+            - \langle \partial_t \phi, \partial_k([g^{j,k}, (1-\Delta)^s \partial_j] \phi) \rangle  
+            - 
+            \underbrace{\langle \partial_t \phi, \partial_k \big( (1-\Delta)^s (g^{j,k}\partial_{j} \phi) \big) \rangle }_{= \langle (1-\Delta)^s \partial_t \phi, \partial_k (g^{j,k}\partial_j\phi) \rangle }. 
+        \]
+        Overall, this equals 
+        \[
+            -\frac{1}{2}\partial_t \langle g^{j,k}\partial_k \phi, (1-\Delta)^s \partial_j \phi \rangle + \frac{1}{2} \langle \partial_t g^{j,k}\partial_k \phi, (1-\Delta)^s \partial_j \phi \rangle - \frac{1}{2} \langle \partial_t \phi, \partial_k ([g^{j,k}, (1-\Delta)^s]\partial_j \phi) \rangle.   
+        \]
+        This point of this messy calculation is as follows: for the terms with the highest number of derivatives, we want to put things into this total derivative form. The other terms will have at least $1$ derivative that is not falling on $\phi$. This is the purpose of using the commutator. What we get is that 
+        \begin{align*}
+            \langle P \phi, &(1-\Delta)^s \partial_t \phi \rangle \\ 
+            & = \underbrace{-\frac{1}{2}\Big( \langle \partial_t \phi, (1-\Delta)^s \partial_t \phi \rangle + \langle g^{j,k}\partial_k \phi, (1-\Delta)^s \partial_j \phi \rangle  \Big)}_{\EE_s [\phi](t)} \\ 
+            & + \underbrace{O\left(\left\langle q_{1} \partial \phi, \partial^{2 s} \partial \phi\right\rangle\right)+O\left(\left\langle q_{2} \partial \phi, \partial^{2 s-1} \partial \phi\right\rangle\right)+\cdots+O\left(\left\langle q_{2 s+1} \partial \phi, \partial \phi\right\rangle\right)}_{R_{s}}
+        \end{align*}
+        where $q_1 = \partial g, q_2 = \partial^2 g \partial bc$, etc. 
+
+    \end{itemize}
+            So our energy argument says 
+        \[
+            \int_0^t \langle P\phi, (1-\Delta)^s \partial_t \phi \rangle dt' \ge \EE_s[\phi](0) -  \EE_s[\phi](t) - C\int_0^t \|\phi\|_{H^{s+1}}^2 + \|\partial_t\phi\|_{H^s}^2 dt', 
+        \]
+        where we are just using the estimate for the remainder: 
+        \[
+            | R_{s}(t^{\prime})| \lesssim\left(\|\phi\|_{H^{s+1}}+\left\|\partial_{t} \phi\right\|_{H^{s}}\right)^{2}
+        \]
+        Now we have 
+        \[
+            \EE_{s}[\phi](t) \leq \EE_{s}[\phi](0)+\|P \phi\|_{L_{t}^{1}\left([0, T] ; H^{s}\right)}\left\|\partial_{t} \phi\right\|_{C_{t}\left((0, T) ; H^{s}\right)}+\int_{0}^{t}\|\phi\|_{H^{s+1}}^{2}+\left\|\partial_{t} \phi\right\|_{H^{s}}^{2} d t^{\prime}. 
+        \]
+        Note that $\EE_{s}[\phi](t) \simeq\|\phi\|_{H^{s+1}}^{2}+\left\|\partial_{t} \phi\right\|_{H^{s}}^{2}$, so our proprties of $H^{s}$ and the elliptic estimate for $\partial_{j} g^{j, k} \partial_{k}$ gives:
+        $$
+        \EE_{s}\left[\phi(t) \leq \EE_{s}[\phi](0)+\|P \phi\|_{L_{t}^{1}\left([0, T] ; H^{s}\right)}\left\|\partial_{t} \phi\right\|_{C_{t}\left((0, T) ; H^{s}\right)}+\int_{0}^{t} E_{s}\left[\phi\left(t^{\prime}\right)]d t^{\prime}\right.\right.
+        $$
+        So Gr\"onwall's inequality tells us that
+        $$
+        \EE_{s}[\Phi](t) \lesssim \EE_{s}[\phi](0)+\|P \phi\|_{L_{t}^{1}\left([0, T] ; H^{s}\right)} \sup _{t \in[0, T]} E_{s}[\phi](t) .
+        $$
+        Now we can take the sup over $t \in[0, T]$ on the left hand side and use the AM-GM inequality with an epsilon to absorb the $\sup _{t \in[0, T]} E_{s}[\phi](t)$ on the right into the left hand side.
+        \item 
+        Step 2: $s<0$ 
+
+        Let $\Phi = (1-\Delta)^{-|s|}\phi$. We have the equivalence: 
+        \[
+            \|\Phi\|_{H^{|s|+1}} \simeq\|\phi\|_{H^{-|s|+1}}=\|\phi\|_{H^{s+1}}. 
+        \]
+        Similarly, 
+        \[
+            \left\|\partial_{t} \Phi\right\|_{H^{|s|}} \simeq \| \partial_{t} \phi \|_{H^{s}}.
+        \]
+        Now, we do the same argument with $s$ replaced by $|s|$ and $\phi$ replaced by $\Phi$. The only thing that is different is part 1 above. So we need to estimate
+        $$
+        \begin{aligned}
+        \left|\left\langle P \Phi,(1-\Delta)^{|s|} \partial_{t} \Phi\right\rangle\right| &=\left|\left\langle(1-\Delta)^{|s|} P \Phi, \partial_{t} \Phi\right\rangle\right| \\
+        &=\mid\langle P \underbrace{\left.(1-\Delta)^{|s|} \Phi, \partial_{t} \Phi\right\rangle|+|\left\langle\left[(1-\Delta)^{|s|}, P\right] \Phi, \partial_{t} \Phi\right\rangle \mid}_{\phi}
+        \end{aligned}
+        $$
+        The right term has order $2|s|+2-1$. Using duality,
+        $$
+        \lesssim\|P \phi\|_{H^{s}}\left\|\partial_{t} \Phi\right\|_{H^{|s|}}+\|\Phi\|_{H^{|s|+1}}\left\|\partial_{t} \Phi\right\|_{H^{|s|}}
+        $$
+        This completes the proof.
+\end{itemize}
+\qed
+\end{proof}
+%────────────────────────────────────────
+
+Now we can quickly conclude the proof of existence and uniqueness theorem. 
+
+\vspace{2em}
+%────────────────────────────────────────
+\begin{proof}[][Thm~\ref{thm: well posedness of VCWE}]
+Note that uniqueness and the a priori estimate follow from the proposition. It remains to prove existence. It remains to prove existence. 
+\begin{itemize}
+    \item Step 1: First, view this as trying to find the inverse of the operator $P: L_{t}^{\infty}\left([0, T], \mathcal{H}^{s+1}\right) \rightarrow$ $L_{t}^{1}\left([0, T] ; H^{s}\right)$. We want to reduce to the case when the initial data $g, h=0$; we may achieve this using extension and modifying $f$.
+    \item Step 2: By duality, $\phi \in L_{t}^{\infty}\left([0, T] ; H^{s+1}\right)=\left(L_{t}^{1}\left([0, T] ; H^{-s-1}\right)\right)^{*}$. We want
+    $$
+    \begin{aligned}
+    \int_{0}^{T}\langle f, \psi\rangle d t &=\int_{0}^{T}\langle P \phi, \psi\rangle d t \\
+    &=\int_{0}^{T}\left\langle\phi, P^{*} \psi\right\rangle d t.
+    \end{aligned}
+    $$
+    Define $\ell: P^{*}\left(L_{t}^{1}\left([0, T] ; H^{-s}\right)\right) \rightarrow \mathbb{R}$ by $\ell\left(P^{*} \psi\right)=\int_{0}^{T}\langle f, \psi\rangle d t$. This is well-defined by our a-priori estimate:
+    $$
+    \|\ell\| \leq\|f\|_{L^{1}\left(H^{s}\right)}\|\psi\|_{L^{\infty}\left(H^{-s}\right)} \leq\|f\|_{L^{1}\left(H^{s}\right)}\left\|P^{*} \psi\right\|_{L^{1}\left(H^{-s-1}\right)} .
+    $$
+    By Hahn-Banach, there exists an extension $\ell^{*} \in\left(L_{t}^{1}\left(H^{-s-1}\right)\right)^{*}$ which is an extension with the bound $\left\|\ell^{*}\right\| \lesssim\|f\|_{L^{1}\left(H^{s}\right)}$. Here, $\phi=\ell^{*} \in L_{t}^{\infty}\left(H^{s+1}\right)$.
+    \item Step 3: Upgrade $\phi \in L_{t}^{\infty}\left(H^{s+1}\right)$ to $\phi \in C_{t}\left(H^{s+1}\right)$ with $\partial_{t} \phi \in C_{t}\left(H^{s}\right)$. The way to do this is to approximate by smooth objects and try to take the limit. The a priori estimate will stay intact through the limit.
+\end{itemize}
+\qed
+\end{proof}
+%────────────────────────────────────────

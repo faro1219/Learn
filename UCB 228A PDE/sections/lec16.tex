@@ -1,0 +1,197 @@
+\newpage 
+\section{Fourier Inversion, Plancherel's Theorem and Temper Distributions}
+
+\subsection{Fourier inversion}
+Last time, we introduced the Fourier transform 
+$$
+\mathcal{F} u(\xi)=\frac{1}{(2 \pi)^{n / 2}} \int_{\mathbb{R}^{n}} e^{-i x \cdot \xi} u(x) d x
+$$
+We had an "inverse"
+$$
+\mathcal{F}^{-1} v(x)=\frac{1}{(2 \pi)^{1 / 2}} \int_{\mathbb{R}^{n}} e^{i x \cdot \xi} v(\xi) d \xi
+$$
+Both $\mathcal{F}$ and $\mathcal{F}^{\prime}$ are functions from $\mathcal{S} \rightarrow \mathcal{S}$, where $\mathcal{S}=\left\{\varphi:\left|x^{\alpha} \partial^{\beta} \varphi\right| \leq c_{\alpha, \beta}\right\}$ is the Schwartz space.
+
+\begin{theorem}
+$\cF^{-1}\cF = I$ on $\cS$.
+\end{theorem}
+\begin{proof}
+    Let's first try a brute-force approach and see what happens.
+    $$
+    \begin{aligned}
+    \mathcal{F}^{-1} \mathcal{F} u &=\frac{1}{(2 \pi)^{n / 2}} \int_{\mathbb{R}^{n}} e^{i x \cdot \xi} \widehat{u}(\xi) d \xi \\
+    &=\frac{1}{(2 \pi)^{n}} \int_{\mathbb{R}^{n}} e^{i x \cdot \xi} \int_{\mathbb{R}^{n}} e^{-i \xi \cdot y} u(y) d y d \xi \\
+    & \stackrel{?}{=} \frac{1}{(2 \pi)^{n}} \iint e^{i(x-y) \cdot \xi} \mu(y) d \xi d y
+    \end{aligned}
+    $$
+    We know $\widehat{u}$ has rapid decay, so the first integral is well-defined. But it is not clear how we can integrate here. The $d \xi$ integral should evaluate to be $\delta_{x=y}$ in some way. Here is what we actually do:
+$$
+=\lim _{\varepsilon \rightarrow 0} \frac{1}{(2 \pi)^{n}} \int_{\mathbb{R}^{n}} e^{i (x-y) \cdot \xi} e^{-\frac{\varepsilon}{2} \xi^{2}}\, d\xi \int_{\mathbb{R}^{n}} u(y) d y
+$$
+Now we can legitimately apply Fubini's theorem.
+$$
+\begin{aligned}
+&=\lim _{\varepsilon \rightarrow 0} \frac{1}{(2 \pi)^{n}} \iint u(y) e^{i(x-y) \cdot \xi} e^{-\frac{\varepsilon}{2} \xi^{2}} d \xi d y \\
+&=\lim _{\varepsilon \rightarrow 0} \int u(y) \frac{1}{(2\pi)^n} e^{-\frac{(x-y)^{2}}{2 \varepsilon}} \varepsilon^{-n / 2} d y \\
+&=\lim _{\varepsilon \rightarrow 0}  u * \varphi_{\varepsilon} \\
+&=u
+\end{aligned}
+$$
+where
+$$
+\varphi_{\varepsilon}(y)=\frac{1}{(2 \pi)^{n}} e^{-\frac{y^{2}}{2 \varepsilon}} \frac{1}{\varepsilon^{n / 2}} \stackrel{\varepsilon \rightarrow 0}{\longrightarrow} \delta_{0}
+$$
+\qed 
+\end{proof}
+
+\subsection{Isometry properties of $\cF$ on $L^2$}
+
+Now let's shift our attention to $L^2$, with inner product $\langle u,v \rangle = \int u\bar v\, dx.$
+
+\begin{proposition}
+The Fourier transform is unitary on $L^2$. That is 
+\[
+    \mathcal{F}^{*}={\mathcal{F}}^{-1}, \quad\left(\mathcal{F}^{-1}\right)^{*}=\mathcal{F}
+\]
+\end{proposition}
+
+\begin{proof}
+    \[
+        \begin{aligned}
+            \langle\mathcal{F}, u v\rangle &=\iint e^{-i x \xi} u(x) d x \bar{v}(\xi) d \xi \\
+            &=\iint e^{-i x \cdot \xi} \bar{v}(\xi) d \xi u(x) d x \\
+            &=\iint \overline{e^{i x \xi} v(\xi)} d \xi u(x) d x \\
+            &=\left\langle u, \mathcal{F}^{-1} v\right\rangle
+            \end{aligned}
+    \]
+    \qed 
+\end{proof}
+
+\begin{theorem}
+$\cF: \cS \to \cS$ is an $L^2$-isometry.
+\end{theorem}
+
+\begin{proof}
+    If we set $u=v$, we get
+$$
+\|u\|_{L^{2}}^{2}=\int|u|^{2} d x=\|\mathcal{F} u\|_{L^{2}}^{2}
+$$
+\qed
+\end{proof}
+We can use this to extend $\mathcal{F}$ to $L^{2}\left(\mathbb{R}^{n}\right)$ by density. If $u \in L^{2}$, find $u_{n} \in \mathcal{S}$ such that $u_{n} \rightarrow u$ in $L^{2}$. Then $u_{n}$ is Cauchy in $L^{2}$, so $\mathcal{F} u_{n}$ is Cauchy in $L^{2}$. So $\lim _{n \rightarrow \infty} \mathcal{F} u_{n}=: \mathcal{F} u$.
+
+\begin{remark}
+    The Hahn-Banach theorem says that we can extend operators that are densely defined, but in general, there is no guarantee of uniqueness.
+\end{remark}
+However, it is not immediately clear that we can do this approximation of elements of $L^{2}$ by elements in $\mathcal{S}$.
+
+\begin{proposition}
+If $u\in L^2$, then there exists $u_n\in \cD$ such that $u_n\to u$ in $L^2$. Note that this means $\cD$ is dense in $L^2$.
+\end{proposition}
+
+\begin{proof}
+    Step 1: Approximate $u$ by compactly supported functions $u=\lim _{n \rightarrow \infty} u_{n}:=$ $u 1_{\{|x| \leq n\}} .$
+
+Step 2: Regularize $u=\lim _{\varepsilon \rightarrow 0} u * \varphi_\varepsilon .$ Here, $\varphi \in \mathcal{D}$ with  $\int \varphi=2$, and $\varphi_{\varepsilon}=\varepsilon^{-n} \varphi(x / \varepsilon)$ so $\varphi_{\varepsilon} \rightarrow \delta_{0}$ as $\varepsilon \rightarrow 0 .$ So $u * \varphi_{\varepsilon} \rightarrow u$ in $\mathcal{D}^{\prime}$ if $u \in \mathcal{D}^{\prime}$ and in $L^{2}$ if $u \in L^{2}$.
+
+\qed 
+\end{proof}
+
+So we get the following theorem: 
+\begin{theorem}
+[Plancherel]
+$\cF:L^2 \to L^2$ is an isometry.
+\end{theorem}
+
+\subsection{Temperate distributions}
+Can we extend $\mathcal{F}$ to any larger spaces? First, we will talk about the Fourier transform as a map $\mathcal{F}: \mathcal{S}^{\prime} \rightarrow \mathcal{S}^{\prime}$
+
+\begin{definition}
+    [Temperate distributions]
+$\cS'$, the space of temperate distributions, is the space of distributions which extend to continuous linear functionals on $\cS$. 
+
+Given $u\in \cD'$, $u \in \mathcal{S}^{\prime}$ if there is a constant $c$ such that for $R \varphi \in \mathcal{S}$,
+$$
+|u(\varphi)| \leq c \sum_{\text {finite }} p_{\alpha, \beta}(\varphi), \quad p_{\alpha, \beta}(\varphi)=\sup \left|x^{\alpha} \partial^{\beta} \varphi\right| .
+$$
+\end{definition}
+
+Here is how we extend Fourier transform and inverse transforms to $\cS'$: For $u,v\in \cS$,
+$$
+\langle\mathcal{F} u, v\rangle=\left\langle u, \mathcal{F}^{-1} v\right\rangle
+$$
+so we have $\mathcal{F} u(\bar{v})=u\left(\overline{\mathcal{F}^{-1} v}\right)$. Replacing $v$ by $\bar{v}$ give $\mathcal{F} u(v)=u(\mathcal{F} v)$, where $u \in \mathcal{S}^{\prime}$ and $\mathcal{F} v \in \mathcal{S}$. So we can define
+$$
+\mathcal{F} u=u(\mathcal{F} v)
+$$
+for $u \in \mathcal{S}^{\prime}, v \in \mathcal{S}$.
+$\mathcal{S} \subseteq \mathcal{E}$, so $\mathcal{E}^{\prime} \subseteq \mathcal{S}^{\prime} .$ If $u \in \mathcal{E}^{\prime}$ (is compactly supported), then
+$$
+\mathcal{F} u(\xi)=u\left(\frac{1}{(2 \pi)^{n / 2}} e^{-x \xi}\right)
+$$
+Note $u\left(\frac{1}{(2 \pi)^{n / 2}} e^{-x \xi}\right)$ is a function of $x$. So we see that $\mathcal{F}: \mathcal{E}^{\prime} \rightarrow \mathcal{E}$. The moral here is that ``$\mathcal{F}$ interchanges decay and regularity.''
+
+\subsection{Examples of temperate distributions}
+When is a function a temperate distribution? If $u \in \mathcal{S}^{\prime}$ and $\varphi \in \mathcal{S}$,
+$$
+u(\varphi):=\int u(x) \varphi(x) d x
+$$
+where $\varphi(x)$ is rapidly decreasing. So if $|u(x)| \leq c\left(1+|x|^{N}\right)$, then the integral is convergent.
+
+\begin{example}
+All rational functions are temperate distributions. You should not get the idea that these are all the temperate distributions.
+\end{example}
+
+\begin{example}
+Consider
+$$
+u(x)=e^{x} \cos e^{x}
+$$
+Think of $u=\frac{\partial}{\partial x} \sin e^{x}=\partial_{x} f .$ Then
+$$
+u(\varphi)=-f\left(\partial_{x} \varphi\right)
+$$
+where $\partial_{x} \varphi \in \mathcal{S}$ if $\varphi \in \mathcal{S}$. So a temperate distribution may not have much decay if it has enough oscillation, and there is a delicate balance between the two.
+Here, if we have $x, \partial: \mathcal{S} \rightarrow \mathcal{S}$, we have extended $x, \partial: \mathcal{S}^{\prime} \rightarrow \mathcal{S}^{\prime}$.
+\end{example}
+
+\subsection{The Fourier transform of $\delta_0$ and $H$}
+What is $\widehat{\delta}_{0} ?$
+$$
+\widehat{\delta}_{0}(\xi)=\delta_{0}\left(\frac{1}{(2 \pi)^{n / 2}} e^{i x \cdot \xi}\right)=\frac{1}{(2 \pi)^{n / 2}}
+$$
+
+\begin{remark}
+    People will often change the normalization constant in the Fourier transform to get $\widehat{\delta}_{0}=1$. So people will also replace $e^{i x \cdot \xi}$ with $e^{2 \pi i x \cdot \xi}$. This is useful if you want to deal with Fourier series or if you want to make a distinction between the $\mathbb{R}^{n}$ of the input and the $\mathbb{R}^{n}$ of the ourput. These are actually the same space because $\mathbb{R}^{n}$ is the cotangent space fo $\mathbb{R}^{n}$. For more general spaces, the Fourier transform will not have the same input and output domain. We will not need to worry about this for our PDEs.
+\end{remark}
+
+In 1 dimension, we have $\partial_{x} H=\delta_{0}$. Then
+$$
+\mathcal{F}\left(\partial_{x} H\right)=\mathcal{F}\left(\delta_{0}\right)
+$$
+which tells us that $-i \xi \mathcal{F}(H)=\frac{1}{(2 \pi)^{n / 2}}$. So we get that
+$$
+\widehat{H}=\frac{i}{(2 \pi)^{n / 2}} \cdot \frac{1}{\xi}
+$$
+
+Take $u$ compactly ussported in $[0, \infty)$. Then
+$$
+\widehat{u}(\xi)=\int e^{-i x \cdot \xi} u(x) d x
+$$
+Switch to complex numbers $\xi+i \zeta .$ This integral ecomes
+$$
+\int e^{-i x \xi+x \zeta} u(x) d x
+$$
+If $\zeta<0$, we have exponential decay for $x>0 .$ So $\widehat{u}(\xi)$ extends to a holomorphic function in $\{\operatorname{Im} z \leq 0\}$.
+In this picture, we can think of
+$$
+\widehat{H}=\frac{i}{(2 \pi)^{n / 2}} \cdot \frac{1}{\xi-i 0}
+$$
+We can also look at
+$$
+\widehat{H-1}=\frac{i}{(2 \pi)^{n / 2}} \cdot \frac{1}{\xi+i 0}
+$$
+So if we take the average, we get
+$$
+H-\frac{1}{2}=\frac{i}{(2 \pi)^{n / 2}} \mathrm{PV} \frac{1}{\xi}
+$$

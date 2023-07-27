@@ -1,0 +1,251 @@
+
+\newpage
+\section{Homogeneous Distribution of Order -1, Convolution, and Fundamental Solutions}
+\textbf{Date:} Oct 7, 2021
+\subsection{Special homogeneous distributions of order -1}
+\subsubsection{The principle value of $1/x$ as a complex limit}
+
+Last time, we were discussing homogeneous distributions. When classifying homogeneous
+distributions of order -1 in 1 dimension, we saw two interesting distributions:
+$$
+\delta_{0}, \quad \mathrm{PV} \frac{1}{x}
+$$
+If you like complex analysis, you can consider the function
+$$
+f(z)=\frac{1}{z}=\frac{1}{x+i y}
+$$
+Then $f(z)=\frac{1}{x-i \varepsilon}$ on the line $L_{-\varepsilon}$ below the real line:
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[framed]
+        \draw[->, thick] (-4,0) -- (4,0);
+        \draw[thick,blue] (-4,0) -- (-1,0);
+        \draw[thick,blue] (1,0) -- (4,0);
+        \draw[ultra thick, blue] (-1,0) arc (180:360:1);
+        \node at (1.5,-0.5) {$\sqrt{\varepsilon}$};
+        \draw[dashed] (-4,-1) -- (4,-1) node[below] {$L_{-\varepsilon}$};
+    \end{tikzpicture}
+\end{figure}
+
+What is $\lim _{\xi \rightarrow 0} \frac{1}{x-i \varepsilon} ?$ Apply this to a test function:
+$$
+\begin{aligned}
+\frac{1}{x-i \varepsilon}(\varphi)=\int \frac{\varphi(x)}{x-i \varepsilon} d x & \\
+& \approx \int_{\mathbb{R} \backslash[\varepsilon, \varepsilon)} \frac{\varphi(x)}{x-i \varepsilon}+\int_{\frac{1}{2} C_{\varepsilon}} \frac{\varphi(z)}{z} d z\\
+& \approx PV \frac{1}{x}(\varphi) + \varphi(0)\cdot \int_{1/2 C_{\varepsilon}}\frac{1}{z} \,dz
+\end{aligned}
+$$
+Write $\ln z=\ln |z|+i \arg z .$ Then $z=\varepsilon e^{i \theta}$ for $\theta \in[\pi, 2 \pi]$
+$$
+\begin{aligned}
+&=\operatorname{PV} \frac{1}{x}(\varphi)+\varphi(0) \cdot \int_{\pi}^{2 \pi} \frac{i \varepsilon e^{i \theta}}{\varepsilon e^{i \theta}} d \theta \\
+&=\operatorname{PV} \frac{1}{x}(\varphi)+\varphi(0) \pi i
+\end{aligned}
+$$
+So
+$$
+\lim _{\varepsilon \rightarrow 0} \frac{1}{x-i \varepsilon}=\mathrm{PV} \frac{1}{x}+\pi i \delta_{0}
+$$
+If we do the same approximation from the line $L_{\varepsilon}$ above the real line, we get
+$$
+\lim _{\varepsilon \rightarrow 0} \frac{1}{x+i \varepsilon}=\mathrm{PV} \frac{1}{x}-\pi i \delta_{0}
+$$
+What is $\partial_{x} \mathrm{PV} \frac{1}{x} ?$ We can calculate that
+$$
+-\lim _{\varepsilon \rightarrow 0} \frac{1}{(x-i \varepsilon)^2}=\left(\mathrm{PV} \frac{1}{x}\right)^{\prime}+\pi i \delta_{0}^{\prime}
+$$
+and repeat this idea to find the derivatives of PV $\frac{1}{x}$.
+
+\subsubsection{$1/|x|$ as a distribution}
+What is $\frac{1}{|x|}$ as a distribution?
+$$
+\begin{aligned}
+\lim _{\varepsilon \rightarrow 0} \int_{[-1,1] \backslash[-\varepsilon, \xi)} \frac{1}{|x|} \varphi(x) d x &=\int \frac{1}{|x|}(\varphi(x)-\varphi(0)) d x+\varphi(0) \int \frac{1}{|x|} d x \\
+& \rightarrow \int_{-1}^{1} \frac{1}{|x|}(\varphi(x)-\varphi(0)) d x+2 \varphi|\log \varepsilon|
+\end{aligned}
+$$
+But this does not converge as $\varepsilon \rightarrow 0$. So we can try to \textbf{renormalize}, calculating the integral when we subtract out the divergent term:
+$$
+\frac{1}{|x|}(\varphi):=\lim _{\varepsilon \rightarrow 0} \int_{\mathbb{R} \backslash[-\varepsilon, \varepsilon} \frac{1}{|x|}(\varphi(x)-\varphi(0)) d x-2 \varphi(0)|\log \varepsilon|
+$$
+However, this breaks the homogeneity.
+
+\subsection{Convolution}
+\begin{definition}
+    [Convolution] Let $\varphi, \psi \in \mathcal{D} .$ The convolution is the function
+    $$
+    (\varphi * \psi)(x)=\int \varphi(y) \psi(x-y) d y
+    $$
+    Observe that this is smooth in $x .$ What about the support?
+\end{definition}
+
+\begin{proposition}
+\[
+    \operatorname{supp} \varphi * \psi \subseteq \operatorname{supp} \varphi+\operatorname{supp} \psi.
+\]
+\end{proposition}
+
+So we can think about convolution as a function
+$$
+*: \mathcal{D} \times \mathcal{D} \rightarrow \mathcal{D}
+$$
+
+\begin{proposition}
+    [Commutativity of convolution]
+    \[
+        \varphi * \psi=\psi * \varphi.
+    \]
+\end{proposition}
+
+\begin{proposition}
+    [Associativity of convolution]
+    \[
+        \varphi *(\psi * \zeta)=(\varphi * \psi) * \zeta.
+    \]
+\end{proposition}
+So $(\mathcal{D},+, *)$ is a commutative algebra. We have another commutative algebra structure on $\mathcal{D},(\mathcal{D},+, \cdot)$. We will later see that these structures are not unrelated; they are mirror images of each other.
+With multiplication, we have the Leibniz rule:
+$$
+\partial(\psi \varphi)=\partial \psi \cdot \varphi+\psi \cdot \partial \psi
+$$
+We don't exactly have a Leibniz rule for convolution:
+\begin{proposition}
+    \[
+        \varphi(\psi * \varphi)=\psi * \partial \varphi=\varphi * \partial \psi.
+    \]
+\end{proposition}
+
+\begin{proposition}
+    If $\varphi \in L^{1}$ and $\psi \in L^{\infty}$, then
+$$
+\|\varphi * \psi\|_{L^{\infty}} \leq\|\varphi\|_{L^{1}}\|\psi\|_{L^{\infty}}
+$$
+\end{proposition}
+
+When you think of convolution, you want to think of two things: regularity and support. If $\varphi \in \mathcal{D}$ and $\psi \in \mathcal{E}$, then we lose information about the support, so $\varphi * \psi \in \mathcal{E}$. So $\mathcal{D} * \mathcal{E} \rightarrow \mathcal{E}$. On the other hand, if we take a derivative of the convolution, we just need to be able to take a derivative of one of the factors. Here is the takeaway:
+
+\begin{itemize}
+    \item For support, we need the support of both factors.
+    \item For regularity, we need the regularity of just one factor.
+\end{itemize}
+We can think of convolutions as distributions: If $\varphi \in \mathcal{E}$ and $\psi \in \mathcal{D}$
+$$
+\varphi * \psi(x)=\varphi(\psi(x-\cdot))
+$$
+This right hand side is well-defined even if $\varphi \in \mathcal{D}^{\prime} .$ So we see that
+$$
+\mathcal{D}^{\prime} * \mathcal{D} \rightarrow \mathcal{E}
+$$
+Similarly, we have
+$$
+\mathcal{E}^{\prime} * \mathcal{D} \rightarrow \mathcal{D}
+$$
+What about $\mathcal{E}^{\prime} * \mathcal{E}^{\prime} ?$ If $u, v, \varphi \in \mathcal{D}$, then
+$$
+(u * v)(\varphi)=\iint u(y) v(x-y) d y \varphi(x) d x
+$$
+Change variables using $z=x-y$ so $\varphi(x)=z+y$.
+$$
+\begin{aligned}
+&=\iint u(y) v(z) \varphi(z+y) d y d z \\
+&=\int u(y) \underbrace{\int v(z) \varphi(z+y) d z}_{v(\varphi(y+))} d y \\
+&=u(v(\varphi(y+\cdot)))
+\end{aligned}
+$$
+This conclusion makes sense even if $u, v \in \mathcal{E}^{\prime} .$ We can make this precise if we can approximate elements of $\mathcal{E}^{\prime}$ by elements in $\mathcal{E} .$ So we get
+$$
+\mathcal{E}^{\prime} * \mathcal{E}^{\prime} \rightarrow \mathcal{E}^{\prime}
+$$
+However, $\mathcal{D}^{\prime} * \mathcal{D}^{\prime}$ is undefined.
+
+\subsection{Fundamental solutions to PDEs}
+Now suppose we have the PDE
+$$
+P(\partial) u=f
+$$
+where $P$ is linear with constant coefficients and $f$ is a distribution. The simplest $f$ we can consider is $\delta_{0}$, which gives us the equation
+$$
+P(\partial) K=\delta_{0}
+$$
+The next simplest $f$ we can consider is $\delta_{x_{0}} .$ So we get
+$$
+P(\partial) K\left(\cdot-x_{0}\right)=\delta_{x_{0}}
+$$
+by invariance with respect to translations.
+Can we write a general function as a superposition of $\delta$ functions? If we have a Riemann integral, we can approximate it by a sum of pieces which look like Dirac masses.
+
+So can we make sense of something that looks like
+$$
+f=\int f\left(x_{0}\right) \delta_{x_{0}} d x_{0} ?
+$$
+We can define this by applying $f$ to a test function:
+$$
+\varphi(\varphi)=\int f\left(x_{0}\right) \underbrace{\delta_{x_{0}}(\varphi)}_{=\varphi\left(x_{0}\right)} d x_{0}
+$$
+So if we can deal with a Dirac masses, we can deal with a lienar combination of Dirac masses and hence any function as a superposition of Dirac masses. So the solution should looks like
+$$
+u(x)=\int f\left(x_{0}\right) K\left(x-x_{0}\right) d x_{0}
+$$
+This was some intuition (Or maybe confusion!), but here are some definitions.
+
+\begin{definition}
+    [Fundamental solution]
+     $K$ is a fundamental solution of $P(\partial)$ if
+$$
+P(\partial) K=\delta_{0}.
+$$
+\end{definition}
+
+\begin{proposition}
+    The function $u=K * f$ solves the equation
+$$
+P(\partial) u=f
+$$
+\end{proposition}
+\begin{proof}
+    $$
+\begin{aligned}
+P(\partial) u &=P(\partial)(K * f) \\
+&=P(\partial K) * f \\
+&=\delta_{0} * f
+\end{aligned}
+$$
+We are done if $f * \delta_{0}=f .$ If $f \in \mathcal{D}$, then
+$$
+f * \delta_{0}(x)=\delta_{0}(f(x-\cdot))=f(x)
+$$
+The same works for $f \in \mathcal{D}^{\prime}$.
+\qed
+\end{proof}
+
+In this proof, we saw that $\delta_{0}$ is the identity with respect to $*$ For multiplication, 1 is the identity. The constant 1 function has support on all of $\mathbb{R}^{n}$, but it has regularity; conversely, $\delta_{0}$ has 1 point as it support but no regularity. You can think of these as opposites.
+
+Besides, with our notation, the fundamental theorem of calculus looks like this: 
+\begin{theorem}
+    If $\partial_{x} u=f$ in $\mathbb{R}$, then
+$$
+u=\int f(x) d x+C
+$$
+If we specify that $u(-\infty)=0$, then
+$$
+u(x)=\int_{-\infty}^{x} f(y) d y
+$$
+\end{theorem}
+
+We want to interpret this as a convolution. First, let's compute the fundamental solution:
+$$
+\partial_{x} K=\delta_{0}, \quad K(-\infty)=0
+$$
+This tells us that
+$$
+K=H(x)
+$$
+is the Heaviside function. By our proposition, $u=K * f$. We can write this as
+$$
+u(x)=\int H(x-y) f(y) d y
+$$
+For $H(x-y)$ to give 1 and not 0 , we need $x-y>0$.
+$$
+=\int_{-\infty}^{x} f(y) d y
+$$
+Is the fundamental solution $K$ unique? In general, if $K$ is a constant solution, then $K+C$ is a fundamental solution for any constant $C$. If we ask for $K=0$ at $-\infty$, we get $K=H$. But if we ask for $K=0$ at $+\infty$, we get $K=H-1$. If we ask for $K$ to be odd, we get $K=H-1 / 2$.

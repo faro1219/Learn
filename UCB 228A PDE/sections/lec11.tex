@@ -1,0 +1,206 @@
+\newpage
+\section{Introduction to Distribution Theory}
+\textbf{Date:} Sep 30, 2021
+\subsection{Weak solutions to PDEs}
+For the next month or so, our goal will be to study linear, constant coefficient PDEs 
+\[
+    P(\partial) u=f, \quad P(\partial)=\sum_{|\alpha| \leq m} c_{\alpha} \partial^{\alpha}.
+\]
+We will first take a detour to study the theory of distributions. First, some motivation: 
+\begin{example}
+Recall the transport equation 
+\[
+    \left\{\begin{array}{l}
+        \left(\partial_{t}+ \sum_j A_{j} \partial_{j}\right) u=0 \\
+        u(0)=u_{0}
+        \end{array}\right.
+\]
+with constant coefficients $A_{j} .$ The characteristics are given by $\dot{x}=A$, which gives $x(t)=$ $x(0)+t A$. This means that $\dot{u}=0$ along these characteristics, so $u(x(t), t)=u(x(0), 0)$. In other words,
+$$
+u(x, t)=u_{0}(x-t A)
+$$
+Classically, if $u_{0} \in C^{1}$, then $u \in C^{1} .$ What if $u_{0} \in C ?$ It doesn't make sense to say that the solution $u$ is continuous because we need to take derivatives. If we interpret the equation as a directional derivative, $u_{0} \in C$ gives a solution. This interpretation relies strongly on the specific problem. Can we treat this problem in general?
+
+Suppose we have a smooth function $\varphi \in C_{0}^{\infty}$. We can write the equation as the condition
+$$
+\int_{\mathbb{R}^{n+1}}\left(\partial_{t}+A_{j} \partial_{j}\right) u \varphi d x=0
+$$
+where a function is 0 if it integrates to be 0 against all $\varphi \in C_{0}^{\infty}$. Now integrate by parts to get
+$$
+-\int_{\mathbb{R}^{n+1}} u\left(\partial_{t}+A_{j} \partial_{j}\right) \varphi d x=0, \quad \forall \varphi \in C_{0}^{\infty}
+$$
+which applies to all $u \in C .$ Our continuous solution will be a solution to this integral equation.
+\end{example}
+
+\begin{definition}
+    [Weak solution]
+    $u$ is a weak solution to a PDE if the corresponding integral equation holds for all $\varphi\in \con_0^\infty$.
+\end{definition}
+
+\begin{example}
+Recall the Burgers' equation 
+$$
+u_{t}+u u_{x}=0, \quad u(0)=u_{0}
+$$
+The characteristics are given by $\dot{x}=u$ and $\dot{u}=0$. The characteristics will intersect, and at the point of intersection of characteristics, the solution will start to develop a jump discontinuity, known as a shock. 
+
+In this problem, if we think of the equation as a directional derivative, the derivative along the characteristics are different when they intersect, so we cannot get a solution. However, we can similarly look for a weak solution by integrating by parts as before. When we do this, we want to think of $u u_{x}$ as $\frac{1}{2} \partial_{x}\left(u^{2}\right)$.
+\end{example}
+
+\subsection{Topologies on vector space}
+The key idea in the theory of distribution is that we can think of a function $u: \mathbb{R}^{n} \rightarrow \mathbb{R}$ as a linear map on all $\varphi \in C_{0}\left(\mathbb{R}^{n}\right)$ via
+$$
+u(\varphi):=\int_{\mathbb{R}^{n}} u \cdot \varphi d x
+$$
+Observe that if $u(\varphi)=0$ for all $\varphi$, then $u=0$.
+We will use the notation $\mathcal{D}=C_{0}^{\infty}$ to refer to the smooth functions with compact support. Obesrve that $\mathcal{D}$ is a linear space. What is the topology of $\mathcal{D} ?$ Recall that $C$ is a normed space, with
+$$
+\|u\|_{C}=\sup _{x \in \mathbb{R}^{n}}|u(x)|
+$$
+Recall:
+
+\begin{definition}
+    [Normed space] A normed space is a vector space $V$, with a norm map $\|\cdot \| : V\to \RR$ (or $\CC$) satisfying 
+    \begin{itemize}
+        \item[(a)] $\|u\|\ge 0$ , with equality iff $u=0$.
+        \item[(b)]  $\|\lambda u\| = |\lambda | \| u \|$  for all $\lambda \in \RR$ (or $\CC$).
+        \item[(c)] $\|u+v\|\le \|u\| + \|v\|$. 
+    \end{itemize}
+    We obtain a metric space structure is given by $d(u, v)=\|u-v\| .$ Recall that completeness of a metric space means that every Cauchy sequence is convergent.
+\end{definition}
+
+\begin{definition}
+[Banach Space, Hilbert space] A Banach space is a complete normed space. A Hilbert space is a vector space with a complete inner product $\left< u,v \right> = u\cdot v$.
+\end{definition}
+
+\begin{example}
+The $L^2$ sapce is given by 
+$$
+L^{2}\left(\mathbb{R}^{n}\right)=\left\{u:\mathbb{R}^{n} \rightarrow \mathbb{R} |\int | u|^{2} d x<\infty\right\}
+$$
+This space is a Hilbert space, given the inner product
+$$
+u \cdot v=\int_{\mathbb{R}^{n}} u v\, d x
+$$
+(with $v$ replaced by $\bar{v}$ in the complex case).
+\end{example}
+
+Hilbert spaces are a special case of Banach spaces, but a single space can have different
+norm structures on it.
+
+\begin{example}
+    We can equip $\mathbb{R}^{n}$ with the norm $\|v\|^{2}=\sum_{j} v_{j}^{2}$ which comes from the usual dot product (a Hilbert space structure). We can also equip $\mathbb{R}^{n}$ with the $L^{p}$ norm $\|v\|^{p}=\sum_{j}\left|v_{j}\right|^{p}$ with $1 \leq p<\infty$, which gives a Banach space structure.
+\end{example}
+
+\begin{example}
+ $C^{k}$ is a Banach space with the norm
+    $$
+    \|u\|=\sup _{|\alpha| \leq K} \sup _{x \in \mathbb{R}^{n}}\left|\partial^{\alpha} u(x)\right|
+    $$
+\end{example}
+Returning to our objective, what norm can we give $C^{\infty}\left(\mathbb{R}^{n}\right) ?$ We can define
+$$
+\|u\|_{\alpha}=p_{\alpha}(u):=\sup _{x \in \mathbb{R}^{n}}\left|\partial^{\alpha} u(x)\right|
+$$
+The problem is that we have infinitely many of these. What would $u_{n} \rightarrow u$ mean in $C^{\infty}\left(\mathbb{R}^{n}\right) ?$ We want to say that $\partial^{\alpha} u_{n} \rightarrow \partial^{\alpha} u$ uniformly for all $\alpha$.
+
+The solution is to use all the $\|\cdot\|_{\alpha}$ as seminorms, which satisfy all the norm conditions except for $\|u\|=0 \Longrightarrow u=0$.
+
+\begin{definition}
+    [Locally convex space, Fr\'echet space] Locally convex spaces are vector spaces equipped with a family of seminorms. A complete, locally convex space is called a Fr\'echet space.
+\end{definition}
+In a locally convex space,
+$$
+p_{\alpha}(u)=0 \quad \forall \alpha \Longrightarrow u=0
+$$
+Why is this called a "locally covnex space"? The idea is that each seminorm gives you neighborhoods of points, which may not be nested in each other for different seminorms. But these are all convex neighborhoods, and we can intersect these neighborhoods to get more convex neighborhoods around every point.
+The picture of our function spaces looks like
+\[
+    \text{Hilbert spaces} \subsetneq  \text{Banach spaces} \subsetneq \text{Fréchet spaces}.  
+\]
+
+\begin{example}
+    We will use the notation $\mathcal{E}=\left\{u \in \mathbb{R}^{n} \rightarrow \mathbb{R} \mid u\right.$ is smooth $\} .$ Here, we ask for nothing at $\infty$. What does $u_{n} \rightarrow u$ mean in $\mathcal{E} ?$ We can define this as $\partial^{\alpha} u_{n} \rightarrow \partial^{\alpha}$ uniformly on compact sets. For this space, we need to use the collection of seminorms
+    $$
+    p_{\alpha, K}(u)=\sup _{x \in K}\left|\partial^{\alpha} u(x)\right|, \quad \alpha \in \mathbb{N}^{d}, K \text { compact. }
+    $$
+    We don't need to check all compact sets; it suffices to take nested balls with radius going to $\infty$. With this topology, $\mathcal{E}$ is a locally convex space.
+\end{example}
+For $\mathcal{D}$, we have an issue: if we have a sequence of functions of compact support, the support may grow to not be compact in the limit. To solve this, there is a notion called the inductive limit of locally convex spaces, essentially cooked up only to describe $\mathcal{D}$. 
+\begin{definition}
+    [Inductive limit]
+    We say $u$ is the inductive limit of $u_n$ in $\cD$ if 
+    \begin{itemize}
+        \item $\partial^\alpha u_n \to \partial^\alpha u$ uniformly.
+        \item There is a compact set $K$ such that $\Supp u_n \subseteq K$.
+    \end{itemize}
+\end{definition}
+
+\begin{remark}
+    If $u\in \con(\RR^n)$ and $\varphi \in \cD$, the map $\varphi \to u(\varphi) = \int u \varphi \, dx$ is continuous.
+\end{remark}
+
+\begin{definition}
+[Space of distrubtions] The space of distributions, denoted $D'$ or $D*$ is the sapce of linear, continuous $f:\cD \to R$.
+\end{definition}
+
+This seems to separate us from our original goal. If we have a function, we can get a
+distribution, but if we have a distribution, we can’t always get a function back; instead,
+we get generalized functions. The term ``distribution'' comes from the French school, whereas the term ``generalized functions'' comes
+from the Russian school.
+
+\subsection{Examples of distributions}
+Here are some examples of distributions.
+
+\begin{example}
+    The dirac mass at 0 is 
+    \[
+        \delta_{0}(\varphi)=\varphi(0)
+    \]
+\end{example}
+
+\begin{example}
+    Another distribution is 
+    $$
+    \delta_{0}^{\prime}(\varphi)=-\varphi^{\prime}(0)
+    $$
+    The reason for the minus sign will become apparent later on. In general, we can define
+    $$
+    \delta_{x}^{(\alpha)}(\varphi)=(-1)^{|\alpha|} \partial^{\alpha} \varphi(x)
+    $$
+\end{example}
+The space $\mathcal{D}^{\prime}$ of distributions is a linear space. ${ }^{2}$ It has the topology of weak convergence: $f_{n} \rightarrow f$ in $\mathcal{D}^{\prime}$ if
+$$
+f_{n}(\varphi) \rightarrow f(\varphi) \quad \forall \varphi \in \mathcal{D}
+$$
+
+\begin{example}
+    Can we approximate $\delta_0$ with functions? This may shed some light on what generalized functions look like. Let 
+    \[
+        u_{n}(x)= \begin{cases}n / 2 & x \in[-1 / n, 1 / n] \\ 0 & \text { otherwise }\end{cases}
+    \]
+    Here, $\int u_{n}=1$ for all $n$. If we try to take the limit in the sense of distributions, we get (in 1 dimension):
+\begin{align*}
+    u_{n}(\varphi)&=\int u_{n} \cdot \varphi\, d x\\ 
+    & = \frac n 2 \int_{-1/n}^{1/n} \varphi(x)\, dx \\
+    & = \frac 1 2 \int_{-1}^1 \varphi(y/n) dx \stackrel{n \to \infty}{\longrightarrow} \varphi(0),
+\end{align*}
+So $u_n(\varphi) \to \delta_0 (\varphi)$. That is, $u_n \to \delta_0$.
+\end{example}
+
+\begin{remark}
+    In $\RR^n$, we could use
+    $$
+u_{\varepsilon}=\frac{1}{\varepsilon^{n} c_{n}} 1_{B(0, \varepsilon)}, \quad c_{n}=|B(0,1)|
+$$
+In $n$ dimensions, this has size $\sim 1 / \varepsilon^{n}$. 
+\end{remark}
+
+\begin{remark}
+We could also use $\cD$ functions. If $\varphi \in \cD$, with $\int \varphi = 1$, then we can define the rescaled function (at scale $\varepsilon$)
+\[
+    \varphi_{\varepsilon}(x)=\frac{1}{\varepsilon} \varphi(x / \varepsilon)
+\]
+By the same argument, $\varphi_{\varepsilon} \rightarrow \delta_{0}$ in $\mathcal{D}^{\prime}$.
+\end{remark}
+Next time, we will see how we can think of distributions as solutions to PDEs. This will require knowing things like how to differentiate distributions.

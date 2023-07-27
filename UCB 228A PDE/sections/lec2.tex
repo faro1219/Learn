@@ -1,0 +1,107 @@
+\newpage 
+\section{First order nonlinear scalar PDEs I}
+\textbf{Date:} Aug 31, 2021
+
+In the following three weeks, we are going to consider 
+\[
+    F(x, \mu, \partial \mu) = 0.    
+\]
+
+Firstly, we are going to consider its functional spaces:
+\begin{itemize}
+    \item Which function could be a solution?
+    \item How do we verify that a function is a solution?
+\end{itemize}
+
+We define some common functions spaces first:
+
+\begin{definition}
+[$\con$, $\con^m$, $\con^m_{loc}$ and $\con^\infty$ functions] Given $\RR^n$,
+\begin{itemize}
+    \item $\con(\RR^n)$ is the set of bounded continuous functions, and $\con_{loc}(\RR^n)$ is the set of continuous function with $\con(\RR^n) \subset \con_{loc}(\RR^n)$. For $\mu\in \con(\RR^n)$, the norm is defined as
+    \[
+            \|\mu\|_{\con} = \sup_{x\in \RR^n} |\mu(x)|. 
+    \]
+    \item $\con^m(\RR^n)$ is the set of bounded functions with $m$-order derivatives. For any derivative with order smaller than $m$, the derivative is also bounded.  $\con^m_{loc}(\RR^n)$ is the set of functions only $m$-order differentiable. The norm of $\con^m(\RR^n)$ is defined as:
+    \[
+        \|u\|_{\con^m} = \sum_{i=0}^n \|D^i u\|_{\con}.    
+    \]
+    \item $\con^\infty(\RR^n) = \cap \con_{loc}^m (\RR^n)$.
+\end{itemize}
+\end{definition}
+For $\con_{loc}$, we cannot define norms but we can consider a series of interval $I_N= [-N, N]$, and 
+\[
+    \|\mu\|_{C[I_N]} = \sup_{x\in I_N} |\mu(x)|.    
+\]
+We say $\mu_n \to \mu$ in $\con_{loc}$, if $\|\mu_n -\mu\|_{C[I_N]}$ converges to $0$ for all $N$. We call space with such a series of norms the locally convex space, which is the extension of norm space.
+
+Now we review some knowledge in ODE. Given ODE,
+\[
+\mu : \RR \to \RR^n, \begin{cases}
+    \mu'(x) = F(x, \mu(x))\\
+    \mu(0) = \mu_0
+\end{cases}    
+\]
+
+We may ask about? 
+\begin{itemize}
+    \item The existence of solution
+    \item The uniqueness of solution 
+    \item This depends on the initial data
+    \item Local vs global equations
+\end{itemize}
+
+\subsection{Local Solution}
+At a minimum, we may ask that $F$ is continuous and look for a $\con^1$ local solution $h$.
+
+\begin{theorem}
+    [Peano] If $f$ continuous, then a local $\con^1$ solution exists.
+\end{theorem}
+
+\begin{example}
+    Solution of $u'(x) = \sqrt{u}, u(0)=0$ is not unique. For any $c>0$,
+    \[
+    f(x) = 
+    \begin{cases}
+        0 & x\le c\\
+        (x-c)^2/4 &x>c
+    \end{cases}    
+    \]
+    is a solution.
+\end{example}
+
+\begin{definition}
+    [Lipschitz continuous function] Give a function $f$ from a Banach space to $\RR$, we call it Lipschitz, if 
+    \[
+        |F(x) - F(y)| \le L |x-y|, \quad \forall x,y    
+    \]
+    where $L$ is a constant in $\RR$.
+\end{definition}
+\begin{remark}
+    $\con^1 \subset \Lip $ but $\Lip$ is not a subset of $\con^1$. An example is $f(x) = |x|$.
+\end{remark}
+
+\begin{definition}
+    [Holder continuous function]
+    We call a function $f$ is holder continuous if
+    \[
+        |F(x) - F(y)| \le M |x-y|^s,    
+    \] 
+    for some constant $M$ and $0<s<1$.
+\end{definition}
+
+\begin{theorem}
+    If $f$ is locally Lipschitz, then a local solution exists and is unique.
+\end{theorem}
+
+\begin{theorem}
+    Given $f:\RR \to \RR$ and $|f'| <1$, f has an unique fixed point. 
+\end{theorem}
+
+\begin{theorem}
+    Given a Lipschitz function $f: B \to B$, with constant $<1$, $f$ has a unique fixed point. 
+\end{theorem}
+
+\begin{theorem}
+    Given a Lipschitz function $f:D\subset B\to D$ where $D$ is a closed set and the Lipschitz
+\end{theorem}

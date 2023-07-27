@@ -1,0 +1,126 @@
+\newpage
+\section{First order nonlinear scalar PDES II}
+
+\begin{theorem}
+    Suppose $f$ is locally Lipschitz, then the ODE 
+    \[
+    \begin{cases}
+        u' = F(x,u)\\ 
+        u(0) = u_0
+    \end{cases}    
+    \]
+    has an unique local solution $u\in \con^1[0,T]$.
+\end{theorem}
+\begin{proof}
+    We can rewrite the ODE as: 
+    \[
+        N(u)(x) = u_0 + \int_0^x F(y,u(y))\,dy  
+    \]
+    Let $B =\con [0,T]$, we will figure out what is $T$ later.  
+
+    Let $D = \{u\in C[0,T], \|u-u_0\|_C\le R\}$. We will find an $R$ such that $N$ is a contraction. 
+    
+\vspace{1em}
+    \noindent$\bullet$ $N$ maps from $D$ to $D$:
+
+    For $u\in B(u_0,R), x\in [0,T]$, we have 
+    \begin{align*}
+        |F(x,u)| &\le |F(x,u_0)| + |F(x,u) - F(x,u_0)| \\  
+        &\le |F(u_0)| + L\cdot R.    
+    \end{align*}
+    Suppose $R\le 1$, we have 
+    \begin{align*}
+        |N(u)(x)-u_0| &\le \int_0^X |F(y,u(y))|\,dy \\     
+        &\le T\cdot  \Big( |F(u_0)| +LR \Big)
+    \end{align*}
+    Let $T$ be small enough, we have 
+    \[
+        |N(u)(x) - u_0|\le \frac{R}{2}.    
+    \]
+
+    \vspace{1em}
+    \noindent $\bullet$ $N$ is a contraction: 
+
+    We have 
+    \begin{align*}
+        \|N(u) - N(v)\|_C &\le \int_0^T \big|F(y,u(y) ) - F(y,u(y)) \big|\, dy\\
+        &\le \int_0^T L\cdot |u(y)-v(y)| \, dy\\
+        &\le LT\cdot \|u-v\|_C
+    \end{align*}
+
+Hence by contraction principle, there exists a unique $u$ for the integral equation in $D$. If we solve the integral equation, since RHS is continuous, we have $u\in \con^1[0,T]$.
+
+For uniqueness, we may want to ask is there any other solution which exists outside of $B(\mu_0,R)$. If such solution $u_1$ exists, we can consider smaller interval, where the other solution doesn't go over $\mu_0+R$. Assume that $u_1(x) \in B(\mu_0, R)$ for $x\in [0,T_0]$. Then we can get that $u_1$ and $u$ are the same in $[0,T_0]$, since $N(u)$ is also a contraction in $[0,T_0]$. Therefore, $|u_1-u_0|\le \frac R 2$, which contradicts with the maximum of $T_0$. 
+\end{proof}
+
+\begin{remark}
+    Here we use the Bootstrap argument. We consider $D$ first, and then prove the solution must be in $D$.
+\end{remark}
+
+\subsection{Global Solution}
+Now we may consider the global solutions. Before, the global solution, we may consider the maximal solution, i.e., a solution cannot be extended further.
+
+\begin{example}
+    Here we give an example for which the global solution doesn't exist.
+
+    \begin{center}
+    \begin{tikzpicture}
+        \begin{axis}[ 
+          xlabel=$t$,
+          ylabel={$\mu$},
+          domain=-10:10,
+          samples = 100,
+        ] 
+          \addplot[color=blue] {1/(5-x)}; 
+        \end{axis}
+      \end{tikzpicture}
+    \end{center}
+      Consider the ODE: 
+      \[
+        u' = u^2, u(0) = u_0 >0.    
+      \]
+      The solution is $U(t) = \frac{1}{T-t}, T= \frac{1}{u_0}$. Hence it cannot be extended over $\frac{1}{u_0}$.
+
+\end{example}
+
+Suppose $u_1:[0,T_1] \to \RR^n$ and $u_2:[0,T_2] \to \RR^n$ are two solutions and $T_1\le T_2$. Choose $T$ maximal $u_1=u_2$ in $[0,T]$. If $T<T_1$, by local well posedness, $u_1=u_2$ in $[T,T+\varepsilon]$ which contradict to the maximality of T.
+
+Conclusion: As long as both two solutions exists, one must be the extension of another one. This leads to that the set of solutions is ordered. Based on Zorn's lemma, the maximal solution exists.
+
+\begin{proposition}
+    Assume $u$ is a maximal solution on $[0,T)$, then we have 
+    \[
+        \lim_{t\to T}|u(t)| = \infty.    
+    \]
+\end{proposition}
+\begin{proof}
+    If not, there exists a series $t_n \to T$ and a constant $M$ such that 
+    \[
+        |u(t_n)| \le M.    
+    \]
+    Hence all these $t_n$ can extend $\varepsilon$ based on the bound $M$ and local Lipschitz condition and there exists $t_i$ such that $t_i+\varepsilon >T$.
+\end{proof}
+
+\subsection{Continuous Dependence on Data}
+Given ODE,
+\[
+    \begin{cases}
+        u' = F(x, u)\\
+        u(0) = u_0
+    \end{cases}  
+\]
+$u$ is the solution for initial data $u_0$. $v$ is the solution for initial data $v_0$. We usually call $u:[0,T] \to \RR^n$ the reference solution.
+
+\begin{theorem}
+    ~\ 
+    \begin{itemize}
+        \item if $|v_0 - u_0|$ is small enough, then $v$ exists on $[0,T]$ and satisfies $|v-u|_\infty \le 1$.
+        \item If $v_0 \to u_0$, then $v\to u$ in $\con[0,T]$.
+    \end{itemize}
+\end{theorem}
+
+We will try try to track 
+\[
+    \frac{d}{dt}|u-v|^2 = 2(u-v) \cdot \frac{d}{dt}(u-v) = 2(u-v) (F(u) - F(v)) \le 2|u-v| \cdot L |u-v| = 2L|u-v|^2,    
+\]
+with Gronwall's inequality.

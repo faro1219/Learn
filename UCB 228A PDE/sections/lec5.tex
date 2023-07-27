@@ -1,0 +1,244 @@
+\newpage 
+\section{First order nonlinear scalar PDEs IV}
+
+\textbf{Date:} Sep 9, 2021
+
+\subsection{Local solutions for linear, scalar PDEs}
+As for the linear case, we are considering PDE like: 
+\begin{equation}
+\label{eq:linearPDE}
+    \underbrace{\sum A_j(x) \partial_j u}_{\text{directional derivative}} + bu = f.
+\end{equation}
+
+\begin{definition}
+    [Initial curves or Characteristics] The initial curves of \eqref{eq:linearPDE} are the solutions to the ODE 
+    \[
+        \dot{x} = A(x), \quad x(0) = x_0.
+    \]
+    Along the integral curves, the PDE looks like: 
+    \[
+        \frac{d}{dt}u(x(t))  + b(x(t))u(x(t)) = f(x(t)).
+    \]
+    With chracteristics we can solve the PDE with two ODEs.
+\end{definition}
+
+If we assume $A\in \con^1$, then the chracteristics $x(t,x_0)\in \con^1$. We want these chracteristics to locally foliate $\RR^n$; in other words, we want them to cover the domain. One issue is that: What if $A(x_0) = 0$? Then $x(t)=x_0$ for all $t$!
+
+\begin{example}
+    Consider $A$ that gives by: 
+    \[
+        \dot{x_1} = x_2, \quad \dot{x_2} = -x_1.
+    \]
+    Then the integral curves will be circles, so $A(0) = 0$. 
+\end{example}
+
+The fix for this problem is to assume that $A(x)\neq 0$ for any $x$.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[framed]
+    \draw[thick] plot [smooth, tension =0.8]
+    coordinates {(-0.2,3) (0.1,2) (0.4,1) (-0.3,0) (0.2,-1)};
+    \draw[thick, blue] plot[smooth, tension= 0.8 ]
+    coordinates {(0.4,1) (2,1.2) (3, 1.1) (4,1.1)};
+    \node at (0.1,1) {$x_0$};
+    \node at (0.2, 3) {$\Sigma$};
+    \draw[->, thick, orange] (0.4,1) -- (2,1.4) node[above] {$A$};
+\end{tikzpicture}
+\end{figure}
+Now suppose we have initial data $u(x) = u_0(x)$ on a curve $\Sigma$. If we swe start an $x_0$ on the curve of surface $\Sigma$, we can look at the integral starting from $x_0$. From $x_0\in \Sigma$ and $t\in [-\varepsilon, \varepsilon]$, we can construct $x(t,x_0)$. Once we know $u(x_0)$, we can solve the second ODE to get $u(x(t,x_0))$, where $x(t,x_0)\in \con^1$. By our ODE theorem, we will get $u\in \con^1$.
+
+However, we still may have bad cases. 
+\begin{itemize}
+    \item The integral may intersect $\Sigma$ twice. But we might still get a local solution if we look at a small enough neighborhood of $x_0$.
+    \begin{figure}[H]
+    \begin{minipage}{0.5 \textwidth}
+        \centering
+        \caption{Bad case I}
+    \begin{tikzpicture}[framed]
+        \draw[thick] plot [smooth, tension =0.8]
+        coordinates {(-0.2,3) (0.1,2) (0.4,1) (-0.3,0) (0.2,-1)};
+        \draw[thick, blue] plot[smooth, tension= 0.8 ]
+        coordinates {(0.4,1) (2,0.5) (2, 0.3) (1,0.2) (-0.3, -0.5)};
+        \node at (0.1,1) {$x_0$};
+        \node at (0.2, 3) {$\Sigma$};
+        \draw[thick, rotate=10] (0.4,1) ellipse (0.7 and 0.3);
+    \end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.5 \textwidth}
+    \centering
+    \caption{Bad case II}
+    \begin{tikzpicture}[framed]
+        \draw[thick] plot [smooth, tension =0.8]
+        coordinates {(-0.2,3) (0.1,2) (0.4,1) (-0.3,0) (0.2,-1)};
+        \draw[->, thick, orange] (0.4,1) -- (-0.1,0) node[right] {$A$};
+        \draw[thick] plot [smooth, tension =0.8]
+        coordinates {(0.4,1) (0.3,0.6) (0,0.3) (-0.5,-0.3)};
+        \node at (0.1,1) {$x_0$};
+        \node at (0.2, 3) {$\Sigma$};
+
+    \end{tikzpicture}
+\end{minipage}
+\end{figure}
+    \item $A$ may be tangent to $\Sigma$ , and re-intersection can happen arbitrarily close. Even if re-intersection is not arbitrarily close, there may be a more subtle issue with the solution not being $C^1$.
+\end{itemize}
+
+Here is how we avoid this issue.
+
+\begin{definition}
+    We say that $\Sigma $ is noncharacteristic for out PDE \eqref{eq:linearPDE} if $A\dot N \neq 0$ on $\Sigma$, where $N$ is the normal to $\Sigma$.
+\end{definition}
+This says that $A$ is not tangent to $\Sigma$ at any point.
+
+\begin{theorem}
+    [Local inversion theorem]
+    Let $F:\RR^n \to \RR^n \in \con^1$. If $\det dF(x_0)\neq 0$< then $F$ is a local diffeomorphism.
+\end{theorem}
+
+\begin{theorem}
+    Assume $a,b,f,\Sigma, u_0 \in \con^1$, and suppose that $\Sigma$ is noncharacteristic. Then the equation 
+    \[
+        \sum_{j} A_j\partial_j u + bu = f
+    \]
+    with initial data $u_0$ has a unique $\con^1$ local solution.
+\end{theorem}
+
+\begin{proof}
+We use 3 steps for this proof: 
+\begin{itemize}
+    \item Step 1: For $x_0 \in \Sigma$, solve for the characteristic $\Sigma \times [-\varepsilon, \varepsilon] \ni (x_0,t) \to x(x_0,t).$
+    \item Step 2: Solve the ODE 
+    \[
+        \frac{d}{dt}u(x(t))  + b(x(t))u(x(t)) = f(x(t))
+    \]
+    along the characteristics to get $u(x(t,x_0))$, which is $\con^1$ in $t$ and $x_0$.
+    \item Step 3: Show that our characteristics foliate a neighborhood of $\Sigma$. What does this mean? Looking at the map $(x_0,t) \to x(t,x_0)$, we want this to be a local diffeomorphism, i.e., a $\con^1$ map with a $\con^1$ inverse. Recall we have local inversion theorem.
+    We would like to change coordinates so that $\Sigma$ is a hyperplane. Since $\Sigma$ is $\con^1$, locally, $\Sigma$ is the graph of a $C^1$ function, $x_n = f(x'), x' = (x_1,...,x_{n-1})$ with $f\in \con^1$. The new coordinates are $y=(x',x_n-f(x'))$. To check that this is local diffeomorphism, we have 
+    \[
+        \frac{\partial y}{\partial x}=\left[\begin{array}{cc}
+            \frac{\partial y^{\prime}}{\partial x^{\prime}} & \frac{\partial y^{\prime}}{\partial x_{n}} \\
+            \frac{\partial y_{n}}{\partial x^{\prime}} & \frac{\partial y_{n}}{\partial x_{n}}
+            \end{array}\right]=\left[\begin{array}{cc}
+            I_{n-1} & 0 \\
+            d f & 1
+            \end{array}\right]
+    \]
+    which has determinant $1$. We can also check that the coefficient remain $\con^1$ after changing coordinates. 
+     
+    In the new coordinates, $\Sigma = \{y_n=0\}, y'=(y_1,...,y_{n-1})$, We are looking at the equation $\dot y = A(y)$. Here, $y=y(t,y_0')$. Look at $\frac{\partial y}{\partial (y_0',t)}$ at $t=0$. When $t=0, y(y_0', 0) = (y_0', 0)$. So 
+    \[
+        \frac{\partial\left(y^{\prime}, y_{n}\right)}{\left(y_{0}^{\prime}, t\right)}=\left[\begin{array}{cc}
+            \frac{\partial y^{\prime}}{\partial y_{0}^{\prime}} & \frac{\partial y^{\prime}}{\partial t} \\
+            \frac{\partial y_{n}}{\partial y_{0}^{\prime}} & \frac{\partial y_{n}}{\partial t}
+            \end{array}\right]=\left[\begin{array}{cc}
+            I_{n-1} & 0 \\
+            A^{\prime} & A_{n}
+            \end{array}\right]
+    \]
+    So $\det \frac{\partial y}{\partial (y_0',t)} = A_n = \dot{y}_n\neq 0$, precisely from our noncharacteristic surface property.
+
+     
+\end{itemize}
+\end{proof}
+
+\begin{remark}
+In the above proof, we reduced the situation to the case where $\Sigma$ is a hyper plane. Let's use this to model the noncharacteristic case. Using coordinates $(x,t)$, we can write $\Sigma= \{t=0\}$.
+
+Our equation looks like 
+\[
+    A_{t} \cdot \partial_{t} u+A_{1} \cdot \partial_{1} u+\cdots+A_{n} \cdot \partial_{n} u+b u=f.
+\]
+where $A_t \neq 0$ by the noncharacteristic assumption. So we may divide by it and just look at euqations of the form 
+\[
+    \cdot \partial_{t} u+A_{1} \cdot \partial_{1} u+\cdots+A_{n} \cdot \partial_{n} u+b u=f
+\]
+This is only a local modelling, however, not necessarily a global one.
+\end{remark}
+
+\subsection{Semilinear PDEs}
+Now we move on to solving semilinear PDEs, of the from
+\[
+     \begin{cases}
+         \sum_j A_j(x) \partial_j u + b(u,x) = 0\\
+         u|_{\Sigma}=0
+     \end{cases}
+\]
+The characteristic are still $\dot{x} = A(x)$, and our noncharacteristic initial surface condition is still $A\cdot N\neq 0$ on $\Sigma$. The evolution along the characteristics is 
+\[
+    \frac{d}{dt}u(x(x_0,t)) = -b(u(x(x_0,t)),x(x_0,t)).
+\]
+The difference from before is that our second equation is a nonlinear ODE, so it may have finite time blow-up. So local well-posedness is identical to the linear case, but gobal well-posedness may fail because the second ODE blows up.
+
+\textbf{Question:} Why  linear ODE won't blow up?
+
+\subsection{quasilinear PDEs}
+Now we look at the quasilinear problem
+\begin{equation}
+    \label{eq:quasilinearPDE}
+    \begin{cases}
+        \sum_j A_j(x,u) \partial_j(u) + b(x,u) = 0\\
+        u|_\Sigma = u_0.
+    \end{cases}
+\end{equation}
+Our characteristics now look like $\dot x = A(x,u)$. We cannot solve this because we do not know what $u$ is outside of $\Sigma$. The second equation would read $\dot u = b(x,u)$. These two ODEs  would be true if we already had a solution, but we cannot solve them. What if we put these two equations together into a system? 
+
+\begin{definition}
+    [Characteristic system] 
+    Given a quasilinear PDE \eqref{eq:quasilinearPDE},
+\[
+    \begin{cases}
+        \dot x = A(x,u)\\
+        \dot u = b(x,u)
+    \end{cases}
+\]
+We call this a \textbf{characteristic system}. The initial data for the characteristic system is 
+\[
+    \begin{cases}
+        x(0) = x_0 \in \Sigma \\
+        u(0) = u(x(0)) = u_0(x_0)
+    \end{cases}
+\]
+where the second initial condition depends on $u_0$. In this situation, our noncharacteristic $\Sigma$ condition is 
+\[
+    A(x_0, u_0(x_0)) \cdot N \neq 0.
+\]
+\end{definition}
+
+Our local well-posedness theorem is identical: if $\Sigma$ is noncharacteristic and $u_0\in \con^1$, then there exists a unique local $\con^1$ solution $u$.
+
+The key difference is that the characteristics may now intersect. In the semilinear case, suppose two characteristics were to intersect. Then the characteristic equation would have the same data, so the two chracteristics must be same. 
+
+\begin{figure}[H]
+    \centering
+\begin{tikzpicture}[framed]
+    \draw[thick] plot [smooth, tension = 0.8]
+    coordinates {(-4,0.2) (-2, 0.1) (0, 0.2) (2, 0.1) (4, 0.1)};
+    \draw[thick] plot [smooth, tension =0.8]
+    coordinates {(-2,0.1) (-1, 0.5) (-0.5, 1.3) (0, 2)};
+    \draw[thick] plot [smooth, tension =0.8]
+    coordinates {(2,0.1) (1, 0.3) (0.5, 1.4) (0, 2)};
+    \node at (-2, -0.1) {$x_0$};
+    \node at (2, -0.1) {$y_0$};
+    \node at (0.2, 2.2) {$y(t)=x(t)$};
+\end{tikzpicture}
+\end{figure}
+
+In the quasilinear case, the initial data is both the location and the value of the function. Intersection means $x(t) = y(t)$, but it does not necessarily mean $u(x(t)) = u(y(t))$. So we cannot say that the two characteristics must be the same. 
+
+\begin{figure}[H]
+    \centering
+\begin{tikzpicture}[framed]
+    \draw[thick] plot [smooth, tension = 0.8]
+    coordinates {(-4,0.2) (-2, 0.1) (0, 0.2) (2, 0.1) (4, 0.1)};
+    \draw[thick] plot [smooth, tension =0.8]
+    coordinates {(-2,0.1) (-1, 0.5) (-0.5, 1.3) (0, 2)};
+    \draw[thick] plot [smooth, tension =0.8]
+    coordinates {(2,0.1) (1, 0.3) (0.5, 1.4) (0, 2)};
+    \node at (-2, -0.1) {$x_0$};
+    \node at (2, -0.1) {$y_0$};
+    \node at (0.2, 2.2) {$y(t)=x(t), u(x(t))\neq u(y(t))$};
+\end{tikzpicture}
+\end{figure}
+
+Next time, we will talk about what might make characteristics intersect and what to do about it.
+

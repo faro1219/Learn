@@ -1,0 +1,194 @@
+\newpage
+
+\section{Using the Fourier Transform to Find Fundamental Solutions}
+
+\subsection{The Paley-Wiener theorem and the Fourier transform of even and odd functions}
+
+We have been looking at the Fourier transform
+$$
+\widehat{u}(\xi)=\frac{1}{(2 \pi)^{n / 2}} \int e^{-i x \cdot \xi} u(x) d x
+$$
+We initially defined $\mathcal{F}: \mathcal{S} \rightarrow \mathcal{S}$, but we can also define it $L^{2} \rightarrow L^{2}$ (with the isometry property) and $\mathcal{S}^{\prime} \rightarrow \mathcal{S}^{\prime} .$ We have also seen that $\mathcal{F}: L^{1} \rightarrow L^{\infty}$.
+
+Last time, we also saw that
+$$
+\widehat{H}=\frac{i}{(2\pi)^{n/2}(\xi-i 0)}
+$$
+If $u \in \mathcal{S}^{\prime}$ with supp $u \subseteq[0, \infty)$, then $\widehat{u}$ has a holomorphic extension to $\{\operatorname{Im} z \leq 0\} .$ If $u$ is a measure, then $\widehat{u}$ is bounded in $\{\operatorname{Im} z \leq 0\}$. This leads us to the following property. First, let's generalize this statement.
+
+Suppose supp $u \subseteq[a, \infty)$. Then
+$$
+\widehat{u}(\xi+i \zeta)=\int e^{i x \xi+x \zeta} u(x) d x
+$$
+so
+$$
+|\widehat{u}(\xi+i \zeta)| \leq c\cdot e^{a \zeta}
+$$
+The best we can hope for is a bound of the form $e^{a \zeta}|\xi|^{N}$.
+
+\begin{theorem}
+[Paley-Wiener] $u\in \cS'$ has $\supp u\subset [a,\infty)$ if and only if $\hat u$ has a holomorphic extension to the lower half-plane such that
+\[
+    |\hat u(z)| \le e^{-a \im z}|z|^N.
+\]
+\end{theorem}
+
+\begin{remark}
+    There is a Paley-Wiener theorem in higher dimensions. If supp $u \subseteq K$ for some compact $K$, then $\widehat{u}(\xi)$ is defined for $\xi \in \mathbb{C}^{n} .$ Instead of getting the support of $u$ as $K$ in the other direction, we get the convex hull of $K$.
+\end{remark}
+
+We can think of the $e^{-ix\cdot \xi}$ in the Fourier transform as $\cos(-x\cdot \xi)+i \sin(-x\cdot \xi)$.
+
+\begin{itemize}
+    \item If $u$ is real and even, hence $\hat u$ is real and even.
+    \item If $u$ is real and odd, then $\hat u$ is imaginary and odd.
+    \item If $u$ is imaginary and even, then $\hat u$ is imaginary and even.
+    \item If $u$ is imaginary and odd, then $\hat u$ is real and odd.
+\end{itemize}
+
+\subsection{Using the Fourier transform to find fundamental solutions}
+
+Suppose we have a constant partial differential operator $P(\partial)$, and we want to compute a fundamental solution $P(\partial)K = \delta_0$. Let $D=-i\partial$ and rewrite $P(\partial)$ as $P(D)$. Taking the Fourier transform gives 
+\[
+    P(\xi)\hat K = \frac{1}{(2\pi)^{n/2}}1.
+\]
+This tells us that 
+\[
+    \hat K = \frac{1}{(2\pi)^{n/2}}\frac{1}{P(\xi)}.
+\]
+So we can invert the Fourier transform to get $K$ :
+$$
+K=\frac{1}{(2 \pi)^{n / 2}} \mathcal{F}^{-1}\left(\frac{1}{P(\xi)}\right)
+$$
+
+Here are some issues:
+\begin{itemize}
+    \item $P(\xi)$ may have zeros.
+    \item If $P$ has zeroes, hen $1/P$ is not uniquely determined as a distribution.
+    \item This procedure only gives fundamental solutions which are temperate distributions.
+\end{itemize}
+
+The easy case is when $P(\xi)\neq 0$ for any $\xi \in \RR^n$. Then $\frac 1 p \in \cS'$, so this computation is justified.
+
+\begin{example}
+    Suppose $P=-\partial_{x}^{2}+1=D_{x}^{2}+1$. Then $P(\xi)=\left(1+\xi^{2}\right)$. So we compute
+    $$
+    K(x)=\mathcal{F}^{-1}\left(\frac{1}{1+\xi^{2}}\right)
+    $$
+
+    This $K(x)$ is real and even. We are looking at
+$$
+\int_{\mathbb{R}} \frac{1}{\xi^{2}+1} e^{i x \xi} d \xi
+$$
+This integral has a pole at $i$ and a pole at $-i$. However, we can expend this using partial fractions:
+$$
+\frac{1}{1+\xi^{2}}=\frac{i}{2} \frac{1}{\xi+i}-\frac{i}{2} \frac{1}{\xi-i}
+$$
+where the first term is holomorphic if $\operatorname{Im} \zeta>0$ and the second is holomorphic if $\operatorname{Im} \zeta<0 .$ So the Paley-Wiener theorem tells us that the first one will have an inverse Fourier transform supported in $(-\infty, 0]$, and the second one will have an inverse Fourier transform supported in $[0, \infty)$.
+If $x<0$, we can use complex analysis to say
+$$
+\int_{\mathbb{R}} \frac{1}{\xi+i} e^{i x \xi} d \xi=\text { Residue at } i=e^{x}
+$$
+A similar computation for $x>0$ suggests that we should get
+$$
+\int_{\mathbb{R}} \frac{1}{1+\xi^{2}} e^{i x \xi} d \xi=c e^{-|x|}
+$$
+In general, if $K$ is a fundamental solution, then so will be $K+K_{0}$, where $K_{0}$ solves the homogeneous equation $P(\partial) K_{0}=0 .$ In this case, our general solution is $K=c e^{|x|}+$ $c_{1} e^{x}+c_{2} e^{-x}$. We did not get these latter two terms before because they are not temperate distributions.
+\end{example}
+
+\begin{example}
+    If $P=-\Delta+1$, then $P(\xi)=\xi^{2}+1$ in $\mathbb{R}^{n} .$ Then
+$$
+K=\mathcal{F}^{-1}\left(\frac{1}{1+\xi^{2}}\right)
+$$
+gives the unique temperate fundamental solution. Note that $e^{i x \cdot \xi}$ is a solution iff $1+\xi^{2}=0$ In 3 dimensions, this is $K(x)=e^{-|x|} \frac{1}{|x|}$.
+\end{example}
+
+\begin{example}
+    Let $P=-\Delta$, so $P(\xi)=\xi^{2} .$ Then $K=\frac{1}{\xi^{2}}$ is locally integrable in $\mathbb{R}^{n}$ if $n \geq 3$. So if $n \geq 3$, we get that $K \in \mathcal{S}^{\prime}$ is a homogeneous temperate distribution. Since $\frac{1}{\xi^{2}}$ is homogeneous of order $-2, K=\mathcal{F}^{-1}\left(\frac{1}{\xi^{2}}\right)$ will be homogeneous of order $2-n$.
+\end{example}
+
+\begin{proposition}
+If $u$ is homogeneous of order $s$, then $\hat u$ is homogeneous of order $-n-s$.
+\end{proposition}
+
+The example to keep in mind to make sure your numbers are right is $\widehat{\delta}=\frac{1}{(2 \pi)^{n / 2}}$. The Dirac mass is homogeneous of order $-n$, whereas this constant function is homogeneous of order 0.
+
+\begin{example}
+    If $P=-\Delta$ with $n=2$, perform the same computation as before, but interpret $\frac{1}{\xi^{2}}$ as a distribution:
+    $$
+    \frac{1}{|\xi|^{2}}(\varphi)=\lim _{\varepsilon \rightarrow 0} \int_{\mathbb{R}^{2} \backslash B(0, \varepsilon)} \frac{\varphi(\xi)}{|\xi|^{2}} d \xi-\varphi(0) \ln \varepsilon
+    $$
+    so we pay a price of $\log$, which makes us lose the homogeneity property.
+\end{example}
+
+\begin{example}
+    Example 1.5. Suppose $P(\xi)=A \xi \cdot \xi$, where $A$ is a positive deifnite matrix. This is a second order, elliptic, constant coefficient $\mathrm{PDE}$ with $P=a^{i, j} \partial_{i} \partial_{j} .$ We can transform $A \rightarrow$ Id by a linear fransformation. Let $x=B y$, so $x \cdot \xi=B y \cdot \xi=y \cdot B^{\top} \xi .$ If we carry out the computation, we end up with
+    $$
+    K=\frac{1}{\left(A^{-1} x \cdot x\right)^{(n-2) / 2}}
+    $$
+    Hormander's book extensively discusses how the Fourier transform behaves under linear changes of coordinates.
+\end{example}
+
+\subsection{Fundamental solution of the heat equation}
+Recall the heat equation
+$$
+\left(\partial_{t}-\Delta\right) u=f
+$$
+We think of $u$ as the temperature of an infinite solid and $f$ as describing the heat sources. This is also called the diffusion equation, since we can, for example, interpret $u(t, x)$ as a local concentration of salt in the water of an ocean. In probability theory, the heat equation has connections to Brownian motion, where we let a particle move randomly at every time, independently of the movement at other times.
+
+Our Fourier variables will be $\xi$ (corresponding to $x$) and $\tau$ (corresponding to $t$). We can write our operator as
+$$
+\partial_{t}-\Delta=i D_{t}+D_{x}^{2},
+$$
+so
+$$
+P(\xi, \tau)=i \tau+\xi^{2}
+$$
+which vanishes only at $\tau=0, \xi=0 .$ Is $\frac{1}{i \tau+\xi^{2}} \in L_{\text {loc }}^{1} ?$ Yes! The $1 / \tau$ increases the local integrability of this expression, so we will not need to make a distinction between the cases $n=2$ and $n \geq 3$. We want to calculate
+\[
+    \mathcal{F}^{-1}\left(\frac{1}{i \tau+\xi^{2}}\right)
+\]
+First integrate in $\tau$ : We have a pole at $\tau=i \xi^{2}$. This pole is in the upper half plane, so $\mathcal{F}_{\tau}^{-1}\left(\frac{1}{i \tau+\xi^{2}}\right)$ is supported where $t>0$. This says that the evolution of heat is well-defined in the future, rather than in the past. We conclude that
+$$
+\mathcal{F}_{\tau}^{-1}\left(\frac{1}{i \tau+\xi^{2}}\right)=c e^{-t \xi^{2}} 1_{\{t \geq 0\}}
+$$
+for some constant $c$. Then we can calculate
+$$
+\mathcal{F}^{-1}\left(\frac{1}{i \tau+\xi^{2}}\right)=\frac{1}{(4 \pi t)^{n / 2}} e^{-\frac{x^{2}}{4 t}} 1_{\{t \geq 0\}}
+$$
+Here is another approach. We can try to solve
+$$
+\left\{\begin{array}{l}
+\left(\partial_{t}-\Delta\right) u=0 \\
+u(0)=\delta_{0}
+\end{array}\right.
+$$
+Take the Fourier transform in $x$ to get
+$$
+\left\{\begin{array}{l}
+\left(\partial_{t}+\xi^{2}\right) \widehat{u}=0 \\
+\widehat{u}(0)=\frac{1}{(2 \pi)^{n / 2}}
+\end{array}\right.
+$$
+This gives
+$$
+\widehat{u}=\frac{1}{(2 \pi)^{n / 2}} e^{-t \xi^{2}}
+$$
+So we get the same result.
+For $t>0$, we can consider
+$$
+\left\{\begin{array}{l}
+\left(\partial_{t}-\Delta\right) u=0 \\
+u(0)=u_{0}
+\end{array}\right.
+$$
+Extend $u$ to
+$$
+\widetilde{u}= \begin{cases}u & t>0 \\ 0 & t<0\end{cases}
+$$
+Then
+$$
+\left(\partial_{t}-\Delta\right) \widetilde{u}=u_{0}(x) \delta_{t=0}
+$$
+Here, $u_{0}=\delta_{x=0}$, so $u_{0} \delta_{t=0}=\delta_{(0,0)}$.

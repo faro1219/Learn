@@ -1,0 +1,195 @@
+\newpage
+\section{Existence of Solutions to Nonlinear First Order Scalar PDEs}
+\textbf{Date:} Sep 14, 2021
+
+\subsection{Existence and uniqueness given initial data}
+Last time, we were looking at fully nonlinear equations
+\[
+\begin{cases}
+    F(x, u, \partial u) = 0\\
+    u = u_0 \text{ on }\Sigma. 
+\end{cases}
+\]
+If $u$ solves this equation and $x$ solve the 1.(a) ODE, then $(x,u,\partial_j u)$ solves the characteristic system 
+\[
+    \left\{\begin{array}{l}
+        \dot{x}=F_{p}(x, z, p) \\
+        \dot{z}=F_{p}(x, z, p) \cdot p \\
+        \dot{p}=-F_{x}(x, z, p)-F_{z}(x, z, p) \cdot p
+        \end{array}\right.
+\]
+The initial data for the characteristic system on $\Sigma$ is 
+\[
+    \left\{\begin{array}{l}
+        x(0)=x_{0} \\
+        z(0)=u_{0}\left(x_{0}\right) \\
+        p(0)=p_{0}
+        \end{array}\right.
+\]
+where $p_0$ has a tangential component $\partial_\tau u_0$ and a normal component given by solving $F(x_0, u_0, p_0)$. In this last part, we had a local solvability condition $F_p\cdot N \neq 0$, where $N$ is the normal to $\Sigma$. This is the same as the noncharacteristic condition.  Our objective is to turn this into an existence proof. 
+
+\begin{theorem}
+    Assume that $F$ is of clsss $\con^2$, $\Sigma$ is $\con^2$, $\mu_0\in \con^2$, and the problem is noncharacteristic, i.e., there exists $p_0$ on $\Sigma$ such that $F_{p_0}\cdot N \neq 0, F(x_0, u_0, p_0)=0$, and $(p_0)_\tau = \partial_\tau u_0$. Then there exists a unique local solution $u\in \con^2$ near $\Sigma$ such that $u|_\Sigma= u_0$ and $\partial u|_\Sigma = p_0$.
+\end{theorem}
+\begin{proof}
+    Firstly, an outline is that: 
+    \begin{itemize}
+        \item Step 1: Solve the characteristic system with initial data $(x_0, u_0, p_0)$ on $\Sigma$. This gives us 
+        \[
+            (x(s,x_0), u(s,x_0), p(s,x_0)),
+        \]
+        which we can solve by using ODE theory.
+    \end{itemize}
+    \item Step 2: Show that the map 
+    \[
+        \Sigma \times[-\varepsilon, \varepsilon] \ni\left(x_{0}, s\right) \mapsto x\left(x_{0}, s\right) \in \mathbb{R}^{n}
+    \]
+    is a local diffeomorphism with inverse 
+    \[
+        x\to (x_0, s).
+    \]
+    \item Step 3: Define 
+    \[
+        u(x(s,x_0)) = (s,x_0).
+    \]
+    This is true if a solution $u$ exists. 
+
+    The main difficulty is that at the end of our construction, we get the function 
+    \[
+        z\left(s, x_{0}\right)=u(x), \quad x=x\left(s, x_{0}\right), \quad p_{j}\left(s, x_{0}\right) \stackrel{?}{=} \partial_{j} z(x).
+    \]
+    Our final goal is to prove that $p_j(s,x_0) = \partial_j z(s,x_0).$ By construction of our initial data ,we know this is true at $s=0$. Ideally, we might want to show $\frac \partial {\partial s}(p_j - \partial_j z)=0$. Instead, we will have a weaker version that works: 
+    \[
+        \frac{\partial}{\partial s}\left(p_{j}-\partial_{j} z\right)=\operatorname{coeff} \cdot \left(p_{j}-\partial_{j} z\right)
+    \]
+    which is a linear ODE for $p_j - \partial_j z$. 
+
+    Our preliminary step is to show that $F(x,z,p)=0$. This is true on $\Sigma$, i.e., when $s=0$. Compute 
+    \[
+        \frac{d}{ds}F(x,z,p) = F_x \cdot \dot x + F_z \cdot \dot z + F_p \cdot \dot p = 0.
+    \]
+    Next, compute $\frac{\partial}{ \partial s}(p_j - \partial_j z)$. We have 
+    \[
+        \frac{\partial p_j}{\partial s} = -F_{x_j}  - F_z\cdot p_j,
+    \]
+    but to calculate $\frac{\partial}{\partial s} \partial_j z$, we need to use $\dot z = F_p \cdot p$. $\frac{\partial}{\partial s} = \sum_k F_{p_k} \cdot \frac{\partial}{\partial x_k}$, where $F_{p_k}$ has variable coefficients. So the derivatives do onot commute. We can explicitly compute 
+    \[
+        \frac{d}{ds}F(x,z,p) = \sum_k  \sum_k F_{p_k} \partial_k \partial_j z.
+    \]
+    Since 
+    \[
+        \partial_{j} \dot{z}=\partial_{j}\left(\sum_k F_{p_{k}} \partial_{k} z\right)=\sum_k F_{p_{k}} \partial_{j} \partial_{k} z+\sum_k \partial_{j} F_{p_{k}},\cdot \partial_{k} z
+    \]
+    which gives 
+    \[
+        \frac{\partial}{\partial s} \partial_{j} z=\partial_{j} \dot{z}-\sum_k \partial_{j} F_{p_{k}} \cdot \partial_{k} z.
+    \]
+    So we get 
+    \[
+        \begin{aligned}
+            \frac{\partial}{\partial s}\left(p_{j}-\partial_{j} z\right) &=-F_{x_{j}}-F_{z} \cdot p_{j}-\partial_{j} \dot{z}+\sum_k\partial_{j}\left(F_{p_{k}}\right) \cdot \partial_{k} z \\
+            &=-F_{x_{j}}-F_{z} \cdot p_{j}-\sum_k\partial_{j}\left(F_{p_{k}} \cdot p_{k}\right)+\sum_k\partial_j\left(F_{p_{k}}\right) \partial_{k} z \\
+            &=-F_{x_{j}}-F_{z} \cdot p_{j}-\sum_k F_{p_{k}} \partial_{j} p_{k} \\ & \underbrace{- \sum_k p_{k}\left(F_{x_{j} p_{k}}+F_{z p_{k}} \partial_{j} z+F_{p_{\ell} p_{k}} \partial_{j} p_{\ell}\right)+ \sum_k \partial_{k} z(F_{x_{j} p_{k}}+F_{z p_{k}} \partial_{j} z+F_{p_{\ell} p_{k}} \partial_{j} p_{\ell})}_{\sum_k -\left(p_{k}-\partial_{k} z\right) \cdot \partial_{j} F_{p_{k}}} \\
+            &=-F_{x_{j}}-F_{z} \cdot p_{j}-\sum_kF_{p_{k}} \partial_{j} p_{k}+\sum_k -\left(p_{k}-\partial_{k} z\right) \cdot \partial_{j} F_{p_{k}}
+            \end{aligned}
+    \]
+    We also have
+    \[
+        F_{x_{j}}+F_{z} \cdot \partial_{j} z+\sum_k F_{p_{k}} \partial_{j} p_{k}=0
+    \]
+    by taking $\frac{\partial}{\partial x_j}$ of our earlier computation. This last term $F_{p_k} \cdot \partial_j p_k$ is the same term in the above expression. If we substitute, we get
+    \[
+        \frac{\partial}{\partial_{s}}\left(p_{j}-\partial_{j} z\right)=-F_{z}\cdot \left(p_{j}-\partial_{j} z\right)-\sum_k\partial_{j} F_{p_{k}}\cdot \left(p_{k}-\partial_{k} z\right),
+    \]
+    which is a linear system.
+    Therefore, $z$ is the solution to our equation, and we are done. \qed 
+\end{proof}
+
+\subsection{Problems in standard form}
+\begin{example}
+    Begin with the equation
+    \[
+        u_{t}+F(t, x, u, \partial u)=0
+    \]
+    We will label $u_t$ as $\tau$, $u$ as $z$ and $\partial u$ as $p$. So we get the equation: 
+    \[
+        \widetilde{F}(t, x, z, \tau, p)=\tau+F(t, x, z, p)=0,
+    \]
+    and the system
+    \[
+    \begin{cases}
+        \dot t = 1 (\text{so } s = t) \\ 
+        \dot x = F_p \\
+        \dot z = F_p\cdot p + \tau = F_p \cdot p - F \\ 
+        \dot p = -F_x -  - F_z \cdot p \\
+        \dot \tau = -F_t - F_z \cdot \tau 
+    \end{cases}
+    \]
+    In the midlle 3 euqations, we have no $\tau$ terms, so we can discard the last equation. Another way to think of this is that $\widetilde{ F} =0$, so $\tau$ is already given as $-F$. So we get smaller system 
+    \[
+    \begin{cases}
+        \dot x = F_p \\
+        \dot z = F_p\cdot p - F\\ 
+        \dot p = -F_x  -F_z \cdot p
+    \end{cases}
+    \]
+    The price we pay is the extra $F$ term in the second equation, compared to before.
+\end{example}
+
+\begin{remark}
+    Solutions are local, near $\Sigma$, until characteristics may intersect. There is no way to continue solutions in general past this intersection of characteristics. For specific classes of problems, however, there is hope. 
+\end{remark}
+
+\begin{example}
+    [Hamiton flow]
+    Suppose we have an equation 
+    \[
+        H(x, \partial u) + u_t = 0
+    \]
+     which does not depend directly on $u$. Then we get 
+    \[
+    \begin{cases}
+        \dot x = H_p \\
+        \dot p = -H_x \\
+        \dot z  = H_p\cdot p - H
+    \end{cases}
+    \]
+    The first two equations do not depend on $z$, so we can discard the last equation, solve the first two questions first, and integrate the last equation at the end. 
+
+    This type of system is called a \textbf{Hamilton Flow}. Hamilton flows play a role in symplectic geometry. Many PDEs can be interpreted as Hamiltonian flows. The Hamilton-Jacobi euqations are of the form 
+    \[
+        u_t + H(x,\partial u) = 0.
+    \]
+\end{example}
+
+Next time, we will do a bit of variational calculus to not only solve Hamilton-Jacobi equations but to also see how we may extend a solution past a point where characteristics intersect. In a Hamilton flow, the characteristics only depend on $(x,p)$. When characteristics intersect, they may have the same $x$ but different $p=\partial u$. We will try to continue the solution in a way such that $\partial u$ has a jump discontinuity.
+
+\begin{example}
+    Consider the equation 
+    \[
+    \begin{cases}
+        u_t + \frac 1 2 | \partial_x u|^2 = 0 \\
+        u(0) = u_0.
+    \end{cases}
+    \]
+    Here, $H(p) = \frac 1 2 p^2$, and we get the system 
+    \[
+    \begin{cases}
+        \dot x = p\\
+        \dot p = 0
+    \end{cases}
+    \]
+    Here, the characteristics are straight lines, with $p(0)=\partial_x u_0$.
+\end{example}
+
+\begin{example}
+    [Eikonal equation] The equation 
+    \[
+        |u_t|^2 -|\partial_x u|^2 = 0.
+    \]
+    is not int the form we have talked about already. This gives 
+    \[
+        u_t = \pm |\partial_x u|,
+    \]
+    so we will get 2 solutions.
+\end{example}

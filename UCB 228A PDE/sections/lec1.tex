@@ -1,0 +1,373 @@
+\chapter{Overview}
+\textbf{Date:} Aug 26, 2021
+\section{Syllabus}
+
+\textbf{Instructor:} Daniel Tataru (tataru@math.berkeley.edu)
+\vspace{1em}
+
+This is the first semester of a two semester sequence in Partial Differential Equations. It is assumed you are familiar with undergraduate real analysis and have some knowlege of ordinary differential equations. For the second half of the semester some measure theory is also needed. Complex analysis is useful but not required. The course roughly follows at first Hormander (theory of distributions and Fourier Analysis) and continues with the first part and the beginning of the second part Evans but with various omissions/additions. Topics to be covered include (not necessarily in this order):
+\begin{itemize}
+    \item Transport equation
+    \item Nonlinear first order Equations
+    \item Theory of distributions 
+    \item Fourier analysis 
+    \item The Laplace equation 
+    \item The heat equation 
+    \item The Schrodinger equation 
+    \item The Wave equation 
+    \item Sobolev Space 
+\end{itemize}
+\noindent
+\textbf{Time:}
+\begin{itemize}
+    \item Tue-Thu 8:00-9:00, 70 Evans
+    \item Unless otherwise announced, the class will meet in person
+    \item \href{https:/berkeley.zoom.us/j/96856743407?pwd=TXpaajZ4MVZDL3d4ODBBWFA2YWk0QT09}{Backup Zoom link}
+\end{itemize}
+
+\noindent
+\textbf{Office hours:}
+\begin{itemize}
+    \item Wed 10:00-12:00
+    \item Office hours will be held virtually unless otherwise announced
+    \item \href{https://berkeley.zoom.us/j/96535851851?pwd=MS9XcXVyRkJHTzhrNnhiblhvalA0Zz09}{OH Zoom link}
+\end{itemize}
+
+\noindent
+\textbf{Textbook:}
+\begin{itemize}
+    \item {\it Partial Differential Equations (2rd Edition)} by L.C.Evans
+    \item {\it Partial Differential Equations, vol. 1} by L.Hormander
+    \item {\it Guide to Distribution THeory and Fourier Transform} by Robert Strichartz
+\end{itemize}
+
+\noindent
+\textbf{Grading:}
+\begin{itemize}
+    \item Homework, midterm and final, equally weighted.
+    \item \textbf{Midterm:} Thursday, Oct 21.
+    \item \textbf{Final:} Take home, to be assigned on Wed eve., Dec 8, and to be returned no later than Wed, Dec 15, at noon.
+\end{itemize}
+
+\section{Overview}
+Firstly, we review the definition of ODE:
+\begin{definition}
+    [ODE]
+    Given a function $\mu:\RR \to \RR( \text{or }\CC)$, an expression of the form:
+    \[
+        F(\mu,\mu', \mu'',\ldots, \mu^{(n)} ) = 0,    
+    \]
+    is called a $n^{th}$-order ordinary differential equation (ODE), where 
+    \[
+        F:\RR^{n+1} \to \RR.    
+    \]
+\end{definition}
+
+Compared to ODE, A {\it partial differential equation} (PDE) is an equation involving an unknown function of two or more variables and certain of its partial derivatives.
+
+\begin{definition}
+[ODE]
+Fix an integer $k\ge 1$ and let $U$ denote an open subset of $\RR^n$. An expression of the form
+\begin{equation}
+\label{def:PDE}
+F\left(D^{k} u(x), D^{k-1} u(x), \ldots, D u(x), u(x), x\right)=0 \quad(x \in U)
+\end{equation}
+is called a $\mathrm{k}^{\mathrm{th}}$-order partial differential equation, where
+$$
+F: \mathbb{R}^{n^{k}} \times \mathbb{R}^{n^{k-1}} \times \cdots \times \mathbb{R}^{n} \times \mathbb{R} \times U \rightarrow \mathbb{R}
+$$
+is given and 
+\[
+    u:U\to \RR    
+\]
+is the unknown.
+\end{definition}
+
+\begin{definition}
+[Linear, semilinear, quasilinear and fully nonlinear PDE]
+~\
+\begin{itemize}
+    \item[(i)] The PDE \eqref{def:PDE} is called linear if it has the form
+    \[
+        \sum_{|\alpha| \leq k} a_{\alpha}(x) D^{\alpha} u=f(x)
+    \] 
+    for given functions $a_\alpha (|\alpha|\le k), f$. This linear PDE is homogeneous if $f\equiv 0$.
+    \item[(ii)] The PDE \eqref{def:PDE} is semilinear if if has the form
+    \[
+        \sum_{|\alpha|=k} a_{\alpha}(x) D^{\alpha} u+a_{0}\left(D^{k-1} u, \ldots, D u, u, x\right)=0.  
+    \]
+    \item[(iii)] The PDE \eqref{def:PDE} is quasilinear if it has the form
+    \[
+        \sum_{|\alpha|=k} a_{\alpha}\left(D^{k-1} u, \ldots, D u, u, x\right) D^{\alpha} u+a_{0}\left(D^{k-1} u, \ldots, D u, u, x\right)=0.
+    \] 
+    \item[(iv)] The PDE \eqref{def:PDE} is fully nonlinear if it depends nonlinearly upon the highest order derivatives.
+\end{itemize}
+\end{definition}
+
+A system of partial differential equations is, informally speaking, a collection
+of several PDE for several unknown functions.
+
+\begin{definition}
+    [System of PDE]
+     An expression of the form
+\begin{equation}
+\label{def:sysPDE}
+    \mathbf{F}\left(D^{k} \mathbf{u}(x), D^{k-1} \mathbf{u}(x), \ldots, D \mathbf{u}(x), \mathbf{u}(x), x\right)=\mathbf{0} \quad(x \in U)
+\end{equation}
+is called a $\mathrm{k}^{\text {th }}$-order system of partial differential equations, where
+$$
+\mathbf{F}: \mathbb{R}^{m n^{k}} \times \mathbb{R}^{m n^{k-1}} \times \cdots \times \mathbb{R}^{m n} \times \mathbb{R}^{m} \times U \rightarrow \mathbb{R}^{m}
+$$
+is given and
+$$
+\mathbf{u}: U \rightarrow \mathbb{R}^{m}, \mathbf{u}=\left(u^{1}, \ldots, u^{m}\right)
+$$
+is the unknown.
+\end{definition}
+Here we are supposing that the system comprises the same number $m$ of scalar equations as unknowns $\left(u^{1}, \ldots, u^{m}\right)$. This is the most common circumstance, although other systems may have fewer or more equations than unknowns. Systems are classified in the obvious way as being linear, semilinear, etc.
+
+Following is a list of many specific partial differential equations of interest
+in current research. This listing is intended merely to familiarize the
+reader with the names and forms of various famous PDE. To display most
+clearly the mathematical structure of these equations, we have mostly set
+relevant physical constants to unity. We will later discuss the origin and
+interpretation of many of these PDE.
+
+Throughout $x \in U$, where $U$ is an open subset of $\mathbb{R}^{n}$, and $t \geq 0$. Also $D u=D_{x} u=\left(u_{x_{1}}, \ldots, u_{x_{n}}\right)$ denotes the gradient of $u$ with respect to the spatial variable $x=\left(x_{1}, \ldots, x_{n}\right)$. The variable $t$ always denotes time.
+
+\begin{example} Single partial differential equations:
+~\\a. Linear equations:
+\begin{itemize}
+    \item Laplace: 
+    \[
+        \Delta u = \sum_{i=1}^n u_{x_ix_i} = 0.  
+    \]
+    \item Helmholtz:
+    \[
+        -\Delta u = \lambda u.
+    \]
+    \item Linear transport:
+    \[
+        u_t + \sum_{i=1}^n b^i u_{x_i} = 0.    
+    \]
+    \item Liouville:
+    \[
+        u_t - \sum_{i=1}^n (b^iu)_{x_i} = 0.    
+    \]
+    \item Heat: 
+    \[
+        u_t - \Delta u =0.    
+    \]
+    \item Schrodinger:
+    \[
+        iu_t + \Delta u =0.    
+    \]
+    \item Kolmogorov:
+    \[
+        u_t  - \sum_{i,j=1}^n a^{ij}u_{x_ix_j} + \sum_{i=1}^n b^i u_{x_i} = 0.    
+    \]
+    \item Fokker-Planck:
+    \[
+        u_t  - \sum_{i,j=1}^n (a^{ij}u)_{x_ix_j} - \sum_{i=1}^n (b^i u)_{x_i} = 0.   
+    \]
+    \item Wave:
+    \[
+        u_{tt} - \Delta u =0.
+    \]
+    \item Klein-Gordon:
+    \[
+        u_{tt} - \Delta u + m^2u = 0.    
+    \]
+    \item Telegraph:
+    \[
+        u_{tt} + 2du_t -u_{xx} = 0.
+    \]
+    \item General wave: 
+    \[
+      u_{tt} - \sum_{i,j=1}^m a^{ij} u_{x_ix_j} +\sum_{i=1}^n b^i u_{x_i} = 0.  
+    \]
+    \item Airy:
+    \[
+        u_t + t_{xxx} = 0.
+    \]
+    \item Beam:
+    \[
+        u_{tt} + u_{xxxx} = 0.    
+    \]
+\end{itemize}
+\noindent b. Nonlinear equations:
+\begin{itemize}
+    \item Eikonal:
+    \[
+        |Du| = 1.    
+    \]
+    \item Nonlinear Poisson:
+    \[
+        -\Delta u = f(u).
+    \]
+    \item $p$-Laplacian:
+    \[
+        div(|Du|^{p-2}Du) = 0.     
+    \]
+    \item Minimal surface:
+    \[
+        \operatorname{div}\left(\frac{D u}{\left(1+|D u|^{2}\right)^{1 / 2}}\right)=0.
+    \]
+    \item Monge-Ampere:
+    \[
+        \det(D^2u)=f.    
+    \]
+    \item Hamilton-Jacobi:
+    \[
+        u_t + H(Du, x) =0.  
+    \]
+    \item Scalar conservation law:
+    \[
+        u_t + div \mathrm{F}(u)=0.   
+    \]
+    \item Scalar reaction-diffusion:
+    \[
+        u_t - \Delta u = f(u).  
+    \]
+    \item Porous medium:
+    \[
+        u_t - \Delta(u^\gamma) =0.  
+    \]
+    \item Nonlinear wave: 
+    \[ 
+        u_{tt} - \Delta u + f(u) = 0.
+    \]
+    \item Korteweg-de Vries (KdV):
+    \[
+        u_t + uu_x + u_{xxx} = 0.  
+    \]
+    \item Nonlinear Schrodinger:
+    \[
+        iu_t + \Delta u = f(|u|^2)u.  
+    \]
+\end{itemize} 
+\end{example}
+
+\begin{example}
+    Systems of PDEs
+    ~\\ a. Linear Systems
+    \begin{itemize}
+        \item Equilibrium equations of linear elasticity:
+        \[
+            \mu\Delta u + (\lambda+ \mu) D(div u) = 0.    
+        \]
+        \item Evolution equations of linear elasticity:
+        \[
+            u_{tt} - \mu \Delta u - (\lambda + \mu) D(div u) =0.  
+        \] 
+        \item Maxwell's equation:
+        $$
+        \left\{\begin{array}{l}
+            \mathbf{E}_{t}=\operatorname{curl} \mathbf{B} \\
+            \mathbf{B}_{t}=-\operatorname{curl} \mathrm{E} \\
+            \operatorname{div} \mathbf{B}=\operatorname{div} \mathbf{E}=0
+            \end{array}\right.
+        $$
+    \end{itemize}
+\noindent b. Nonlinear systems
+\begin{itemize}
+    \item System of conservation laws:
+    \[
+        \mathbf{u}_{t}+\operatorname{div} \mathbf{F}(\mathbf{u})=\mathbf{0}.
+    \]
+    \item Reaction-diffusion system:
+    \[
+        \mathbf{u}_{t}-\Delta \mathbf{u}=\mathbf{f}(\mathbf{u}).
+    \]
+    \item Euler's equations for incompressible, inviscid flow:
+    \[
+        \left\{\begin{array}{l}
+            \mathbf{u}_{t}+\mathbf{u} \cdot D \mathbf{u}=-D p \\
+            \operatorname{div} \mathbf{u}=0
+            \end{array}\right.
+    \]
+    \item Navier-Stokes equations for incompressible, viscous flow:
+    \[
+        \left\{\begin{array}{l}
+            \mathbf{u}_{t}+\mathbf{u} \cdot D \mathbf{u}-\Delta \mathbf{u}=-D p \\
+            \operatorname{div} \mathbf{u}=0
+            \end{array}\right.
+    \]
+\end{itemize}
+\end{example}
+
+\subsection{Strategies for studying PDE}
+The informal notion of a well-posed problem captures many of the desirable features of what it means to solve a PDE. We say that a given problem for a partial differential equation is well-posed if
+\begin{itemize}
+    \item[(i)] the problem in fact has a solution;
+    \item[(ii)] this solution is unique;
+    \item[(iii)] the solution depends continuously on the data given in the problem.
+\end{itemize}
+The last condition is particularly important for problems arising from physical applications: we would prefer that our (unique) solution changes only a little when the conditions specifying the problem change a little. (For many problems, on the other hand, uniqueness is not to be expected. In these cases the primary mathematical tasks are to classify and to characterize the solutions.)
+
+By solving a partial differential equation in the classical sense we mean
+if possible to write down a formula for a classical solution satisfying (i)–(iii)
+above, or at least to show such a solution exists, and to deduce various of
+its properties.
+
+But can we achieve this? The answer is that certain specific partial
+differential equations (e.g. Laplace’s equation) can be solved in the classical
+sense, but many others, if not most others, cannot. Consider for instance the scalar conservation law
+\[
+    u_t + F(u)_x = 0.
+\]  
+We will see in §3.4 that this PDE governs various one-dimensional phenomena
+involving fluid dynamics, and in particular models the formation and
+propagation of shock waves. Now a shock wave is a curve of discontinuity
+of the solution u; and so if we wish to study conservation laws, and recover
+the underlying physics, we must surely allow for solutions u which are not
+continuously differentiable or even continuous. In general, as we shall see,
+the conservation law has no classical solutions but is well-posed if we allow
+for properly defined generalized or weak solutions.
+
+The point is this: if from the outset we demand that our solutions be very
+regular, say k-times continuously differentiable, then we are usually going
+to have a really hard time finding them, as our proofs must then necessarily
+include possibly intricate demonstrations that the functions we are building
+are in fact smooth enough. A far more reasonable strategy is to consider as
+separate the existence and the smoothness (or regularity) problems. The idea
+is to define for a given PDE a reasonably wide notion of a weak solution, with
+the expectation that since we are not asking too much by way of smoothness
+of this weak solution, it may be easier to establish its existence, uniqueness,
+and continuous dependence on the given data. Thus, to repeat, it is often
+wise to aim at proving well-posedness in some appropriate class of weak or
+generalized solutions.
+
+Now, as noted above, for various partial differential equations this is
+the best that can be done. For other equations we can hope that our weak
+solution may turn out after all to be smooth enough to qualify as a classical
+solution. This leads to the question of regularity of weak solutions. As we
+will see, it is often the case that the existence of weak solutions depends
+upon rather simple estimates plus ideas of functional analysis, whereas the
+regularity of the weak solutions, when true, usually rests upon many intricate
+calculus estimates.
+
+Let me explicitly note here that our efforts will be largely devoted to proving mathematically the existence of solutions to various sorts of partial differential equations, and not so much to deriving formulas for these solutions. This may seem wasted or misguided
+effort, but in fact mathematicians are like theologians: we regard existence
+as the prime attribute of what we study. But unlike theologians, we need
+not always rely upon faith alone.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+\noindent \textbf{Typical Difficulties:} Following are some vague but general principles, which may be useful to
+keep in mind:
+\begin{itemize}
+    \item [(1)] Nonlinear equations are more difficult than linear equations; and,
+    indeed, the more the nonlinearity affects the higher derivatives, the
+    more difficult the PDE is.
+    \item [(2)] Higher-order PDE are more difficult than lower-order PDE.
+    \item [(3)] Systems are harder than single equations.
+    \item [(4)] Partial differential equations entailing many independent variables
+    are harder than PDE entailing few independent variables.
+    \item [(5)] For most partial differential equations it is not possible to write out
+    explicit formulas for solutions.
+\end{itemize}
+None of these assertions is without important exceptions.
+\vspace{1em}
+\hrule
