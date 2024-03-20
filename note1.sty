@@ -86,7 +86,7 @@
     tabsize=2,
 }
 \usepackage{minibox}
-\newcommand*{\Comment}[1]{\hfill\minibox[l]{#1}}%
+\newcommand*{\explain}[1]{\hfill\minibox[l]{\textcolor{gray}{#1}}}%
 \lstset{language=C++,basicstyle=\small\sffamily,
   numbers=none,
   frame=tb,
@@ -445,13 +445,7 @@ postheadspace = \newline,
   sibling=theorem,
 ]{notation}
 
-\declaretheorem[
-    style=coloredexplanation,
-  name=Proof,
-  numbered=no,
-]
-{explain}
-\newenvironment{explanation}[1][\proofname]{\vspace{-15pt}\begin{explain}}{\end{explain}}
+
 \declaretheorem[
   style=coloredeg,
   name=Example,
@@ -590,7 +584,7 @@ postheadspace = \newline,
 	\end{tabular}
     \end{flushright}
 \vspace{2in}
-{  \Huge \noindent\coursenum \par\vspace{0.2cm}\noindent {\bfseries\coursename} \par\vspace{-0.3cm} \noindent\rule{0.8\textwidth}{0.05cm}\par\vspace{0.2cm}}
+{  \Huge \noindent\coursenum \par\vspace{0.2cm}\noindent {\bfseries\coursename} \par\vspace{-0.3cm} \noindent\rule{0.8\textwidth}{0.05cm}\par\vspace{0.4cm}}
 \ifdefined\professor 
 { \Large \noindent Professor: \professor \par \noindent Notes By: \student}
 \else 
